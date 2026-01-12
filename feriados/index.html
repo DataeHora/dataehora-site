@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feriados 2026 Brasil | Calendário e Datas de Emendas</title>
+    <meta name="description" content="Lista oficial de feriados nacionais de 2026. Veja datas, dias da semana e planeje suas emendas e folgas.">
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; }
+        body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; line-height: 1.6; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: var(--accent); border-bottom: 2px solid var(--card); padding-bottom: 10px; }
+        .holiday-card { background: var(--card); margin: 10px 0; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--accent); }
+        .date { font-weight: bold; font-size: 1.2rem; min-width: 80px; }
+        .name { flex-grow: 1; margin-left: 20px; }
+        .loading { text-align: center; font-style: italic; opacity: 0.7; }
+        .nav { margin-bottom: 20px; }
+        .nav a { color: var(--accent); text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav"><a href="index.html">← Voltar para Hora Atual</a></nav>
+        <h1>Feriados Nacionais 2026</h1>
+        <p>Confira a lista oficial de feriados e planeje seus descansos.</p>
+        
+        <div id="holiday-list" class="loading">Consultando calendário oficial...</div>
+        
+        <footer style="margin-top: 40px; font-size: 0.8rem; opacity: 0.5;">
+            Dados fornecidos via BrasilAPI. Sincronizado com o calendário nacional.
+        </footer>
+    </div>
+
+    <script>
+        async function getFeriados() {
+            try {
+                const ano = 2026;
+                const response = await fetch(`https://brasilapi.com.br/api/feriados/v1/${ano}`);
+                const feriados = await response.json();
+                
+                let html = '';
+                feriados.forEach(f => {
+                    const data = new Date(f.date + "T00:00:00");
+                    const dataFormatada = data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                    const diaSemana = data.toLocaleDateString('pt-BR', { weekday: 'long' });
+                    
+                    html += `
+                        <div class="holiday-card">
+                            <div class="date">${dataFormatada}</div>
+                            <div class="name">
+                                <strong>${f.name}</strong><br>
+                                <span style="font-size: 0.9rem; opacity: 0.7;">${diaSemana}</span>
+                            </div>
+                        </div>`;
+                });
+                document.getElementById('holiday-list').innerHTML = html;
+                document.getElementById('holiday-list').classList.remove('loading');
+            } catch (error) {
+                document.getElementById('holiday-list').innerHTML = "Erro ao carregar feriados. Tente novamente mais tarde.";
+            }
+        }
+        getFeriados();
+    </script>
+</body>
+</html>
