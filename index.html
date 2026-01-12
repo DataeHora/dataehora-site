@@ -1,40 +1,39 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>dataehora.com.br — Dataa, hora, calendário e ferramentas</title>
-  <meta name="description" content="Calendário do Brasil, feriados, semana do ano, relógio mundial, fusos horários, previsão do tempo, cronômetro e calculadora." />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horário de Brasília Oficial | Data e Hora</title>
+    <style>
+        :root { --bg: #0f172a; --text: #f8fafc; --accent: #38bdf8; }
+        body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { text-align: center; }
+        #clock { font-size: 5rem; font-weight: 800; color: var(--accent); margin-bottom: 0.5rem; letter-spacing: -2px; }
+        #date { font-size: 1.5rem; opacity: 0.8; }
+        .label { text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 1rem; opacity: 0.6; }
+        /* Optimization: Mobile responsive font */
+        @media (max-width: 600px) { #clock { font-size: 3.5rem; } }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>dataehora.com.br</h1>
-    <nav>
-      <a href="/">Home</a> |
-      <a href="/calendario/">Calendário</a> |
-      <a href="/relogio-mundial/">Relógio Mundial</a> |
-      <a href="/fusos/">Fusos</a> |
-      <a href="/previsao-do-tempo/">Previsão do Tempo</a> |
-      <a href="/cronometro/">Cronômetro</a> |
-      <a href="/calculadora/">Calculadora</a>
-    </nav>
-    <hr />
-  </header>
+    <div class="container">
+        <div class="label">Horário de Brasília (Oficial)</div>
+        <div id="clock">00:00:00</div>
+        <div id="date">Carregando data...</div>
+    </div>
 
-  <main>
-    <p>Em breve: calendário do Brasil com semanas ISO, feriados, ferramentas de tempo e mais.</p>
-
-    <h2>Comece por aqui</h2>
-    <ul>
-      <li><a href="/calendario/">Calendário</a></li>
-      <li><a href="/fusos/">Fusos horários</a></li>
-      <li><a href="/relogio-mundial/">Relógio mundial</a></li>
-    </ul>
-  </main>
-
-  <footer>
-    <hr />
-    <p>© dataehora.com.br</p>
-  </footer>
+    <script>
+        function updateClock() {
+            const agora = new Date();
+            // Force Brasília Time (UTC-3) regardless of user device settings
+            const opcoesHora = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const opcoesData = { timeZone: 'America/Sao_Paulo', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            
+            document.getElementById('clock').textContent = agora.toLocaleTimeString('pt-BR', opcoesHora);
+            document.getElementById('date').textContent = agora.toLocaleDateString('pt-BR', opcoesData);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
 </body>
 </html>
