@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feriadões 2026 | Datas para Emendar | Data e Hora</title>
+    <style>
+        :root { 
+            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; 
+            --accent: #10b981; /* Verde esmeralda para sugerir folga/viagem */
+            --secondary: #94a3b8; --border: rgba(148, 163, 184, 0.1);
+        }
+        [data-theme="light"] {
+            --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; 
+            --accent: #059669; --secondary: #64748b; --border: rgba(0, 0, 0, 0.05);
+        }
+
+        body { 
+            background: var(--bg); color: var(--text); 
+            font-family: system-ui, -apple-system, sans-serif; 
+            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; 
+            transition: background 0.5s ease; min-height: 100vh;
+        }
+
+        .nav-links { display: flex; gap: 10px; margin-bottom: 30px; }
+        .btn-nav {
+            padding: 8px 18px; border-radius: 50px; background: var(--card);
+            color: var(--text); text-decoration: none; font-size: 0.85rem;
+            border: 1px solid var(--border); transition: 0.2s;
+        }
+        .btn-nav:hover { border-color: var(--accent); color: var(--accent); }
+
+        .container { width: 100%; max-width: 800px; }
+        h1 { font-size: 2.2rem; text-align: center; margin-bottom: 10px; color: var(--accent); }
+        .sub-h1 { text-align: center; color: var(--secondary); margin-bottom: 40px; }
+
+        /* Cards de Feriadões */
+        .holiday-grid { display: grid; gap: 20px; }
+        .holiday-card {
+            background: var(--card); border-radius: 20px; padding: 25px;
+            border-left: 6px solid var(--accent); border-top: 1px solid var(--border);
+            border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .holiday-info h3 { margin: 0; font-size: 1.2rem; }
+        .holiday-info p { margin: 5px 0 0 0; color: var(--secondary); font-size: 0.95rem; }
+        .holiday-status { 
+            background: rgba(16, 185, 129, 0.1); color: var(--accent);
+            padding: 6px 15px; border-radius: 50px; font-size: 0.8rem; font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .holiday-card { flex-direction: column; align-items: flex-start; gap: 15px; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div class="nav-links">
+        <a href="/" class="btn-nav">🏠 Início</a>
+        <a href="../" class="btn-nav">📅 Voltar</a>
+    </div>
+
+    <div class="container">
+        <h1>Feriadões e Emendas 2026</h1>
+        <p class="sub-h1">As melhores datas para planejar sua folga ou viagem</p>
+
+        <div id="holiday-list" class="holiday-grid">
+            </div>
+    </div>
+
+    <script>
+        async function loadHolidayEmendas() {
+            try {
+                const response = await fetch('https://brasilapi.com.br/api/feriados/v1/2026');
+                const holidays = await response.json();
+                const container = document.getElementById('holiday-list');
+                
+                holidays.forEach(h => {
+                    const dateObj = new Date(h.date + "T00:00:00");
+                    const dayOfWeek = dateObj.getDay(); // 0=Dom, 1=Seg, 2=Ter, 3=Qua, 4=Qui, 5=Sex, 6=Sab
+                    
+                    // Lógica de "Feriadão": Terça (2), Quinta (4), Segunda (1) ou Sexta (5)
+                    // Feriados na quarta (3) ou fins de semana não emendam oficialmente
+                    const podeEmendar = [1, 2, 4, 5].includes(dayOfWeek);
+
+                    if (podeEmendar) {
+                        const dateFmt = dateObj.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' });
+                        const weekdayFmt = dateObj.toLocaleDateString('pt-BR', { weekday: 'long' });
+                        let sugestao = (dayOfWeek === 2 || dayOfWeek === 4) ? "Emenda possível" : "Final de semana prolongado";
+
+                        container.innerHTML += `
+                            <div class="holiday-card">
+                                <div class="holiday-info">
+                                    <h3>${h.name}</h3>
+                                    <p>${dateFmt} • <span style="text-transform: capitalize">${weekdayFmt}</span></p>
+                                </div>
+                                <div class="holiday-status">${sugestao}</div>
+                            </div>
+                        `;
+                    }
+                });
+            } catch (error) {
+                container.innerHTML = "<p>Erro ao carregar feriados.</p>";
+            }
+        }
+
+        const savedTheme = localStorage.getItem('theme-pref-dataehora') || 'auto';
+        if (savedTheme === 'auto') {
+            const hora = new Date().getHours();
+            document.body.setAttribute('data-theme', (hora >= 6 && hora < 18) ? 'light' : 'dark');
+        } else {
+            document.body.setAttribute('data-theme', savedTheme);
+        }
+
+        loadHolidayEmendas();
+    </script>
+</body>
+</html>
