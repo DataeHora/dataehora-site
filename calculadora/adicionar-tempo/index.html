@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Somar ou Subtrair Datas | Calculadora de Prazos | Data e Hora</title>
+    <style>
+        :root { 
+            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; 
+            --accent: #f59e0b; --secondary: #94a3b8; --border: rgba(148, 163, 184, 0.1);
+        }
+        [data-theme="light"] {
+            --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; 
+            --accent: #d97706; --secondary: #64748b; --border: rgba(0, 0, 0, 0.05);
+        }
+
+        body { 
+            background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; 
+            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; 
+            transition: background 0.5s ease; min-height: 100vh;
+        }
+
+        .nav-links { display: flex; gap: 10px; margin-bottom: 30px; }
+        .btn-nav {
+            padding: 8px 18px; border-radius: 50px; background: var(--card);
+            color: var(--text); text-decoration: none; font-size: 0.85rem;
+            border: 1px solid var(--border); transition: 0.2s;
+        }
+        .btn-nav:hover { border-color: var(--accent); color: var(--accent); }
+
+        .container { width: 100%; max-width: 500px; background: var(--card); padding: 35px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid var(--border); }
+        h1 { font-size: 1.8rem; text-align: center; margin-bottom: 25px; color: var(--accent); }
+
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; }
+        
+        input {
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border);
+            background: var(--bg); color: var(--text); font-family: inherit; font-size: 1rem; box-sizing: border-box;
+        }
+
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .grid-inputs input { text-align: center; }
+
+        .operation-toggle {
+            display: flex; background: var(--bg); border-radius: 12px; padding: 4px; margin-bottom: 20px;
+        }
+        .op-btn {
+            flex: 1; padding: 10px; border: none; background: transparent; color: var(--secondary);
+            cursor: pointer; font-weight: 700; border-radius: 8px; transition: 0.2s;
+        }
+        .op-btn.active { background: var(--accent); color: white; }
+
+        button.main-calc {
+            width: 100%; padding: 15px; border-radius: 12px; border: none;
+            background: var(--accent); color: white; font-weight: 700; font-size: 1rem;
+            cursor: pointer; transition: 0.2s; margin-top: 20px;
+        }
+
+        .result-box {
+            margin-top: 30px; padding: 25px; background: rgba(245, 158, 11, 0.1);
+            border-radius: 20px; text-align: center; display: none; border: 2px solid var(--accent);
+        }
+        .res-date { font-size: 2rem; font-weight: 800; color: var(--text); display: block; }
+        .res-weekday { color: var(--accent); font-weight: 600; text-transform: capitalize; margin-top: 5px; }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div class="nav-links">
+        <a href="/" class="btn-nav">🏠 Início</a>
+        <a href="../" class="btn-nav">🧮 Voltar</a>
+    </div>
+
+    <div class="container">
+        <h1>Somar ou Subtrair Tempo</h1>
+        
+        <div class="form-group">
+            <label>Data de Referência</label>
+            <input type="date" id="base-date">
+        </div>
+
+        <div class="operation-toggle">
+            <button class="op-btn active" onclick="setOp('add', this)">➕ Somar</button>
+            <button class="op-btn" onclick="setOp('sub', this)">➖ Subtrair</button>
+        </div>
+
+        <div class="grid-inputs">
+            <div class="form-group">
+                <label>Anos</label>
+                <input type="number" id="num-years" value="0" min="0">
+            </div>
+            <div class="form-group">
+                <label>Meses</label>
+                <input type="number" id="num-months" value="0" min="0">
+            </div>
+            <div class="form-group">
+                <label>Dias</label>
+                <input type="number" id="num-days" value="0" min="0">
+            </div>
+        </div>
+
+        <button class="main-calc" onclick="calculateTime()">Calcular Nova Data</button>
+
+        <div id="result" class="result-box">
+            <span class="res-date" id="res-date">--/--/----</span>
+            <div class="res-weekday" id="res-weekday">Sexta-feira</div>
+        </div>
+    </div>
+
+    <script>
+        let currentOp = 'add';
+
+        function setOp(op, btn) {
+            currentOp = op;
+            document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function calculateTime() {
+            const baseStr = document.getElementById('base-date').value;
+            if (!baseStr) { alert("Selecione uma data base."); return; }
+
+            let date = new Date(baseStr + "T00:00:00");
+            const years = parseInt(document.getElementById('num-years').value) || 0;
+            const months = parseInt(document.getElementById('num-months').value) || 0;
+            const days = parseInt(document.getElementById('num-days').value) || 0;
+
+            const multiplier = (currentOp === 'add') ? 1 : -1;
+
+            date.setFullYear(date.getFullYear() + (years * multiplier));
+            date.setMonth(date.getMonth() + (months * multiplier));
+            date.setDate(date.getDate() + (days * multiplier));
+
+            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            const weekdayOpt = { weekday: 'long' };
+
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('res-date').textContent = date.toLocaleDateString('pt-BR', options);
+            document.getElementById('res-weekday').textContent = date.toLocaleDateString('pt-BR', weekdayOpt);
+        }
+
+        // Init tema e data atual
+        const savedTheme = localStorage.getItem('theme-pref-dataehora') || 'auto';
+        if (savedTheme === 'auto') {
+            const hora = new Date().getHours();
+            document.body.setAttribute('data-theme', (hora >= 6 && hora < 18) ? 'light' : 'dark');
+        } else {
+            document.body.setAttribute('data-theme', savedTheme);
+        }
+        document.getElementById('base-date').value = new Date().toISOString().split('T')[0];
+    </script>
+</body>
+</html>
