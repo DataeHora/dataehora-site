@@ -5,81 +5,139 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Dias Úteis 2026 | Data e Hora</title>
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --input-bg: #334155; }
-        body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .nav { align-self: flex-start; margin-bottom: 20px; }
-        .nav a { color: var(--accent); text-decoration: none; font-weight: bold; }
-        .container { background: var(--card); padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); width: 100%; max-width: 500px; text-align: center; }
-        h1 { color: var(--accent); font-size: 1.8rem; margin-bottom: 25px; }
-        .input-group { text-align: left; margin-bottom: 20px; }
-        label { display: block; font-size: 0.9rem; opacity: 0.7; margin-bottom: 5px; }
-        input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--input-bg); background: var(--input-bg); color: white; font-size: 1rem; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; border-radius: 8px; border: none; background: var(--accent); color: var(--bg); font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s; }
-        button:hover { transform: scale(1.02); }
-        #resultado { margin-top: 25px; padding: 20px; border-radius: 8px; background: rgba(56, 189, 248, 0.1); display: none; }
-        .res-destaque { font-size: 2.5rem; font-weight: 800; color: var(--accent); display: block; }
+        :root { 
+            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; 
+            --accent: #f59e0b; --secondary: #94a3b8; --border: rgba(148, 163, 184, 0.1);
+        }
+        [data-theme="light"] {
+            --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; 
+            --accent: #d97706; --secondary: #64748b; --border: rgba(0, 0, 0, 0.05);
+        }
+
+        body { 
+            background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; 
+            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; 
+            transition: background 0.5s ease; min-height: 100vh;
+        }
+
+        .nav-links { display: flex; gap: 10px; margin-bottom: 30px; }
+        .btn-nav {
+            padding: 8px 18px; border-radius: 50px; background: var(--card);
+            color: var(--text); text-decoration: none; font-size: 0.85rem;
+            border: 1px solid var(--border); transition: 0.2s;
+        }
+        .btn-nav:hover { border-color: var(--accent); color: var(--accent); }
+
+        .container { width: 100%; max-width: 500px; background: var(--card); padding: 30px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid var(--border); }
+        h1 { font-size: 1.8rem; text-align: center; margin-bottom: 25px; color: var(--accent); }
+
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; }
+        input[type="date"] {
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border);
+            background: var(--bg); color: var(--text); font-family: inherit; font-size: 1rem;
+        }
+
+        .result-box {
+            margin-top: 30px; padding: 20px; background: rgba(245, 158, 11, 0.1);
+            border-radius: 15px; text-align: center; display: none;
+        }
+        .result-value { font-size: 2.5rem; font-weight: 800; color: var(--accent); display: block; }
+        .result-label { font-size: 0.9rem; color: var(--secondary); }
+
+        button {
+            width: 100%; padding: 15px; border-radius: 12px; border: none;
+            background: var(--accent); color: white; font-weight: 700; font-size: 1rem;
+            cursor: pointer; transition: 0.2s; margin-top: 10px;
+        }
+        button:hover { opacity: 0.9; transform: translateY(-2px); }
     </style>
 </head>
-<body>
-    <div class="nav"><a href="../../index.html">← Voltar</a></div>
-    
+<body data-theme="dark">
+
+    <div class="nav-links">
+        <a href="/" class="btn-nav">🏠 Início</a>
+        <a href="../" class="btn-nav">🧮 Voltar</a>
+    </div>
+
     <div class="container">
         <h1>Dias Úteis</h1>
         
-        <div class="input-group">
+        <div class="form-group">
             <label>Data Inicial</label>
-            <input type="date" id="dataInicio">
+            <input type="date" id="data-inicio">
         </div>
-        
-        <div class="input-group">
+
+        <div class="form-group">
             <label>Data Final</label>
-            <input type="date" id="dataFim">
+            <input type="date" id="data-fim">
         </div>
 
         <button onclick="calcularDiasUteis()">Calcular Intervalo</button>
 
-        <div id="resultado">
-            <span id="labelResultado">Resultado:</span>
-            <span id="resValor" class="res-destaque">0</span>
-            <span id="resDetalhe" style="font-size: 0.9rem; opacity: 0.8;">dias úteis encontrados</span>
+        <div id="resultado" class="result-box">
+            <span id="valor-dias" class="result-value">0</span>
+            <span class="result-label">Dias úteis encontrados</span>
+            <p id="info-extra" style="font-size: 0.75rem; margin-top: 10px; opacity: 0.7;"></p>
         </div>
     </div>
 
     <script>
-        async function calcularDiasUteis() {
-            const d1 = new Date(document.getElementById('dataInicio').value + "T00:00:00");
-            const d2 = new Date(document.getElementById('dataFim').value + "T00:00:00");
+        // Feriados Nacionais 2026 (Baseados na BrasilAPI)
+        const feriados2026 = [
+            "2026-01-01", "2026-02-16", "2026-02-17", "2026-04-03", "2026-04-21", 
+            "2026-05-01", "2026-06-04", "2026-09-07", "2026-10-12", "2026-11-02", 
+            "2026-11-15", "2026-11-20", "2026-12-25"
+        ];
+
+        function calcularDiasUteis() {
+            const inicio = new Date(document.getElementById('data-inicio').value + "T00:00:00");
+            const fim = new Date(document.getElementById('data-fim').value + "T00:00:00");
             
-            if (isNaN(d1) || isNaN(d2)) {
+            if (isNaN(inicio) || isNaN(fim)) {
                 alert("Por favor, selecione as duas datas.");
                 return;
             }
 
-            // Busca feriados de 2026 para precisão
-            const resp = await fetch('https://brasilapi.com.br/api/feriados/v1/2026');
-            const feriados = await resp.json();
-            const listaFeriados = feriados.map(f => f.date);
-
-            let diasUteis = 0;
-            let dataCursor = new Date(d1);
-
-            while (dataCursor <= d2) {
-                const diaSemana = dataCursor.getDay(); // 0 = Domingo, 6 = Sábado
-                const dataFormatada = dataCursor.toISOString().split('T')[0];
-                
-                const ehFimDeSemana = (diaSemana === 0 || diaSemana === 6);
-                const ehFeriado = listaFeriados.includes(dataFormatada);
-
-                if (!ehFimDeSemana && !ehFeriado) {
-                    diasUteis++;
-                }
-                dataCursor.setDate(dataCursor.getDate() + 1);
+            if (inicio > fim) {
+                alert("A data inicial não pode ser maior que a data final.");
+                return;
             }
 
-            const divRes = document.getElementById('resultado');
-            document.getElementById('resValor').textContent = diasUteis;
-            divRes.style.display = 'block';
+            let diasUteis = 0;
+            let dataAtual = new Date(inicio);
+
+            while (dataAtual <= fim) {
+                const diaSemana = dataAtual.getDay();
+                const dataString = dataAtual.toISOString().split('T')[0];
+                
+                // 0 = Domingo, 6 = Sábado
+                const fimDeSemana = (diaSemana === 0 || diaSemana === 6);
+                const eFeriado = feriados2026.includes(dataString);
+
+                if (!fimDeSemana && !eFeriado) {
+                    diasUteis++;
+                }
+                dataAtual.setDate(dataAtual.getDate() + 1);
+            }
+
+            document.getElementById('resultado').style.display = 'block';
+            document.getElementById('valor-dias').textContent = diasUteis;
+            document.getElementById('info-extra').textContent = "*Considerando fins de semana e feriados nacionais de 2026.";
         }
+
+        // Sincronização de tema
+        const savedTheme = localStorage.getItem('theme-pref-dataehora') || 'auto';
+        if (savedTheme === 'auto') {
+            const hora = new Date().getHours();
+            document.body.setAttribute('data-theme', (hora >= 6 && hora < 18) ? 'light' : 'dark');
+        } else {
+            document.body.setAttribute('data-theme', savedTheme);
+        }
+
+        // Definir datas padrão (Hoje e +30 dias)
+        const hoje = new Date().toISOString().split('T')[0];
+        document.getElementById('data-inicio').value = hoje;
     </script>
 </body>
 </html>
