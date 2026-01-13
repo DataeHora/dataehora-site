@@ -1,145 +1,92 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calendário — dataehora.com.br</title>
-  <meta name="description" content="Calendário do Brasil com semanas ISO (segunda a domingo)." />
-  <style>
-    table { border-collapse: collapse; width: 100%; max-width: 560px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-    th { background: #f3f3f3; }
-    .wrap { display: grid; gap: 12px; }
-    .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-    .week { width: 56px; font-weight: 600; background: #fafafa; }
-    .muted { color: #666; font-size: 0.95rem; }
-  </style>
-</head>
-<body>
-  <header>
-    <nav>
-      <a href="/">Home</a> |
-      <a href="/calendario/">Calendário</a> |
-      <a href="/relogio-mundial/">Relógio Mundial</a> |
-      <a href="/fusos/">Fusos</a> |
-      <a href="/previsao-do-tempo/">Previsão do Tempo</a> |
-      <a href="/cronometro/">Cronômetro</a> |
-      <a href="/calculadora/">Calculadora</a>
-    </nav>
-    <hr />
-  </header>
-
-  <main class="wrap">
-    <h1>Calendário</h1>
-    <p class="muted">Selecione o mês e o ano. Padrão ISO: semanas começam na segunda-feira.</p>
-
-    <div class="controls">
-      <label>
-        Ano:
-        <select id="year"></select>
-      </label>
-
-      <label>
-        Mês:
-        <select id="month"></select>
-      </label>
-    </div>
-
-    <h2 id="title"></h2>
-    <div id="calendar"></div>
-  </main>
-
-  <script>
-    const monthNames = [
-      "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-      "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
-    ];
-
-    function isoWeekNumber(date) {
-      // ISO week: week starts Monday, week 1 contains Jan 4th
-      const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-      const day = d.getUTCDay() || 7; // Mon=1..Sun=7
-      d.setUTCDate(d.getUTCDate() + 4 - day);
-      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-      const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-      return weekNo;
-    }
-
-    function buildCalendar(year, monthIndex) {
-      // monthIndex: 0..11
-      const first = new Date(year, monthIndex, 1);
-      const last = new Date(year, monthIndex + 1, 0);
-      // Convert JS Sunday(0) to ISO Monday(1)
-      const firstDow = (first.getDay() + 6) % 7; // Mon=0..Sun=6
-      const daysInMonth = last.getDate();
-
-      // Build grid of weeks: each row = 7 days
-      const weeks = [];
-      let dayCounter = 1 - firstDow;
-      while (dayCounter <= daysInMonth) {
-        const row = [];
-        for (let i = 0; i < 7; i++, dayCounter++) {
-          row.push(dayCounter >= 1 && dayCounter <= daysInMonth ? dayCounter : "");
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendários 2026 | Modelos e Visualização | Data e Hora</title>
+    <style>
+        :root { 
+            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; 
+            --accent: #818cf8; /* Índigo para Calendários (Planejamento) */
+            --secondary: #94a3b8; 
         }
-        weeks.push(row);
-      }
+        [data-theme="light"] {
+            --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; 
+            --accent: #4f46e5; --secondary: #64748b; 
+        }
 
-      // Render
-      const container = document.createElement("div");
-      const table = document.createElement("table");
-      const thead = document.createElement("thead");
-      const trh = document.createElement("tr");
+        body { 
+            background: var(--bg); color: var(--text); 
+            font-family: system-ui, -apple-system, sans-serif; 
+            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; 
+            transition: background 0.5s ease; min-height: 100vh;
+        }
 
-      const thW = document.createElement("th");
-      thW.textContent = "Sem.";
-      trh.appendChild(thW);
+        .btn-home {
+            margin-top: 20px; margin-bottom: 40px; padding: 10px 25px; border-radius: 50px;
+            background: rgba(148, 163, 184, 0.1); color: var(--text);
+            text-decoration: none; font-weight: 600; font-size: 0.85rem;
+            border: 1px solid rgba(148, 163, 184, 0.2); transition: 0.2s;
+        }
+        .btn-home:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-      ["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].forEach(d => {
-        const th = document.createElement("th");
-        th.textContent = d;
-        trh.appendChild(th);
-      });
-      thead.appendChild(trh);
-      table.appendChild(thead);
+        .hero { text-align: center; margin-bottom: 50px; }
+        .label { text-transform: uppercase; font-size: 1rem; letter-spacing: 3px; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+        h1 { font-size: 2.5rem; margin: 0; }
 
-      const tbody = document.createElement("tbody");
-      weeks.forEach((weekRow, rowIdx) => {
-        const tr = document.createElement("tr");
+        .menu-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px; width: 100%; max-width: 800px;
+        }
+        .menu-item {
+            background: var(--card); border: 1px solid rgba(148, 163, 184, 0.1);
+            padding: 40px 20px; border-radius: 24px; text-decoration: none; color: var(--text);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; align-items: center; gap: 15px;
+            text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .menu-item:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .menu-item i { font-size: 2.5rem; font-style: normal; }
+        .menu-item span { font-weight: 800; font-size: 1.2rem; }
+        .menu-item small { color: var(--secondary); font-size: 0.9rem; line-height: 1.4; }
 
-        // ISO week number based on Monday of this row
-        // Find the date represented by Monday cell (may be outside month)
-        const mondayDay = weekRow[0] === "" ? 1 : weekRow[0];
-        const mondayDate = new Date(year, monthIndex, mondayDay);
-        // If monday cell is blank, mondayDate is first of month, week number still OK for display
-        const wk = isoWeekNumber(mondayDate);
+        @media (max-width: 500px) { .menu-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body data-theme="dark">
 
-        const tdW = document.createElement("td");
-        tdW.className = "week";
-        tdW.textContent = wk;
-        tr.appendChild(tdW);
+    <a href="/" class="btn-home">🏠 Início</a>
 
-        weekRow.forEach(val => {
-          const td = document.createElement("td");
-          td.textContent = val;
-          tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
-      });
-      table.appendChild(tbody);
+    <section class="hero">
+        <div class="label">Organização Total</div>
+        <h1>Calendários</h1>
+    </section>
 
-      container.appendChild(table);
-      return container;
-    }
+    <nav class="menu-grid">
+        <a href="anual-2026/" class="menu-item">
+            <i>📅</i>
+            <span>Calendário 2026</span>
+            <small>Visão completa do ano com feriados nacionais em destaque.</small>
+        </a>
+        <a href="tecnico/" class="menu-item">
+            <i>⚙️</i>
+            <span>Calendário Técnico</span>
+            <small>Exibição com número das semanas (ISO 8601) e dias do ano.</small>
+        </a>
+        <a href="imprimir/" class="menu-item">
+            <i>🖨️</i>
+            <span>Para Imprimir</span>
+            <small>Modelos otimizados em PDF ou imagem para uso físico.</small>
+        </a>
+    </nav>
 
-    function setFromQueryOrToday() {
-      const params = new URLSearchParams(location.search);
-      const now = new Date();
-      const y = parseInt(params.get("ano") || now.getFullYear(), 10);
-      const m = parseInt(params.get("mes") || (now.getMonth()+1), 10); // 1..12
-      return { y, m };
-    }
-
-    const yearSelect = document.getElementById("year");
-    const monthSelect = document.getElementById("month");
-    const titleEl = document.getElementById("title");
-    const calEl = document.getElementByI
+    <script>
+        const savedTheme = localStorage.getItem('theme-pref-dataehora') || 'auto';
+        if (savedTheme === 'auto') {
+            const hora = new Date().getHours();
+            document.body.setAttribute('data-theme', (hora >= 6 && hora < 18) ? 'light' : 'dark');
+        } else {
+            document.body.setAttribute('data-theme', savedTheme);
+        }
+    </script>
+</body>
+</html>
