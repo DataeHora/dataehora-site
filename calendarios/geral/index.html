@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário Geral 2026 | Data e Hora</title>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --today: #ef4444; }
+        body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; padding: 20px; margin: 0; }
+        .nav { margin-bottom: 20px; }
+        .nav a { color: var(--accent); text-decoration: none; font-weight: bold; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
+        .month { background: var(--card); padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .month-name { color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th { opacity: 0.6; padding: 5px; font-weight: normal; }
+        td { text-align: center; padding: 8px; border-radius: 4px; }
+        .weekend { color: #94a3b8; }
+        .holiday { color: var(--accent); font-weight: bold; background: rgba(56, 189, 248, 0.1); }
+        .today { background: var(--today) !important; color: white; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="nav"><a href="../../index.html">← Início</a></div>
+    <h1 style="text-align: center; color: var(--accent);">Calendário 2026</h1>
+    
+    <div class="calendar-grid" id="calendar-container">
+        </div>
+
+    <script>
+        const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+        const container = document.getElementById('calendar-container');
+        const hoje = new Date();
+
+        meses.forEach((nome, index) => {
+            let html = `<div class="month"><div class="month-name">${nome}</div>`;
+            html += `<table><tr><th>D</th><th>S</th><th>T</th><th>Q</th><th>Q</th><th>S</th><th>S</th></tr><tr>`;
+            
+            let data = new Date(2026, index, 1);
+            let diaSemana = data.getDay();
+            
+            for(let i=0; i<diaSemana; i++) html += '<td></td>';
+            
+            while(data.getMonth() === index) {
+                let dia = data.getDate();
+                let classe = (data.getDay() === 0 || data.getDay() === 6) ? 'weekend' : '';
+                if(data.toDateString() === hoje.toDateString()) classe += ' today';
+                
+                html += `<td class="${classe}">${dia}</td>`;
+                if(data.getDay() === 6) html += '</tr><tr>';
+                data.setDate(data.getDate() + 1);
+            }
+            html += '</tr></table></div>';
+            container.innerHTML += html;
+        });
+    </script>
+</body>
+</html>
