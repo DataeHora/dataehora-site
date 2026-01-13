@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contagem Regressiva | Eventos e Datas 2026 | Data e Hora</title>
+    <style>
+        :root { 
+            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; 
+            --accent: #fb7185; /* Rosa/Carmim para Contagem */
+            --secondary: #94a3b8; --border: rgba(148, 163, 184, 0.1);
+        }
+        [data-theme="light"] {
+            --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; 
+            --accent: #e11d48; --secondary: #64748b; --border: rgba(0, 0, 0, 0.05);
+        }
+
+        body { 
+            background: var(--bg); color: var(--text); 
+            font-family: system-ui, -apple-system, sans-serif; 
+            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; 
+            transition: background 0.5s ease; min-height: 100vh;
+        }
+
+        .btn-home {
+            margin-top: 20px; margin-bottom: 40px; padding: 10px 25px; border-radius: 50px;
+            background: rgba(148, 163, 184, 0.1); color: var(--text);
+            text-decoration: none; font-weight: 600; font-size: 0.85rem;
+            border: 1px solid var(--border); transition: 0.2s;
+        }
+        .btn-home:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+        .hero { text-align: center; margin-bottom: 50px; }
+        .label { text-transform: uppercase; font-size: 1rem; letter-spacing: 3px; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+        h1 { font-size: 2.5rem; margin: 0; }
+
+        .menu-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px; width: 100%; max-width: 850px;
+        }
+        .menu-item {
+            background: var(--card); border: 1px solid var(--border);
+            padding: 40px 20px; border-radius: 24px; text-decoration: none; color: var(--text);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+            text-align: center;
+        }
+        .menu-item:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .menu-item i { font-size: 2.8rem; font-style: normal; }
+        .menu-item span { font-weight: 800; font-size: 1.3rem; }
+        .menu-item small { color: var(--secondary); font-size: 0.95rem; line-height: 1.4; }
+
+        @media (max-width: 600px) { h1 { font-size: 2rem; } }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <a href="/" class="btn-home">🏠 Voltar ao Início</a>
+
+    <section class="hero">
+        <div class="label">Tempo Restante</div>
+        <h1>Contagens Regressivas</h1>
+    </section>
+
+    <nav class="menu-grid">
+        <a href="ano-novo/" class="menu-item">
+            <i>🥂</i>
+            <span>Ano Novo 2027</span>
+            <small>Quanto tempo falta para o próximo ano.</small>
+        </a>
+
+        <a href="proximo-feriado/" class="menu-item">
+            <i>🎉</i>
+            <span>Próximo Feriado</span>
+            <small>Contagem automática para a folga mais próxima.</small>
+        </a>
+
+        <a href="personalizada/" class="menu-item">
+            <i>⏱️</i>
+            <span>Criar Contagem</span>
+            <small>Defina uma data e partilhe um link exclusivo.</small>
+        </a>
+    </nav>
+
+    <script>
+        const savedTheme = localStorage.getItem('theme-pref-dataehora') || 'auto';
+        if (savedTheme === 'auto') {
+            const hora = new Date().getHours();
+            document.body.setAttribute('data-theme', (hora >= 6 && hora < 18) ? 'light' : 'dark');
+        } else {
+            document.body.setAttribute('data-theme', savedTheme);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendários e Planejamento | Data e Hora</title>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #818cf8; --secondary: #94a3b8; --border: rgba(148, 163, 184, 0.1); }
+        [data-theme="light"] { --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; --accent: #4f46e5; --secondary: #64748b; --border: rgba(0, 0, 0, 0.05); }
+        body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .btn-home { margin-top: 20px; margin-bottom: 40px; padding: 10px 25px; border-radius: 50px; background: rgba(148, 163, 184, 0.1); color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.85rem; border: 1px solid var(--border); transition: 0.2s; }
+        .btn-home:hover { background: var(--accent); color: white; }
+        .hero { text-align: center; margin-bottom: 50px; }
+        .label { text-transform: uppercase; font-size: 1rem; letter-spacing: 3px; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+        h1 { font-size: 2.5rem; margin: 0; }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; width: 100%; max-width: 850px; }
+        .menu-item { background: var(--card); border: 1px solid var(--border); padding: 40px 20px; border-radius: 24px; text-decoration: none; color: var(--text); transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 15px; text-align: center; }
+        .menu-item:hover { transform: translateY(-8px); border-color: var(--accent); }
+        .menu-item i { font-size: 2.8rem; font-style: normal; }
+        .menu-item span { font-weight: 800; font-size: 1.3rem; }
+        .menu-item small { color: var(--secondary); font-size: 0.95rem; }
+    </style>
+</head>
+<body data-theme="dark">
+    <a href="/" class="btn-home">🏠 Início</a>
+    <section class="hero">
+        <div class="label">Organização</div>
+        <h1 id="main-title">Calendários</h1>
+    </section>
+    <nav class="menu-grid">
+        <a href="anual/" class="menu-item">
+            <i>📅</i>
+            <span id="card-anual">Calendário Anual</span>
+            <small>Visão completa dos 12 meses com feriados nacionais.</small>
+        </a>
+        <a href="tecnico/" class="menu-item">
+            <i>⚙️</i>
+            <span>Calendário Técnico</span>
+            <small>Número das semanas (ISO-8601) e contagem de dias.</small>
+        </a>
+        <a href="imprimir/" class="menu-item">
+            <i>🖨️</i>
+            <span>Para Imprimir</span>
+            <small>Modelos otimizados para PDF e impressão física.</small>
+        </a>
+    </nav>
+    <script>
+        const year = new Date().getFullYear();
+        document.getElementById('main-title').textContent = `Calendários ${year}`;
+        document.getElementById('card-anual').textContent = `Calendário ${year}`;
+        
+        const savedTheme = localStorage.getItem('theme-pref-dataehora') || 'auto';
+        document.body.setAttribute('data-theme', savedTheme === 'auto' ? (new Date().getHours() >= 6 && new Date().getHours() < 18 ? 'light' : 'dark') : savedTheme);
+    </script>
+</body>
+</html>

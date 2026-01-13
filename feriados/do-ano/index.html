@@ -3,116 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Feriados 2026 | Data e Hora</title>
+    <title id="page-title">Feriados | Data e Hora</title>
     <style>
-        :root { 
-            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; 
-            --accent: #38bdf8; --secondary: #94a3b8; --border: rgba(148, 163, 184, 0.1);
-        }
-        [data-theme="light"] {
-            --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; 
-            --accent: #0284c7; --secondary: #64748b; --border: rgba(0, 0, 0, 0.05);
-        }
-
-        body { 
-            background: var(--bg); color: var(--text); 
-            font-family: system-ui, -apple-system, sans-serif; 
-            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; 
-            transition: background 0.5s ease; min-height: 100vh;
-        }
-
+        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --border: rgba(148, 163, 184, 0.1); }
+        [data-theme="light"] { --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; --accent: #0284c7; --border: rgba(0, 0, 0, 0.05); }
+        body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         .nav-links { display: flex; gap: 10px; margin-bottom: 30px; }
-        .btn-nav {
-            padding: 8px 18px; border-radius: 50px; background: var(--card);
-            color: var(--text); text-decoration: none; font-size: 0.85rem;
-            border: 1px solid var(--border); transition: 0.2s;
-        }
-        .btn-nav:hover { border-color: var(--accent); color: var(--accent); }
-
+        .btn-nav { padding: 8px 18px; border-radius: 50px; background: var(--card); color: var(--text); text-decoration: none; font-size: 0.85rem; border: 1px solid var(--border); transition: 0.2s; }
         .container { width: 100%; max-width: 800px; }
-        h1 { font-size: 2.2rem; text-align: center; margin-bottom: 10px; }
-        .sub-h1 { text-align: center; color: var(--secondary); margin-bottom: 40px; }
-
-        /* Tabela de Feriados */
-        .holiday-table {
-            width: 100%; border-collapse: collapse; background: var(--card);
-            border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        .holiday-table th, .holiday-table td {
-            padding: 18px; text-align: left; border-bottom: 1px solid var(--border);
-        }
-        .holiday-table th { background: rgba(56, 189, 248, 0.1); color: var(--accent); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-        
-        .holiday-name { font-weight: 700; color: var(--text); }
-        .holiday-date { color: var(--secondary); font-variant-numeric: tabular-nums; }
-        .holiday-weekday { font-size: 0.9rem; color: var(--accent); font-weight: 500; }
-
-        @media (max-width: 600px) {
-            .holiday-table th:nth-child(3), .holiday-table td:nth-child(3) { display: none; }
-            .container { padding: 0; }
-            h1 { font-size: 1.8rem; }
-        }
+        h1 { font-size: 2rem; text-align: center; margin-bottom: 5px; }
+        .sub-h1 { text-align: center; color: #94a3b8; margin-bottom: 40px; font-size: 1rem; }
+        .holiday-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 16px; overflow: hidden; }
+        .holiday-table th, .holiday-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); }
+        .holiday-table th { background: rgba(56, 189, 248, 0.1); color: var(--accent); font-size: 0.8rem; text-transform: uppercase; }
+        .holiday-date { font-weight: 600; color: var(--accent); }
+        .loader { border: 3px solid rgba(56, 189, 248, 0.2); border-left-color: var(--accent); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 50px auto; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body data-theme="dark">
-
     <div class="nav-links">
         <a href="/" class="btn-nav">🏠 Início</a>
         <a href="../" class="btn-nav">📅 Voltar</a>
     </div>
 
     <div class="container">
-        <h1>Feriados Nacionais 2026</h1>
-        <p class="sub-h1">Lista oficial com datas e dias da semana</p>
-
-        <table class="holiday-table">
-            <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Feriado</th>
-                    <th>Dia da Semana</th>
-                </tr>
-            </thead>
-            <tbody id="holiday-list">
-                </tbody>
+        <h1 id="main-h1">Feriados Nacionais</h1>
+        <p class="sub-h1" id="sub-year">Carregando calendário oficial...</p>
+        
+        <div id="loader" class="loader"></div>
+        <table class="holiday-table" id="table" style="display: none;">
+            <thead><tr><th>Data</th><th>Nome do Feriado</th><th>Dia da Semana</th></tr></thead>
+            <tbody id="list"></tbody>
         </table>
     </div>
 
     <script>
         async function loadHolidays() {
+            const year = new Date().getFullYear();
+            document.getElementById('page-title').textContent = `Feriados Nacionais ${year} | Data e Hora`;
+            document.getElementById('main-h1').textContent = `Feriados Nacionais ${year}`;
+            
             try {
-                const response = await fetch('https://brasilapi.com.br/api/feriados/v1/2026');
-                const holidays = await response.json();
-                const list = document.getElementById('holiday-list');
+                const res = await fetch(`https://brasilapi.com.br/api/feriados/v1/${year}`);
+                const data = await res.json();
+                const list = document.getElementById('list');
                 
-                holidays.forEach(h => {
-                    const dateObj = new Date(h.date + "T00:00:00");
-                    const dateFmt = dateObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-                    const weekdayFmt = dateObj.toLocaleDateString('pt-BR', { weekday: 'long' });
-
-                    const row = `
-                        <tr>
-                            <td class="holiday-date">${dateFmt}/2026</td>
-                            <td class="holiday-name">${h.name}</td>
-                            <td class="holiday-weekday">${weekdayFmt}</td>
-                        </tr>
-                    `;
+                data.forEach(h => {
+                    const d = new Date(h.date + "T00:00:00");
+                    const row = `<tr>
+                        <td class="holiday-date">${d.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'})}</td>
+                        <td>${h.name}</td>
+                        <td style="text-transform: capitalize; color: #94a3b8">${d.toLocaleDateString('pt-BR', {weekday:'long'})}</td>
+                    </tr>`;
                     list.innerHTML += row;
                 });
-            } catch (error) {
-                document.getElementById('holiday-list').innerHTML = "<tr><td colspan='3'>Erro ao carregar dados.</td></tr>";
-            }
+                
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('table').style.display = 'table';
+                document.getElementById('sub-year').textContent = `Lista oficial de feriados e pontos facultativos em ${year}`;
+            } catch (e) { document.getElementById('sub-year').textContent = "Erro ao carregar dados."; }
         }
 
-        // Sincronização de tema
         const savedTheme = localStorage.getItem('theme-pref-dataehora') || 'auto';
         if (savedTheme === 'auto') {
-            const hora = new Date().getHours();
-            document.body.setAttribute('data-theme', (hora >= 6 && hora < 18) ? 'light' : 'dark');
-        } else {
-            document.body.setAttribute('data-theme', savedTheme);
-        }
-
+            const h = new Date().getHours();
+            document.body.setAttribute('data-theme', (h >= 6 && h < 18) ? 'light' : 'dark');
+        } else { document.body.setAttribute('data-theme', savedTheme); }
         loadHolidays();
     </script>
 </body>
