@@ -3,63 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feriados 2026 Brasil | Calendário e Datas de Emendas</title>
-    <meta name="description" content="Lista oficial de feriados nacionais de 2026. Veja datas, dias da semana e planeje suas emendas e folgas.">
+    <title>Feriados 2026 | Calendário Nacional</title>
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; }
-        body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; line-height: 1.6; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        h1 { color: var(--accent); border-bottom: 2px solid var(--card); padding-bottom: 10px; }
-        .holiday-card { background: var(--card); margin: 10px 0; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--accent); }
-        .date { font-weight: bold; font-size: 1.2rem; min-width: 80px; }
-        .name { flex-grow: 1; margin-left: 20px; }
-        .loading { text-align: center; font-style: italic; opacity: 0.7; }
-        .nav { margin-bottom: 20px; }
-        .nav a { color: var(--accent); text-decoration: none; font-weight: bold; }
+        :root { 
+            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; 
+            --accent: #38bdf8; --secondary: #94a3b8; 
+        }
+        [data-theme="light"] {
+            --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; 
+            --accent: #0284c7; --secondary: #64748b; 
+        }
+
+        body { 
+            background: var(--bg); color: var(--text); 
+            font-family: system-ui, -apple-system, sans-serif; 
+            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; 
+            transition: background 0.5s ease; min-height: 100vh;
+        }
+
+        .btn-home {
+            margin-top: 20px; margin-bottom: 40px; padding: 10px 25px; border-radius: 50px;
+            background: rgba(148, 163, 184, 0.1); color: var(--text);
+            text-decoration: none; font-weight: 600; font-size: 0.85rem;
+            border: 1px solid rgba(148, 163, 184, 0.2); transition: 0.2s;
+        }
+        .btn-home:hover { background: var(--accent); color: var(--bg); }
+
+        .hero { text-align: center; margin-bottom: 50px; }
+        .label { text-transform: uppercase; font-size: 1rem; letter-spacing: 3px; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+        h1 { font-size: 2.5rem; margin: 0; }
+
+        .menu-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px; width: 100%; max-width: 700px;
+        }
+        .menu-item {
+            background: var(--card); border: 1px solid rgba(148, 163, 184, 0.1);
+            padding: 40px 20px; border-radius: 24px; text-decoration: none; color: var(--text);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; align-items: center; gap: 15px;
+            text-align: center;
+        }
+        .menu-item:hover { transform: translateY(-8px); border-color: var(--accent); }
+        .menu-item i { font-size: 2.5rem; }
+        .menu-item span { font-weight: 800; font-size: 1.2rem; }
+        .menu-item small { color: var(--secondary); font-size: 0.9rem; }
+
+        @media (max-width: 500px) { .menu-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
-<body>
-    <div class="container">
-        <nav class="nav"><a href="index.html">← Voltar para Hora Atual</a></nav>
-        <h1>Feriados Nacionais 2026</h1>
-        <p>Confira a lista oficial de feriados e planeje seus descansos.</p>
-        
-        <div id="holiday-list" class="loading">Consultando calendário oficial...</div>
-        
-        <footer style="margin-top: 40px; font-size: 0.8rem; opacity: 0.5;">
-            Dados fornecidos via BrasilAPI. Sincronizado com o calendário nacional.
-        </footer>
-    </div>
+<body data-theme="dark">
+
+    <a href="/" class="btn-home">🏠 Início</a>
+
+    <section class="hero">
+        <div class="label">Planejamento 2026</div>
+        <h1>Feriados</h1>
+    </section>
+
+    <nav class="menu-grid">
+        <a href="do-ano/" class="menu-item">
+            <i>📅</i>
+            <span>Feriados do Ano</span>
+            <small>Lista completa de feriados nacionais e pontos facultativos.</small>
+        </a>
+        <a href="feriadoes/" class="menu-item">
+            <i>🌴</i>
+            <span>Feriadões 2026</span>
+            <small>Datas que permitem emendar com o final de semana.</small>
+        </a>
+    </nav>
 
     <script>
-        async function getFeriados() {
-            try {
-                const ano = 2026;
-                const response = await fetch(`https://brasilapi.com.br/api/feriados/v1/${ano}`);
-                const feriados = await response.json();
-                
-                let html = '';
-                feriados.forEach(f => {
-                    const data = new Date(f.date + "T00:00:00");
-                    const dataFormatada = data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-                    const diaSemana = data.toLocaleDateString('pt-BR', { weekday: 'long' });
-                    
-                    html += `
-                        <div class="holiday-card">
-                            <div class="date">${dataFormatada}</div>
-                            <div class="name">
-                                <strong>${f.name}</strong><br>
-                                <span style="font-size: 0.9rem; opacity: 0.7;">${diaSemana}</span>
-                            </div>
-                        </div>`;
-                });
-                document.getElementById('holiday-list').innerHTML = html;
-                document.getElementById('holiday-list').classList.remove('loading');
-            } catch (error) {
-                document.getElementById('holiday-list').innerHTML = "Erro ao carregar feriados. Tente novamente mais tarde.";
-            }
+        // Sincronização de tema idêntica à página de contato
+        const savedTheme = localStorage.getItem('theme-pref-dataehora') || 'auto';
+        if (savedTheme === 'auto') {
+            const hora = new Date().getHours();
+            document.body.setAttribute('data-theme', (hora >= 6 && hora < 18) ? 'light' : 'dark');
+        } else {
+            document.body.setAttribute('data-theme', savedTheme);
         }
-        getFeriados();
     </script>
 </body>
 </html>
