@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário Técnico 2026 | ISO 8601 e Dia do Ano</title>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #10b981; } /* Verde para o técnico */
+        body { background: var(--bg); color: var(--text); font-family: 'Courier New', monospace; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--card); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #334155; }
+        th { background: rgba(16, 185, 129, 0.1); color: var(--accent); text-transform: uppercase; font-size: 0.8rem; }
+        tr:hover { background: rgba(255,255,255,0.02); }
+        .highlight { color: var(--accent); font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" style="color: var(--accent); text-decoration: none;">← Voltar</a>
+        <h1 style="color: var(--accent);">Dados Técnicos Temporais</h1>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Mês/Dia</th>
+                    <th>Semana (ISO)</th>
+                    <th>Dia do Ano</th>
+                    <th>Restam</th>
+                </tr>
+            </thead>
+            <tbody id="tech-data">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        function getISOWeek(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+        }
+
+        const tbody = document.getElementById('tech-data');
+        const hoje = new Date();
+        const fimDoAno = new Date(hoje.getFullYear(), 11, 31);
+
+        // Exibe os próximos 30 dias técnicos a partir de hoje
+        for(let i=0; i<30; i++) {
+            let d = new Date();
+            d.setDate(hoje.getDate() + i);
+            
+            const diaDoAno = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
+            const diasParaFim = Math.floor((fimDoAno - d) / 86400000);
+
+            tbody.innerHTML += `
+                <tr>
+                    <td>${d.toLocaleDateString('pt-BR')}</td>
+                    <td class="highlight">W${getISOWeek(d)}</td>
+                    <td>${diaDoAno}</td>
+                    <td>${diasParaFim} dias</td>
+                </tr>
+            `;
+        }
+    </script>
+</body>
+</html>
