@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diferença entre Datas | Calculadora Precisa | Data e Hora</title>
+    <style>
+        :root { 
+            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; 
+            --accent: #f59e0b; --secondary: #94a3b8; --border: rgba(148, 163, 184, 0.1);
+        }
+        [data-theme="light"] {
+            --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; 
+            --accent: #d97706; --secondary: #64748b; --border: rgba(0, 0, 0, 0.05);
+        }
+
+        body { 
+            background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; 
+            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; 
+            transition: background 0.5s ease; min-height: 100vh;
+        }
+
+        .nav-links { display: flex; gap: 10px; margin-bottom: 30px; }
+        .btn-nav {
+            padding: 8px 18px; border-radius: 50px; background: var(--card);
+            color: var(--text); text-decoration: none; font-size: 0.85rem;
+            border: 1px solid var(--border); transition: 0.2s;
+        }
+        .btn-nav:hover { border-color: var(--accent); color: var(--accent); }
+
+        .container { width: 100%; max-width: 500px; background: var(--card); padding: 35px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid var(--border); text-align: center; }
+        h1 { font-size: 1.8rem; margin-bottom: 25px; color: var(--accent); }
+
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; }
+        input[type="date"] {
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border);
+            background: var(--bg); color: var(--text); font-family: inherit; font-size: 1rem; box-sizing: border-box;
+        }
+
+        button {
+            width: 100%; padding: 15px; border-radius: 12px; border: none;
+            background: var(--accent); color: white; font-weight: 700; font-size: 1rem;
+            cursor: pointer; transition: 0.2s; margin-top: 10px;
+        }
+        button:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        .result-box {
+            margin-top: 30px; padding: 25px; background: rgba(245, 158, 11, 0.05);
+            border-radius: 20px; border: 1px dashed var(--accent); display: none;
+        }
+        .result-item { margin-bottom: 10px; font-size: 1.1rem; }
+        .result-item b { color: var(--accent); font-size: 1.4rem; }
+        .total-days { margin-top: 15px; font-size: 0.9rem; color: var(--secondary); border-top: 1px solid var(--border); padding-top: 15px; }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div class="nav-links">
+        <a href="/" class="btn-nav">🏠 Início</a>
+        <a href="../" class="btn-nav">🧮 Voltar</a>
+    </div>
+
+    <div class="container">
+        <h1>Diferença entre Datas</h1>
+        
+        <div class="form-group">
+            <label>Data Inicial</label>
+            <input type="date" id="date-start">
+        </div>
+
+        <div class="form-group">
+            <label>Data Final</label>
+            <input type="date" id="date-end">
+        </div>
+
+        <button onclick="calculateDifference()">Calcular Diferença</button>
+
+        <div id="result" class="result-box">
+            <div class="result-item"><b id="res-years">0</b> anos</div>
+            <div class="result-item"><b id="res-months">0</b> meses</div>
+            <div class="result-item"><b id="res-days">0</b> dias</div>
+            <div class="total-days">Total em dias: <span id="res-total-days">0</span></div>
+        </div>
+    </div>
+
+    <script>
+        function calculateDifference() {
+            const startStr = document.getElementById('date-start').value;
+            const endStr = document.getElementById('date-end').value;
+
+            if (!startStr || !endStr) {
+                alert("Por favor, selecione ambas as datas.");
+                return;
+            }
+
+            let start = new Date(startStr + "T00:00:00");
+            let end = new Date(endStr + "T00:00:00");
+
+            if (start > end) {
+                let temp = start;
+                start = end;
+                end = temp;
+            }
+
+            let years = end.getFullYear() - start.getFullYear();
+            let months = end.getMonth() - start.getMonth();
+            let days = end.getDate() - start.getDate();
+
+            if (days < 0) {
+                months--;
+                let lastMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            // Cálculo total de dias
+            const diffTime = Math.abs(end - start);
+            const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('res-years').textContent = years;
+            document.getElementById('res-months').textContent = months;
+            document.getElementById('res-days').textContent = days;
+            document.getElementById('res-total-days').textContent = totalDays.toLocaleString('pt-BR');
+        }
+
+        // Sincronização de tema
+        const savedTheme = localStorage.getItem('theme-pref-dataehora') || 'auto';
+        if (savedTheme === 'auto') {
+            const hora = new Date().getHours();
+            document.body.setAttribute('data-theme', (hora >= 6 && hora < 18) ? 'light' : 'dark');
+        } else {
+            document.body.setAttribute('data-theme', savedTheme);
+        }
+    </script>
+</body>
+</html>
