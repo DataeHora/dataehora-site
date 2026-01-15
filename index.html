@@ -7,12 +7,22 @@
     
     <script>
         (function() {
-            const saved = localStorage.getItem('theme-pref') || 'auto';
-            let isDark = saved === 'dark';
-            if (saved === 'auto') {
-                isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            function applyStoredTheme() {
+                const saved = localStorage.getItem('theme-pref') || 'default'; // Padrão agora é 'default'
+                const html = document.documentElement;
+                let isDark = false;
+
+                if (saved === 'default') {
+                    isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                } else if (saved === 'auto') {
+                    const hora = new Date().getHours();
+                    isDark = (hora < 6 || hora >= 18);
+                } else {
+                    isDark = (saved === 'dark');
+                }
+                html.setAttribute('data-theme', isDark ? 'dark' : 'light');
             }
-            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            applyStoredTheme();
         })();
     </script>
 
@@ -23,8 +33,6 @@
             --text-main: #0f172a;
             --text-muted: #64748b;
             --accent: #2563eb;
-            --switch-bg: #e2e8f0;
-            --slider: #ffffff;
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
 
@@ -34,8 +42,6 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --accent: #60a5fa;
-            --switch-bg: #1e293b;
-            --slider: #334155;
             --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
         }
 
@@ -50,125 +56,86 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
         }
 
-        /* --- SELETOR DE TEMA (Modelo Pílula) --- */
-        .theme-switch-wrapper {
-            margin-bottom: 40px;
-        }
-
-        .theme-switch {
-            position: relative;
-            display: flex;
-            background: var(--switch-bg);
-            border-radius: 16px;
-            padding: 5px;
-            width: 260px;
-            height: 48px;
-            user-select: none;
-        }
-
-        .theme-switch input { display: none; }
-
-        .theme-switch label {
-            flex: 1;
-            z-index: 2;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            font-weight: 600;
-            gap: 6px;
-            color: var(--text-muted);
-        }
-
-        .theme-switch input:checked + label { color: var(--text-main); }
-
-        .slider {
+        /* --- LOGO / HEADER --- */
+        .top-nav {
             position: absolute;
-            top: 5px;
-            left: 5px;
-            width: calc(33.33% - 7px);
-            height: calc(100% - 10px);
-            background: var(--slider);
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-            transition: transform 0.45s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-            z-index: 1;
+            top: 20px;
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
         }
 
-        #light:checked ~ .slider { transform: translateX(0); }
-        #auto:checked ~ .slider { transform: translateX(100%); }
-        #dark:checked ~ .slider { transform: translateX(200%); }
+        .logo-text {
+            font-weight: 800;
+            letter-spacing: -1px;
+            font-size: 1.2rem;
+            color: var(--accent);
+            text-decoration: none;
+        }
 
         /* --- RELÓGIO GIGANTE --- */
         .hero { text-align: center; margin-bottom: 60px; width: 100%; }
         .label-topo { 
-            text-transform: uppercase; font-size: 1rem;
+            text-transform: uppercase; font-size: 0.9rem;
             letter-spacing: 5px; color: var(--accent); margin-bottom: 20px; font-weight: 700;
         }
         #clock { 
-            font-size: clamp(4rem, 18vw, 12rem);
-            font-weight: 800; color: var(--text-main); letter-spacing: -4px; line-height: 0.9;
+            font-size: clamp(4.5rem, 18vw, 12rem);
+            font-weight: 800; color: var(--text-main); letter-spacing: -5px; line-height: 0.9;
             font-variant-numeric: tabular-nums;
         }
         #date { 
-            font-size: clamp(1rem, 4vw, 2.2rem);
+            font-size: clamp(1.1rem, 4vw, 2.2rem);
             margin-top: 20px; color: var(--text-muted); font-weight: 300; text-transform: capitalize;
         }
 
-        /* --- MENU --- */
+        /* --- MENU GRID --- */
         .menu-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px; width: 100%; max-width: 900px;
         }
         .menu-item {
             background: var(--bg-card); border: 1px solid rgba(148, 163, 184, 0.1);
-            padding: 30px; border-radius: 24px; text-decoration: none; color: var(--text-main);
-            transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 10px;
+            padding: 30px; border-radius: 28px; text-decoration: none; color: var(--text-main);
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; align-items: center; gap: 10px;
             box-shadow: var(--shadow);
         }
-        .menu-item:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .menu-item:hover { transform: translateY(-8px); border-color: var(--accent); }
         .menu-item span { font-weight: 700; font-size: 1.1rem; }
         .menu-item small { color: var(--text-muted); font-size: 0.8rem; }
         
-        .btn-contato {
-            margin-top: 60px; padding: 12px 30px; border-radius: 50px;
-            color: var(--text-muted); text-decoration: none; border: 1px solid var(--text-muted); font-size: 0.85rem;
-            transition: 0.3s;
+        .btn-settings {
+            margin-top: 60px; padding: 12px 25px; border-radius: 50px;
+            color: var(--text-muted); text-decoration: none; border: 1px solid var(--text-muted); 
+            font-size: 0.85rem; font-weight: 600; transition: 0.3s;
+            display: flex; align-items: center; gap: 8px;
         }
-        .btn-contato:hover { color: var(--accent); border-color: var(--accent); }
+        .btn-settings:hover { color: var(--accent); border-color: var(--accent); background: var(--bg-card); }
 
         @media (max-width: 600px) { 
             .menu-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-            #clock { font-size: 4.5rem; letter-spacing: -1px; }
-            .theme-switch { width: 100%; max-width: 320px; }
+            #clock { font-size: 4.8rem; letter-spacing: -2px; }
+            .top-nav { justify-content: center; }
         }
     </style>
 </head>
 <body>
 
-    <div class="theme-switch-wrapper">
-        <div class="theme-switch">
-            <input type="radio" name="theme" id="light" value="light">
-            <label for="light">☀️ <span>Dia</span></label>
-            
-            <input type="radio" name="theme" id="auto" value="auto">
-            <label for="auto">🌓 <span>Auto</span></label>
-            
-            <input type="radio" name="theme" id="dark" value="dark">
-            <label for="dark">🌙 <span>Noite</span></label>
-            
-            <div class="slider"></div>
-        </div>
+    <div class="top-nav">
+        <a href="/" class="logo-text">dataehora.com.br</a>
     </div>
 
     <section class="hero">
         <div class="label-topo">Horário Oficial de Brasília</div>
         <div id="clock">00:00:00</div>
-        <div id="date">Carregando...</div>
+        <div id="date">--:--</div>
     </section>
 
     <nav class="menu-grid">
@@ -178,10 +145,11 @@
         <a href="/calculadora/" class="menu-item"><span>🧮 Calculadoras</span><small>Dias Úteis</small></a>
     </nav>
 
-    <a href="/contato/" class="btn-contato">✉️ Contato / Sugestões</a>
+    <a href="/configuracoes/" class="btn-settings">
+        ⚙️ Configurações & Contato
+    </a>
 
     <script>
-        // Lógica do Relógio
         function updateClock() {
             const agora = new Date();
             const optH = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' };
@@ -189,45 +157,25 @@
             
             document.getElementById('clock').textContent = agora.toLocaleTimeString('pt-BR', optH);
             document.getElementById('date').textContent = agora.toLocaleDateString('pt-BR', optD);
-        }
 
-        // Lógica de Aplicação de Tema
-        function applyTheme(theme) {
-            const html = document.documentElement;
-            let themeToApply = theme;
-
-            if (theme === 'auto') {
-                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                themeToApply = isDark ? 'dark' : 'light';
+            // Re-checar o tema se estiver no modo 'auto' (solar) a cada minuto
+            const saved = localStorage.getItem('theme-pref') || 'default';
+            if (saved === 'auto' && agora.getSeconds() === 0) {
+                const hora = agora.getHours();
+                const isDark = (hora < 6 || hora >= 18);
+                document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
             }
-            
-            html.setAttribute('data-theme', themeToApply);
         }
-
-        const inputs = document.querySelectorAll('input[name="theme"]');
-        inputs.forEach(input => {
-            input.addEventListener('change', (e) => {
-                const theme = e.target.value;
-                localStorage.setItem('theme-pref', theme);
-                applyTheme(theme);
-            });
-        });
-
-        // Inicialização mantendo estado salvo
-        const savedTheme = localStorage.getItem('theme-pref') || 'auto';
-        const activeInput = document.getElementById(savedTheme);
-        if (activeInput) activeInput.checked = true;
-        applyTheme(savedTheme);
-
-        // Listener para mudanças no sistema (apenas se estiver em auto)
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-            if (localStorage.getItem('theme-pref') === 'auto' || !localStorage.getItem('theme-pref')) {
-                applyTheme('auto');
-            }
-        });
 
         setInterval(updateClock, 1000);
         updateClock();
+
+        // Escuta mudanças no sistema para o modo 'Padrão'
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (localStorage.getItem('theme-pref') === 'default' || !localStorage.getItem('theme-pref')) {
+                document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+            }
+        });
     </script>
 </body>
 </html>
