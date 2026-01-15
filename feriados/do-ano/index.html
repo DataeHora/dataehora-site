@@ -3,74 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Feriados | Data e Hora</title>
+    <title>Feriados Nacionais | dataehora.com.br</title>
+    
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme-pref') || 'default';
+            let isDark = false;
+            if (saved === 'default') isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            else if (saved === 'auto') { const h = new Date().getHours(); isDark = (h < 6 || h >= 18); }
+            else isDark = (saved === 'dark');
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        })();
+    </script>
+
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --border: rgba(148, 163, 184, 0.1); }
-        [data-theme="light"] { --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; --accent: #0284c7; --border: rgba(0, 0, 0, 0.05); }
-        body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        .nav-links { display: flex; gap: 10px; margin-bottom: 30px; }
-        .btn-nav { padding: 8px 18px; border-radius: 50px; background: var(--card); color: var(--text); text-decoration: none; font-size: 0.85rem; border: 1px solid var(--border); transition: 0.2s; }
-        .container { width: 100%; max-width: 800px; }
-        h1 { font-size: 2rem; text-align: center; margin-bottom: 5px; }
-        .sub-h1 { text-align: center; color: #94a3b8; margin-bottom: 40px; font-size: 1rem; }
-        .holiday-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 16px; overflow: hidden; }
-        .holiday-table th, .holiday-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); }
-        .holiday-table th { background: rgba(56, 189, 248, 0.1); color: var(--accent); font-size: 0.8rem; text-transform: uppercase; }
-        .holiday-date { font-weight: 600; color: var(--accent); }
-        .loader { border: 3px solid rgba(56, 189, 248, 0.2); border-left-color: var(--accent); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 50px auto; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        :root {
+            --bg-body: #f1f5f9; --bg-card: #ffffff; --text-main: #0f172a;
+            --text-muted: #64748b; --accent: #2563eb; --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --border: rgba(148, 163, 184, 0.15); --next-bg: #10b981; /* Verde esmeralda para o destaque */
+        }
+        [data-theme="dark"] {
+            --bg-body: #020617; --bg-card: #0f172a; --text-main: #f8fafc;
+            --text-muted: #94a3b8; --accent: #60a5fa; --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
+            --border: rgba(255, 255, 255, 0.05); --next-bg: #059669;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-body); color: var(--text-main);
+            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center;
+        }
+
+        .container { width: 100%; max-width: 700px; animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .header { margin: 30px 0 50px; text-align: left; }
+        .btn-voltar { text-decoration: none; color: var(--accent); font-weight: 700; font-size: 0.95rem; margin-bottom: 12px; display: block; transition: 0.2s; }
+        .btn-voltar:hover { opacity: 0.7; }
+        h1 { font-size: 2.5rem; margin: 0; letter-spacing: -1.5px; font-weight: 800; }
+
+        /* --- DESTAQUE PRÓXIMO (ESTILO GOV.UK MODERNO) --- */
+        #next-container { margin-bottom: 50px; }
+        .next-banner {
+            background: var(--next-bg); color: #ffffff;
+            padding: 45px 30px; border-radius: 32px; text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.2);
+        }
+        .next-banner .label { text-transform: uppercase; font-size: 0.85rem; font-weight: 700; opacity: 0.9; letter-spacing: 2px; display: block; margin-bottom: 15px; }
+        .next-banner .date { font-size: 3.5rem; font-weight: 900; margin: 0; display: block; letter-spacing: -2px; line-height: 1; }
+        .next-banner .name { font-size: 1.8rem; font-weight: 700; margin-top: 10px; display: block; }
+
+        /* --- LISTA HARMONIOSA --- */
+        .year-divider { 
+            font-size: 1.1rem; font-weight: 900; color: var(--text-main); 
+            padding: 50px 0 15px; border-bottom: 3px solid var(--accent);
+            margin-bottom: 15px; letter-spacing: -0.5px;
+        }
+
+        .holiday-row {
+            display: flex; align-items: center; padding: 20px 10px;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        .holiday-row:hover { background: var(--bg-card); border-radius: 12px; border-color: transparent; transform: scale(1.01); }
+        .holiday-row.past { opacity: 0.35; filter: grayscale(1); }
+
+        .col-date { min-width: 100px; font-weight: 800; font-size: 1.2rem; color: var(--text-main); }
+        .col-weekday { min-width: 150px; font-size: 1.1rem; font-weight: 500; color: var(--text-muted); }
+        .col-name { flex-grow: 1; font-weight: 700; text-align: right; font-size: 1.15rem; color: var(--accent); }
+
+        footer { text-align: center; padding: 80px 0; color: var(--text-muted); font-size: 0.9rem; font-weight: 600; }
+
+        @media (max-width: 600px) {
+            .next-banner .date { font-size: 2.8rem; }
+            .next-banner .name { font-size: 1.4rem; }
+            .col-weekday { display: none; }
+            .col-date { min-width: 80px; font-size: 1.1rem; }
+            .col-name { font-size: 1rem; }
+            h1 { font-size: 2rem; }
+        }
     </style>
 </head>
-<body data-theme="dark">
-    <div class="nav-links">
-        <a href="/" class="btn-nav">🏠 Início</a>
-        <a href="../" class="btn-nav">📅 Voltar</a>
-    </div>
+<body>
 
     <div class="container">
-        <h1 id="main-h1">Feriados Nacionais</h1>
-        <p class="sub-h1" id="sub-year">Carregando calendário oficial...</p>
-        
-        <div id="loader" class="loader"></div>
-        <table class="holiday-table" id="table" style="display: none;">
-            <thead><tr><th>Data</th><th>Nome do Feriado</th><th>Dia da Semana</th></tr></thead>
-            <tbody id="list"></tbody>
-        </table>
+        <header class="header">
+            <a href="/" class="btn-voltar">← Início</a>
+            <h1>Calendário de Feriados</h1>
+        </header>
+
+        <div id="next-container"></div>
+        <div id="calendar-content"></div>
+
+        <footer>dataehora.com.br</footer>
     </div>
 
     <script>
-        async function loadHolidays() {
-            const year = new Date().getFullYear();
-            document.getElementById('page-title').textContent = `Feriados Nacionais ${year} | Data e Hora`;
-            document.getElementById('main-h1').textContent = `Feriados Nacionais ${year}`;
-            
-            try {
-                const res = await fetch(`https://brasilapi.com.br/api/feriados/v1/${year}`);
-                const data = await res.json();
-                const list = document.getElementById('list');
-                
-                data.forEach(h => {
-                    const d = new Date(h.date + "T00:00:00");
-                    const row = `<tr>
-                        <td class="holiday-date">${d.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'})}</td>
-                        <td>${h.name}</td>
-                        <td style="text-transform: capitalize; color: #94a3b8">${d.toLocaleDateString('pt-BR', {weekday:'long'})}</td>
-                    </tr>`;
-                    list.innerHTML += row;
-                });
-                
-                document.getElementById('loader').style.display = 'none';
-                document.getElementById('table').style.display = 'table';
-                document.getElementById('sub-year').textContent = `Lista oficial de feriados e pontos facultativos em ${year}`;
-            } catch (e) { document.getElementById('sub-year').textContent = "Erro ao carregar dados."; }
+        function getHolidays(year) {
+            const h = [
+                { d: 1, m: 0, n: "Ano Novo" },
+                { d: 21, m: 3, n: "Tiradentes" },
+                { d: 1, m: 4, n: "Dia do Trabalho" },
+                { d: 7, m: 8, n: "Independência do Brasil" },
+                { d: 12, m: 9, n: "Nossa Sra. Aparecida" },
+                { d: 2, m: 10, n: "Finados" },
+                { d: 15, m: 10, n: "Proclamação da República" },
+                { d: 20, m: 10, n: "Consciência Negra" },
+                { d: 25, m: 11, n: "Natal" }
+            ];
+
+            // Cálculo da Páscoa (Algoritmo de Meeus/Jones/Butcher)
+            const a = year % 19, b = Math.floor(year / 100), c = year % 100,
+                  d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25),
+                  g = Math.floor((b - f + 1) / 3), h_val = (19 * a + b - d - g + 15) % 30,
+                  i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h_val - k) % 7,
+                  m = Math.floor((a + 11 * h_val + 22 * l) / 451);
+            const month = Math.floor((h_val + l - 7 * m + 114) / 31) - 1;
+            const day = ((h_val + l - 7 * m + 114) % 31) + 1;
+            const easter = new Date(year, month, day);
+
+            const addM = (offset, name) => {
+                const date = new Date(easter);
+                date.setDate(easter.getDate() + offset);
+                h.push({ d: date.getDate(), m: date.getMonth(), n: name });
+            };
+
+            addM(-47, "Carnaval");
+            addM(-2, "Sexta-feira Santa");
+            addM(60, "Corpus Christi");
+
+            return h.map(x => {
+                const dt = new Date(year, x.m, x.d);
+                return { ...x, dt, week: dt.toLocaleDateString('pt-BR', { weekday: 'long' }) };
+            }).sort((a, b) => a.dt - b.dt);
         }
 
-        const savedTheme = localStorage.getItem('theme-pref-dataehora') || 'auto';
-        if (savedTheme === 'auto') {
-            const h = new Date().getHours();
-            document.body.setAttribute('data-theme', (h >= 6 && h < 18) ? 'light' : 'dark');
-        } else { document.body.setAttribute('data-theme', savedTheme); }
-        loadHolidays();
+        function render() {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const container = document.getElementById('calendar-content');
+            let nextFound = false;
+
+            for (let y = currentYear; y <= currentYear + 2; y++) {
+                const yearDiv = document.createElement('div');
+                yearDiv.className = 'year-divider';
+                yearDiv.textContent = y;
+                container.appendChild(yearDiv);
+
+                getHolidays(y).forEach(f => {
+                    const isPast = f.dt < new Date().setHours(0,0,0,0);
+                    
+                    if (!nextFound && !isPast) {
+                        renderNext(f);
+                        nextFound = true;
+                    }
+
+                    const row = document.createElement('div');
+                    row.className = `holiday-row ${isPast ? 'past' : ''}`;
+                    row.innerHTML = `
+                        <div class="col-date">${f.d} ${f.dt.toLocaleDateString('pt-BR', {month: 'short'}).replace('.','')}</div>
+                        <div class="col-weekday">${f.week.charAt(0).toUpperCase() + f.week.slice(1)}</div>
+                        <div class="col-name">${f.n}</div>
+                    `;
+                    container.appendChild(row);
+                });
+            }
+        }
+
+        function renderNext(f) {
+            const nextCont = document.getElementById('next-container');
+            nextCont.innerHTML = `
+                <div class="next-banner">
+                    <span class="label">O próximo feriado é em</span>
+                    <span class="date">${f.d} de ${f.dt.toLocaleDateString('pt-BR', {month: 'long'})}</span>
+                    <span class="name">${f.n}</span>
+                </div>
+            `;
+        }
+
+        render();
     </script>
 </body>
 </html>
