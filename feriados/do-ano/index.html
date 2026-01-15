@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feriados Nacionais | dataehora.com.br</title>
+    <title>Calendário de Feriados | dataehora.com.br</title>
     
     <script>
         (function() {
@@ -20,12 +20,15 @@
         :root {
             --bg-body: #f1f5f9; --bg-card: #ffffff; --text-main: #0f172a;
             --text-muted: #64748b; --accent: #2563eb; --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-            --border: rgba(148, 163, 184, 0.15); --next-bg: #10b981; /* Verde esmeralda para o destaque */
+            --border: rgba(148, 163, 184, 0.15); --next-bg: #10b981;
+            /* Cores dos Anos */
+            --y2026: #2563eb; --y2027: #7c3aed; --y2028: #0891b2;
         }
         [data-theme="dark"] {
             --bg-body: #020617; --bg-card: #0f172a; --text-main: #f8fafc;
             --text-muted: #94a3b8; --accent: #60a5fa; --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
             --border: rgba(255, 255, 255, 0.05); --next-bg: #059669;
+            --y2026: #60a5fa; --y2027: #a78bfa; --y2028: #22d3ee;
         }
 
         body {
@@ -34,52 +37,64 @@
             margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center;
         }
 
-        .container { width: 100%; max-width: 700px; animation: fadeIn 0.5s ease-out; }
+        .container { width: 100%; max-width: 750px; animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .header { margin: 30px 0 50px; text-align: left; }
-        .btn-voltar { text-decoration: none; color: var(--accent); font-weight: 700; font-size: 0.95rem; margin-bottom: 12px; display: block; transition: 0.2s; }
-        .btn-voltar:hover { opacity: 0.7; }
-        h1 { font-size: 2.5rem; margin: 0; letter-spacing: -1.5px; font-weight: 800; }
+        /* Breadcrumb Nível 3 */
+        .nav-header { display: flex; gap: 12px; margin: 20px 0 30px 0; align-items: center; }
+        .nav-link { text-decoration: none; font-weight: 700; font-size: 0.85rem; color: var(--accent); }
+        .nav-sep { color: var(--text-muted); font-size: 0.8rem; }
 
-        /* --- DESTAQUE PRÓXIMO (ESTILO GOV.UK MODERNO) --- */
-        #next-container { margin-bottom: 50px; }
+        .header { margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; margin: 0; letter-spacing: -2px; font-weight: 900; }
+        .subtitle { color: var(--text-muted); font-size: 1.1rem; margin-top: 5px; }
+
+        /* Banner Destaque */
+        #next-container { margin-bottom: 60px; }
         .next-banner {
             background: var(--next-bg); color: #ffffff;
-            padding: 45px 30px; border-radius: 32px; text-align: center;
+            padding: 40px 30px; border-radius: 32px; text-align: center;
             box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.2);
         }
-        .next-banner .label { text-transform: uppercase; font-size: 0.85rem; font-weight: 700; opacity: 0.9; letter-spacing: 2px; display: block; margin-bottom: 15px; }
-        .next-banner .date { font-size: 3.5rem; font-weight: 900; margin: 0; display: block; letter-spacing: -2px; line-height: 1; }
-        .next-banner .name { font-size: 1.8rem; font-weight: 700; margin-top: 10px; display: block; }
+        .next-banner .label { text-transform: uppercase; font-size: 0.8rem; font-weight: 800; opacity: 0.9; letter-spacing: 2px; display: block; margin-bottom: 12px; }
+        .next-banner .date { font-size: 3rem; font-weight: 900; margin: 0; display: block; letter-spacing: -2px; line-height: 1; }
+        .next-banner .name { font-size: 1.6rem; font-weight: 700; margin-top: 10px; display: block; opacity: 0.95; }
 
-        /* --- LISTA HARMONIOSA --- */
+        /* Divisores de Ano Estilizados */
+        .year-section { margin-top: 60px; }
         .year-divider { 
-            font-size: 1.1rem; font-weight: 900; color: var(--text-main); 
-            padding: 50px 0 15px; border-bottom: 3px solid var(--accent);
-            margin-bottom: 15px; letter-spacing: -0.5px;
+            font-size: 3.5rem; font-weight: 900; margin-bottom: 25px; 
+            letter-spacing: -3px; display: flex; align-items: center; gap: 20px;
         }
+        .year-divider::after { content: ''; flex-grow: 1; height: 5px; border-radius: 3px; opacity: 0.2; }
 
+        /* Cores por Ano */
+        .y-2026 .year-divider { color: var(--y2026); } .y-2026 .year-divider::after { background: var(--y2026); }
+        .y-2027 .year-divider { color: var(--y2027); } .y-2027 .year-divider::after { background: var(--y2027); }
+        .y-2028 .year-divider { color: var(--y2028); } .y-2028 .year-divider::after { background: var(--y2028); }
+
+        /* Linhas da Lista */
         .holiday-row {
-            display: flex; align-items: center; padding: 20px 10px;
-            border-bottom: 1px solid var(--border);
-            transition: all 0.2s;
+            display: grid; grid-template-columns: 120px 160px 1fr; align-items: center;
+            padding: 18px 15px; border-bottom: 1px solid var(--border);
+            transition: 0.2s;
         }
-        .holiday-row:hover { background: var(--bg-card); border-radius: 12px; border-color: transparent; transform: scale(1.01); }
+        .holiday-row:hover { background: var(--bg-card); border-radius: 16px; transform: translateX(5px); border-color: transparent; }
         .holiday-row.past { opacity: 0.35; filter: grayscale(1); }
 
-        .col-date { min-width: 100px; font-weight: 800; font-size: 1.2rem; color: var(--text-main); }
-        .col-weekday { min-width: 150px; font-size: 1.1rem; font-weight: 500; color: var(--text-muted); }
-        .col-name { flex-grow: 1; font-weight: 700; text-align: right; font-size: 1.15rem; color: var(--accent); }
+        .col-date { font-weight: 900; font-size: 1.25rem; }
+        /* A cor da data será injetada via JS conforme o ano */
+        
+        .col-weekday { font-size: 1rem; font-weight: 600; color: var(--text-muted); text-transform: capitalize; }
+        .col-name { font-weight: 800; text-align: right; font-size: 1.1rem; color: var(--text-main); }
 
-        footer { text-align: center; padding: 80px 0; color: var(--text-muted); font-size: 0.9rem; font-weight: 600; }
+        footer { text-align: center; padding: 100px 0; color: var(--text-muted); font-size: 0.9rem; font-weight: 700; }
 
-        @media (max-width: 600px) {
-            .next-banner .date { font-size: 2.8rem; }
-            .next-banner .name { font-size: 1.4rem; }
+        @media (max-width: 650px) {
+            .holiday-row { grid-template-columns: 100px 1fr; }
             .col-weekday { display: none; }
-            .col-date { min-width: 80px; font-size: 1.1rem; }
-            .col-name { font-size: 1rem; }
+            .year-divider { font-size: 2.5rem; }
+            .next-banner .date { font-size: 2.2rem; }
             h1 { font-size: 2rem; }
         }
     </style>
@@ -87,9 +102,17 @@
 <body>
 
     <div class="container">
+        <nav class="nav-header">
+            <a href="/" class="nav-link">Início</a>
+            <span class="nav-sep">/</span>
+            <a href="/feriados" class="nav-link">Feriados</a>
+            <span class="nav-sep">/</span>
+            <span style="color: var(--text-muted); font-weight: 800; font-size: 0.85rem;">Calendário</span>
+        </nav>
+
         <header class="header">
-            <a href="/" class="btn-voltar">← Início</a>
             <h1>Calendário de Feriados</h1>
+            <p class="subtitle">Lista oficial de feriados nacionais e pontos facultativos.</p>
         </header>
 
         <div id="next-container"></div>
@@ -112,7 +135,6 @@
                 { d: 25, m: 11, n: "Natal" }
             ];
 
-            // Cálculo da Páscoa (Algoritmo de Meeus/Jones/Butcher)
             const a = year % 19, b = Math.floor(year / 100), c = year % 100,
                   d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25),
                   g = Math.floor((b - f + 1) / 3), h_val = (19 * a + b - d - g + 15) % 30,
@@ -145,10 +167,13 @@
             let nextFound = false;
 
             for (let y = currentYear; y <= currentYear + 2; y++) {
+                const yearSection = document.createElement('div');
+                yearSection.className = `year-section y-${y}`;
+                
                 const yearDiv = document.createElement('div');
                 yearDiv.className = 'year-divider';
                 yearDiv.textContent = y;
-                container.appendChild(yearDiv);
+                yearSection.appendChild(yearDiv);
 
                 getHolidays(y).forEach(f => {
                     const isPast = f.dt < new Date().setHours(0,0,0,0);
@@ -160,13 +185,19 @@
 
                     const row = document.createElement('div');
                     row.className = `holiday-row ${isPast ? 'past' : ''}`;
+                    
+                    // Cor dinâmica da data baseada no ano
+                    const dateColor = `var(--y${y})`;
+                    const mesAbrev = f.dt.toLocaleDateString('pt-BR', {month: 'short'}).replace('.','');
+
                     row.innerHTML = `
-                        <div class="col-date">${f.d} ${f.dt.toLocaleDateString('pt-BR', {month: 'short'}).replace('.','')}</div>
-                        <div class="col-weekday">${f.week.charAt(0).toUpperCase() + f.week.slice(1)}</div>
+                        <div class="col-date" style="color: ${dateColor}">${f.d} ${mesAbrev}</div>
+                        <div class="col-weekday">${f.week.split('-')[0]}</div>
                         <div class="col-name">${f.n}</div>
                     `;
-                    container.appendChild(row);
+                    yearSection.appendChild(row);
                 });
+                container.appendChild(yearSection);
             }
         }
 
@@ -174,7 +205,7 @@
             const nextCont = document.getElementById('next-container');
             nextCont.innerHTML = `
                 <div class="next-banner">
-                    <span class="label">O próximo feriado é em</span>
+                    <span class="label">Próximo Feriado</span>
                     <span class="date">${f.d} de ${f.dt.toLocaleDateString('pt-BR', {month: 'long'})}</span>
                     <span class="name">${f.n}</span>
                 </div>
