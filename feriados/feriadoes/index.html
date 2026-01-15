@@ -3,72 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feriadões e Pontes | Data e Hora</title>
+    <title>Feriadões e Emendas | dataehora.com.br</title>
+    
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme-pref') || 'default';
+            let isDark = false;
+            if (saved === 'default') isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            else if (saved === 'auto') { const h = new Date().getHours(); isDark = (h < 6 || h >= 18); }
+            else isDark = (saved === 'dark');
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        })();
+    </script>
+
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --border: rgba(148, 163, 184, 0.1); }
-        [data-theme="light"] { --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; --accent: #0284c7; --border: rgba(0, 0, 0, 0.05); }
-        body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        .container { width: 100%; max-width: 600px; }
-        .nav-links { display: flex; gap: 10px; margin-bottom: 30px; }
-        .btn-nav { padding: 8px 18px; border-radius: 50px; background: var(--card); color: var(--text); text-decoration: none; font-size: 0.85rem; border: 1px solid var(--border); }
-        h1 { text-align: center; color: var(--accent); margin-bottom: 10px; }
-        .desc { text-align: center; color: #94a3b8; margin-bottom: 40px; }
-        .bridge-card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px; border-left: 5px solid var(--accent); display: flex; justify-content: space-between; align-items: center; }
-        .bridge-info h3 { margin: 0; font-size: 1.1rem; }
-        .bridge-info p { margin: 5px 0 0 0; color: #94a3b8; font-size: 0.9rem; }
-        .badge { background: rgba(56, 189, 248, 0.1); color: var(--accent); padding: 5px 12px; border-radius: 10px; font-weight: 700; font-size: 0.8rem; }
-        .loader { border: 3px solid rgba(56, 189, 248, 0.2); border-left-color: var(--accent); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 50px auto; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        :root {
+            --bg-body: #f1f5f9; --bg-card: #ffffff; --text-main: #0f172a;
+            --text-muted: #64748b; --accent: #2563eb; --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --border: rgba(148, 163, 184, 0.15);
+            --color-prolongado: #10b981; --color-emenda: #f59e0b;
+            
+            /* Cores de Identidade por Ano */
+            --y2026: #2563eb; --y2027: #7c3aed; --y2028: #0891b2;
+        }
+        [data-theme="dark"] {
+            --bg-body: #020617; --bg-card: #0f172a; --text-main: #f8fafc;
+            --text-muted: #94a3b8; --accent: #60a5fa; --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
+            --border: rgba(255, 255, 255, 0.05);
+            --y2026: #60a5fa; --y2027: #a78bfa; --y2028: #22d3ee;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-body); color: var(--text-main);
+            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center;
+        }
+
+        .container { width: 100%; max-width: 750px; }
+        
+        /* Navegação Nível 3 */
+        .nav-header { display: flex; gap: 12px; margin: 20px 0 30px 0; align-items: center; }
+        .nav-link { text-decoration: none; font-weight: 700; font-size: 0.85rem; color: var(--accent); }
+        .nav-sep { color: var(--text-muted); font-size: 0.8rem; }
+
+        .header { margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; margin: 0; letter-spacing: -2px; font-weight: 900; }
+        .subtitle { color: var(--text-muted); font-size: 1.1rem; margin-top: 5px; font-weight: 500; }
+
+        /* Blocos de Ano */
+        .year-group { margin-top: 80px; }
+        .year-title { 
+            font-size: 4rem; font-weight: 900; margin-bottom: 25px; 
+            letter-spacing: -4px; display: flex; align-items: center; gap: 20px;
+        }
+        .year-title::after { content: ''; flex-grow: 1; height: 6px; border-radius: 3px; opacity: 0.15; }
+
+        /* Herança de Cor Dinâmica */
+        .y-2026 .year-title, .y-2026 .month-label, .y-2026 .info-date { color: var(--y2026); }
+        .y-2026 .year-title::after { background: var(--y2026); }
+
+        .y-2027 .year-title, .y-2027 .month-label, .y-2027 .info-date { color: var(--y2027); }
+        .y-2027 .year-title::after { background: var(--y2027); }
+
+        .y-2028 .year-title, .y-2028 .month-label, .y-2028 .info-date { color: var(--y2028); }
+        .y-2028 .year-title::after { background: var(--y2028); }
+
+        /* Meses */
+        .month-group { margin-bottom: 40px; }
+        .month-label { 
+            font-size: 0.9rem; font-weight: 900; text-transform: uppercase; 
+            letter-spacing: 3px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px;
+        }
+        .month-label::after { content: ''; flex-grow: 1; height: 1px; background: currentColor; opacity: 0.2; }
+
+        /* Cards */
+        .trip-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 24px; padding: 25px 30px; margin-bottom: 15px;
+            display: grid; grid-template-columns: 1fr auto; align-items: center;
+            box-shadow: var(--shadow); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .trip-card:hover { transform: scale(1.02); border-color: currentColor; }
+        .trip-card.past { opacity: 0.35; filter: grayscale(1); transform: none !important; }
+
+        .info-main { 
+            display: flex; flex-wrap: wrap; align-items: center; 
+            gap: 12px; font-size: 1.4rem; font-weight: 900; line-height: 1.1; margin-bottom: 12px;
+        }
+        .info-week { color: var(--text-muted); opacity: 0.8; }
+
+        .badge-area { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .badge { 
+            padding: 6px 14px; border-radius: 10px; font-size: 0.75rem; 
+            font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .prolongado { background: #10b98115; color: var(--color-prolongado); }
+        .emenda { background: #f59e0b15; color: var(--color-emenda); }
+        .desc-folga { font-size: 0.9rem; font-weight: 700; color: var(--text-muted); }
+
+        /* Contador Lateral */
+        .trip-counter { 
+            text-align: center; padding-left: 30px; border-left: 2px solid var(--border);
+            min-width: 90px;
+        }
+        .days-val { font-size: 2.8rem; font-weight: 900; line-height: 1; display: block; }
+        .days-lbl { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; display: block; }
+
+        footer { text-align: center; padding: 100px 0; color: var(--text-muted); font-size: 0.9rem; font-weight: 700; }
+
+        @media (max-width: 650px) {
+            .info-main { font-size: 1.2rem; }
+            .trip-card { padding: 22px; grid-template-columns: 1fr; }
+            .trip-counter { border-left: none; border-top: 2px solid var(--border); padding: 20px 0 0 0; margin-top: 20px; display: flex; align-items: baseline; gap: 10px; justify-content: center; }
+            .year-title { font-size: 3rem; }
+        }
     </style>
 </head>
-<body data-theme="dark">
-    <div class="nav-links">
-        <a href="/" class="btn-nav">🏠 Início</a>
-        <a href="../" class="btn-nav">📅 Voltar</a>
-    </div>
+<body>
 
     <div class="container">
-        <h1 id="title">Feriadões</h1>
-        <p class="desc">Feriados que permitem emendar ou criar fins de semana prolongados.</p>
-        <div id="loader" class="loader"></div>
-        <div id="results"></div>
+        <nav class="nav-header">
+            <a href="/" class="nav-link">Início</a>
+            <span class="nav-sep">/</span>
+            <a href="/feriados" class="nav-link">Feriados</a>
+            <span class="nav-sep">/</span>
+            <span style="color: var(--text-muted); font-weight: 800; font-size: 0.85rem;">Planejador</span>
+        </nav>
+
+        <header class="header">
+            <h1>Feriadões & Emendas</h1>
+            <p class="subtitle">Seu guia estratégico para os próximos 3 anos.</p>
+        </header>
+
+        <div id="planner-list"></div>
+
+        <footer>dataehora.com.br</footer>
     </div>
 
     <script>
-        async function checkBridges() {
-            const year = new Date().getFullYear();
-            document.getElementById('title').textContent = `Feriadões ${year}`;
-            try {
-                const res = await fetch(`https://brasilapi.com.br/api/feriados/v1/${year}`);
-                const holidays = await res.json();
-                const container = document.getElementById('results');
-                
-                holidays.forEach(h => {
-                    const d = new Date(h.date + "T00:00:00");
-                    const dayOfWeek = d.getDay(); // 0 Dom, 1 Seg, 2 Ter, 4 Qui, 5 Sex, 6 Sab
-                    
-                    let status = "";
-                    if (dayOfWeek === 1 || dayOfWeek === 5) status = "Fim de Semana Prolongado";
-                    else if (dayOfWeek === 2 || dayOfWeek === 4) status = "Possibilidade de Ponte";
-                    
-                    if (status !== "") {
-                        container.innerHTML += `
-                            <div class="bridge-card">
-                                <div class="bridge-info">
-                                    <h3>${h.name}</h3>
-                                    <p>${d.toLocaleDateString('pt-BR', {day:'2-digit', month:'long'})} • ${d.toLocaleDateString('pt-BR', {weekday:'long'})}</p>
-                                </div>
-                                <div class="badge">${status}</div>
-                            </div>`;
-                    }
-                });
-                document.getElementById('loader').style.display = 'none';
-            } catch (e) { console.error(e); }
+        const mesesNomes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+        function getFeriadoes(ano) {
+            const h = [
+                { d: 1, m: 0, n: "Ano Novo" }, { d: 21, m: 3, n: "Tiradentes" },
+                { d: 1, m: 4, n: "Dia do Trabalho" }, { d: 7, m: 8, n: "Independência" },
+                { d: 12, m: 9, n: "Nossa Sra. Aparecida" }, { d: 2, m: 10, n: "Finados" },
+                { d: 15, m: 10, n: "Proclamação da República" }, { d: 20, m: 10, n: "Consciência Negra" },
+                { d: 25, m: 11, n: "Natal" }
+            ];
+
+            const a = ano % 19, b = Math.floor(ano / 100), c = ano % 100,
+                  d = Math.floor(b / 4), e = b % 4, g = Math.floor((8 * b + 13) / 25),
+                  hv = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4,
+                  l = (32 + 2 * e + 2 * i - hv - k) % 7, m = Math.floor((a + 11 * hv + 19 * l) / 433);
+            const mp = Math.floor((hv + l - 7 * m + 90) / 25) - 1;
+            const dp = (hv + l - 7 * m + 33 * (mp + 1) + 19) % 32;
+            const pascoa = new Date(ano, mp, dp);
+
+            const addM = (off, name) => {
+                const dt = new Date(pascoa); dt.setDate(pascoa.getDate() + off);
+                h.push({ d: dt.getDate(), m: dt.getMonth(), n: name });
+            };
+            addM(-47, "Carnaval"); addM(-2, "Sexta-feira Santa"); addM(60, "Corpus Christi");
+
+            return h.map(x => {
+                const dt = new Date(ano, x.m, x.d);
+                const ds = dt.getDay(); 
+                let tipo = "", dias = 0, resumo = "", sem = dt.toLocaleDateString('pt-BR', {weekday: 'long'});
+                if (ds === 1 || ds === 5) { tipo = "prolongado"; dias = 3; resumo = ds === 1 ? "Sáb a Seg" : "Sex a Dom"; }
+                else if (ds === 2 || ds === 4) { tipo = "emenda"; dias = 4; resumo = ds === 2 ? "Sáb a Ter" : "Qui a Dom"; }
+                return { ...x, dt, tipo, dias, resumo, sem: sem.split('-')[0] };
+            }).filter(f => f.dias > 0).sort((a, b) => a.dt - b.dt);
         }
 
-        const savedTheme = localStorage.getItem('theme-pref-dataehora') || 'auto';
-        document.body.setAttribute('data-theme', savedTheme === 'auto' ? (new Date().getHours() >= 6 && new Date().getHours() < 18 ? 'light' : 'dark') : savedTheme);
-        checkBridges();
+        function render() {
+            const now = new Date();
+            const list = document.getElementById('planner-list');
+
+            for (let y = now.getFullYear(); y <= now.getFullYear() + 2; y++) {
+                const yearSection = document.createElement('div');
+                yearSection.className = `year-group y-${y}`;
+                yearSection.innerHTML = `<div class="year-title">${y}</div>`;
+
+                const data = getFeriadoes(y);
+                let currentM = -1;
+                let mGroup;
+
+                data.forEach(f => {
+                    if (f.m !== currentM) {
+                        currentM = f.m;
+                        mGroup = document.createElement('div');
+                        mGroup.className = 'month-group';
+                        mGroup.innerHTML = `<div class="month-label">${mesesNomes[currentM]}</div>`;
+                        yearSection.appendChild(mGroup);
+                    }
+
+                    const isPast = f.dt < new Date().setHours(0,0,0,0);
+                    const colorDestaque = f.tipo === 'prolongado' ? 'var(--color-prolongado)' : 'var(--color-emenda)';
+
+                    mGroup.innerHTML += `
+                        <div class="trip-card ${isPast ? 'past' : ''}">
+                            <div class="trip-content">
+                                <div class="info-main">
+                                    <span class="info-date">${f.d} ${mesesNomes[f.m].substring(0,3)}</span>
+                                    <span class="info-week">${f.sem}</span>
+                                    <span class="info-name">${f.n}</span>
+                                </div>
+                                <div class="badge-area">
+                                    <span class="badge ${f.tipo}">${f.tipo === 'emenda' ? '⚡ Emenda' : '✅ Prolongado'}</span>
+                                    <span class="desc-folga">${f.resumo}</span>
+                                </div>
+                            </div>
+                            <div class="trip-counter" style="color: ${colorDestaque}">
+                                <span class="days-val">${f.dias}</span>
+                                <span class="days-lbl">Dias</span>
+                            </div>
+                        </div>`;
+                });
+                list.appendChild(yearSection);
+            }
+        }
+        render();
     </script>
 </body>
 </html>
