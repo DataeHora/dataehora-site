@@ -3,91 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadoras de Datas e Prazos | Data e Hora</title>
+    <title>Calculadoras de Tempo | dataehora.com.br</title>
+    
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme-pref') || 'default';
+            let isDark = false;
+            if (saved === 'default') isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            else if (saved === 'auto') { const h = new Date().getHours(); isDark = (h < 6 || h >= 18); }
+            else isDark = (saved === 'dark');
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        })();
+    </script>
+
     <style>
-        :root { 
-            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; 
-            --accent: #f59e0b; /* Âmbar/Laranja para Calculadoras (Remete a alerta/precisão) */
-            --secondary: #94a3b8; 
+        :root {
+            --bg-body: #f1f5f9; --bg-card: #ffffff; --text-main: #0f172a;
+            --text-muted: #64748b; --accent: #059669; /* Verde para Calculadoras */
+            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --border: rgba(148, 163, 184, 0.2);
+            --color-uteis: #059669; --color-dif: #2563eb; --color-soma: #d97706;
         }
-        [data-theme="light"] {
-            --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; 
-            --accent: #d97706; --secondary: #64748b; 
-        }
-
-        body { 
-            background: var(--bg); color: var(--text); 
-            font-family: system-ui, -apple-system, sans-serif; 
-            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; 
-            transition: background 0.5s ease; min-height: 100vh;
+        [data-theme="dark"] {
+            --bg-body: #020617; --bg-card: #0f172a; --text-main: #f8fafc;
+            --text-muted: #94a3b8; --accent: #10b981; --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
+            --border: rgba(255, 255, 255, 0.05);
         }
 
-        .btn-home {
-            margin-top: 20px; margin-bottom: 40px; padding: 10px 25px; border-radius: 50px;
-            background: rgba(148, 163, 184, 0.1); color: var(--text);
-            text-decoration: none; font-weight: 600; font-size: 0.85rem;
-            border: 1px solid rgba(148, 163, 184, 0.2); transition: 0.2s;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-body); color: var(--text-main);
+            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
         }
-        .btn-home:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
 
-        .hero { text-align: center; margin-bottom: 50px; }
-        .label { text-transform: uppercase; font-size: 1rem; letter-spacing: 3px; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
-        h1 { font-size: 2.5rem; margin: 0; }
+        .container { width: 100%; max-width: 700px; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .menu-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px; width: 100%; max-width: 800px;
+        /* Navegação Nível 2 */
+        .nav-header { display: flex; gap: 12px; margin: 20px 0 30px 0; align-items: center; }
+        .nav-link { text-decoration: none; font-weight: 700; font-size: 0.85rem; color: var(--accent); }
+        .nav-sep { color: var(--text-muted); font-size: 0.8rem; }
+
+        .header { margin-bottom: 50px; text-align: left; }
+        h1 { font-size: 2.8rem; margin: 0; letter-spacing: -2px; font-weight: 900; line-height: 1; }
+        .subtitle { color: var(--text-muted); font-size: 1.2rem; margin-top: 10px; font-weight: 500; }
+
+        /* Grid de Calculadoras */
+        .hub-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+
+        .hub-card {
+            background: var(--bg-card); border: 2px solid var(--border);
+            border-radius: 28px; padding: 35px; text-decoration: none;
+            display: flex; flex-direction: column; gap: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .menu-item {
-            background: var(--card); border: 1px solid rgba(148, 163, 184, 0.1);
-            padding: 40px 20px; border-radius: 24px; text-decoration: none; color: var(--text);
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; align-items: center; gap: 15px;
-            text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-        }
-        .menu-item:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-        .menu-item i { font-size: 2.5rem; font-style: normal; }
-        .menu-item span { font-weight: 800; font-size: 1.2rem; }
-        .menu-item small { color: var(--secondary); font-size: 0.9rem; line-height: 1.4; }
 
-        @media (max-width: 500px) { .menu-grid { grid-template-columns: 1fr; } }
+        .hub-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--card-color); }
+        
+        .card-icon { font-size: 2.2rem; margin-bottom: 5px; }
+        .card-title { font-size: 1.7rem; font-weight: 900; color: var(--text-main); letter-spacing: -1px; }
+        .card-desc { font-size: 1rem; color: var(--text-muted); font-weight: 500; line-height: 1.5; }
+
+        /* Cores Temáticas */
+        .card-uteis { --card-color: var(--color-uteis); }
+        .card-dif { --card-color: var(--color-dif); }
+        .card-soma { --card-color: var(--color-soma); }
+        
+        .hub-card:hover .card-title { color: var(--card-color); }
+
+        .btn-action {
+            margin-top: 8px; display: inline-flex; align-items: center; gap: 8px;
+            font-weight: 800; color: var(--card-color); text-transform: uppercase;
+            font-size: 0.8rem; letter-spacing: 1px;
+        }
+
+        footer { text-align: center; padding: 80px 0; color: var(--text-muted); font-size: 0.9rem; font-weight: 700; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2rem; }
+            .hub-card { padding: 25px; }
+            .card-title { font-size: 1.4rem; }
+        }
     </style>
 </head>
-<body data-theme="dark">
+<body>
 
-    <a href="/" class="btn-home">🏠 Início</a>
+    <div class="container">
+        <nav class="nav-header">
+            <a href="/" class="nav-link">Início</a>
+            <span class="nav-sep">/</span>
+            <span style="color: var(--text-muted); font-weight: 800; font-size: 0.85rem;">Calculadoras</span>
+        </nav>
 
-    <section class="hero">
-        <div class="label">Ferramentas de Precisão</div>
-        <h1>Calculadoras</h1>
-    </section>
+        <header class="header">
+            <h1>Calculadoras</h1>
+            <p class="subtitle">Ferramentas precisas para prazos e datas.</p>
+        </header>
 
-    <nav class="menu-grid">
-        <a href="dias-uteis/" class="menu-item">
-            <i>💼</i>
-            <span>Dias Úteis</span>
-            <small>Calcule prazos excluindo fins de semana e feriados nacionais.</small>
-        </a>
-        <a href="diferenca-datas/" class="menu-item">
-            <i>⏳</i>
-            <span>Diferença entre Datas</span>
-            <small>Saiba exatamente quantos dias, meses e anos separam duas datas.</small>
-        </a>
-        <a href="adicionar-tempo/" class="menu-item">
-            <i>➕</i>
-            <span>Somar/Subtrair Dias</span>
-            <small>Descubra em qual data cairá um prazo após X dias ou meses.</small>
-        </a>
-    </nav>
+        <main class="hub-grid">
+            <a href="/calculadoras/dias-uteis" class="hub-card card-uteis">
+                <span class="card-icon">💼</span>
+                <span class="card-title">Dias Úteis</span>
+                <span class="card-desc">Calcule prazos profissionais descontando finais de semana e feriados nacionais.</span>
+                <span class="btn-action">Acessar Calculadora de Dias Úteis →</span>
+            </a>
 
-    <script>
-        // Sincronização de tema idêntica à página de contato
-        const savedTheme = localStorage.getItem('theme-pref-dataehora') || 'auto';
-        if (savedTheme === 'auto') {
-            const hora = new Date().getHours();
-            document.body.setAttribute('data-theme', (hora >= 6 && hora < 18) ? 'light' : 'dark');
-        } else {
-            document.body.setAttribute('data-theme', savedTheme);
-        }
-    </script>
+            <a href="/calculadoras/diferenca-datas" class="hub-card card-dif">
+                <span class="card-icon">📅</span>
+                <span class="card-title">Diferença entre Datas</span>
+                <span class="card-desc">Saiba o total de dias, meses e anos entre duas datas (dias corridos).</span>
+                <span class="btn-action">Acessar Calculadora de Dias Corridos→</span>
+            </a>
+
+            <a href="/calculadoras/adicionar-dias" class="hub-card card-soma">
+                <span class="card-icon">🧮</span>
+                <span class="card-title">Somar ou Subtrair Dias</span>
+                <span class="card-desc">Descubra qual será a data final ao adicionar ou remover um período de tempo.</span>
+                <span class="btn-action">Acessar Calculadora de Datas→</span>
+            </a>
+        </main>
+
+        <footer>dataehora.com.br</footer>
+    </div>
+
 </body>
 </html>
