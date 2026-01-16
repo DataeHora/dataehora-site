@@ -3,113 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diferença entre Datas | Calculadora Precisa | Data e Hora</title>
+    <title>Diferença entre Datas | dataehora.com.br</title>
+    
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme-pref') || 'default';
+            let isDark = false;
+            if (saved === 'default') isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            else if (saved === 'auto') { const h = new Date().getHours(); isDark = (h < 6 || h >= 18); }
+            else isDark = (saved === 'dark');
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        })();
+    </script>
+
     <style>
-        :root { 
-            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; 
-            --accent: #f59e0b; --secondary: #94a3b8; --border: rgba(148, 163, 184, 0.1);
+        :root {
+            --bg-body: #f1f5f9; --bg-card: #ffffff; --text-main: #0f172a;
+            --text-muted: #64748b; 
+            --accent-blue: #2563eb; /* Azul Padrão Breadcrumb/Calculadora */
+            --border: rgba(148, 163, 184, 0.2);
+            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --input-bg: #f8fafc;
         }
-        [data-theme="light"] {
-            --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; 
-            --accent: #d97706; --secondary: #64748b; --border: rgba(0, 0, 0, 0.05);
+        [data-theme="dark"] {
+            --bg-body: #020617; --bg-card: #0f172a; --text-main: #f8fafc;
+            --text-muted: #94a3b8; --accent-blue: #60a5fa;
+            --border: rgba(255, 255, 255, 0.05); --input-bg: #1e293b;
         }
 
-        body { 
-            background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; 
-            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; 
-            transition: background 0.5s ease; min-height: 100vh;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-body); color: var(--text-main);
+            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center;
         }
 
-        .nav-links { display: flex; gap: 10px; margin-bottom: 30px; }
-        .btn-nav {
-            padding: 8px 18px; border-radius: 50px; background: var(--card);
-            color: var(--text); text-decoration: none; font-size: 0.85rem;
-            border: 1px solid var(--border); transition: 0.2s;
+        .container { width: 100%; max-width: 650px; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Navegação Nível 3 */
+        .nav-header { display: flex; gap: 12px; margin: 20px 0 30px 0; align-items: center; }
+        .nav-link { text-decoration: none; font-weight: 700; font-size: 0.85rem; color: var(--accent-blue); }
+        .nav-sep { color: var(--text-muted); font-size: 0.8rem; }
+
+        .header { margin-bottom: 40px; }
+        h1 { font-size: 2.2rem; margin: 0; letter-spacing: -1.5px; font-weight: 900; }
+        .subtitle { color: var(--text-muted); font-size: 1.1rem; margin-top: 5px; }
+
+        .calc-card {
+            background: var(--bg-card); border-radius: 28px; padding: 40px;
+            box-shadow: var(--shadow); border: 1px solid var(--border);
         }
-        .btn-nav:hover { border-color: var(--accent); color: var(--accent); }
 
-        .container { width: 100%; max-width: 500px; background: var(--card); padding: 35px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid var(--border); text-align: center; }
-        h1 { font-size: 1.8rem; margin-bottom: 25px; color: var(--accent); }
-
-        .form-group { margin-bottom: 20px; text-align: left; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        
         input[type="date"] {
-            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border);
-            background: var(--bg); color: var(--text); font-family: inherit; font-size: 1rem; box-sizing: border-box;
+            width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--border);
+            background: var(--input-bg); color: var(--text-main); font-size: 1.1rem;
+            font-family: inherit; box-sizing: border-box; outline: none;
         }
 
         button {
-            width: 100%; padding: 15px; border-radius: 12px; border: none;
-            background: var(--accent); color: white; font-weight: 700; font-size: 1rem;
-            cursor: pointer; transition: 0.2s; margin-top: 10px;
+            width: 100%; padding: 18px; border-radius: 15px; border: none;
+            background: var(--accent-blue); color: #fff; font-size: 1.1rem; font-weight: 800;
+            cursor: pointer; transition: 0.2s;
         }
-        button:hover { opacity: 0.9; transform: translateY(-2px); }
+        button:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-        .result-box {
-            margin-top: 30px; padding: 25px; background: rgba(245, 158, 11, 0.05);
-            border-radius: 20px; border: 1px dashed var(--accent); display: none;
+        /* Resultado */
+        #result-area { margin-top: 40px; display: none; text-align: center; }
+        .res-divider { border-top: 2px dashed var(--border); padding-top: 30px; margin-bottom: 25px; }
+        
+        /* Grid de Decomposição */
+        .res-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+        .grid-item { background: var(--input-bg); padding: 20px; border-radius: 18px; border: 1px solid var(--border); }
+        .grid-val { display: block; font-size: 2.2rem; font-weight: 900; color: var(--accent-blue); line-height: 1; }
+        .grid-lbl { display: block; font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-top: 8px; }
+
+        /* Totalizador */
+        .total-box { 
+            background: var(--accent-blue); color: #fff; padding: 25px; 
+            border-radius: 20px; box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.3);
         }
-        .result-item { margin-bottom: 10px; font-size: 1.1rem; }
-        .result-item b { color: var(--accent); font-size: 1.4rem; }
-        .total-days { margin-top: 15px; font-size: 0.9rem; color: var(--secondary); border-top: 1px solid var(--border); padding-top: 15px; }
+        .total-val { font-size: 3rem; font-weight: 900; line-height: 1; display: block; }
+        .total-lbl { font-size: 1rem; font-weight: 700; opacity: 0.9; margin-top: 5px; display: block; }
+
+        footer { text-align: center; padding: 80px 0; color: var(--text-muted); font-size: 0.9rem; font-weight: 700; }
+
+        @media (max-width: 500px) {
+            .calc-card { padding: 25px; }
+            .res-grid { grid-template-columns: 1fr; }
+            .total-val { font-size: 2.2rem; }
+        }
     </style>
 </head>
-<body data-theme="dark">
-
-    <div class="nav-links">
-        <a href="/" class="btn-nav">🏠 Início</a>
-        <a href="../" class="btn-nav">🧮 Voltar</a>
-    </div>
+<body>
 
     <div class="container">
-        <h1>Diferença entre Datas</h1>
-        
-        <div class="form-group">
-            <label>Data Inicial</label>
-            <input type="date" id="date-start">
+        <nav class="nav-header">
+            <a href="/" class="nav-link">Início</a>
+            <span class="nav-sep">/</span>
+            <a href="/calculadoras" class="nav-link">Calculadoras</a>
+            <span class="nav-sep">/</span>
+            <span style="color: var(--text-muted); font-weight: 800; font-size: 0.85rem;">Diferença de Datas</span>
+        </nav>
+
+        <header class="header">
+            <h1>Diferença entre Datas</h1>
+            <p class="subtitle">Descubra o tempo exato em dias, meses e anos entre dois momentos.</p>
+        </header>
+
+        <div class="calc-card">
+            <div class="form-group">
+                <label>Data Inicial</label>
+                <input type="date" id="date-start">
+            </div>
+            <div class="form-group">
+                <label>Data Final</label>
+                <input type="date" id="date-end">
+            </div>
+            <button onclick="calculate()">Calcular Diferença</button>
+
+            <div id="result-area">
+                <div class="res-divider"></div>
+                
+                <div class="res-grid">
+                    <div class="grid-item">
+                        <span class="grid-val" id="res-anos">0</span>
+                        <span class="grid-lbl">Anos</span>
+                    </div>
+                    <div class="grid-item">
+                        <span class="grid-val" id="res-meses">0</span>
+                        <span class="grid-lbl">Meses</span>
+                    </div>
+                    <div class="grid-item">
+                        <span class="grid-val" id="res-dias">0</span>
+                        <span class="grid-lbl">Dias</span>
+                    </div>
+                </div>
+
+                <div class="total-box">
+                    <span class="total-val" id="res-total">0</span>
+                    <span class="total-lbl">Total de Dias Corridos</span>
+                </div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label>Data Final</label>
-            <input type="date" id="date-end">
-        </div>
-
-        <button onclick="calculateDifference()">Calcular Diferença</button>
-
-        <div id="result" class="result-box">
-            <div class="result-item"><b id="res-years">0</b> anos</div>
-            <div class="result-item"><b id="res-months">0</b> meses</div>
-            <div class="result-item"><b id="res-days">0</b> dias</div>
-            <div class="total-days">Total em dias: <span id="res-total-days">0</span></div>
-        </div>
+        <footer>dataehora.com.br</footer>
     </div>
 
     <script>
-        function calculateDifference() {
+        function calculate() {
             const startStr = document.getElementById('date-start').value;
             const endStr = document.getElementById('date-end').value;
+            if (!startStr || !endStr) return;
 
-            if (!startStr || !endStr) {
-                alert("Por favor, selecione ambas as datas.");
-                return;
-            }
+            let d1 = new Date(startStr + 'T00:00:00');
+            let d2 = new Date(endStr + 'T00:00:00');
+            if (d1 > d2) [d1, d2] = [d2, d1];
 
-            let start = new Date(startStr + "T00:00:00");
-            let end = new Date(endStr + "T00:00:00");
+            // Cálculo do Total de Dias Corridos
+            const diffTime = Math.abs(d2 - d1);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            if (start > end) {
-                let temp = start;
-                start = end;
-                end = temp;
-            }
-
-            let years = end.getFullYear() - start.getFullYear();
-            let months = end.getMonth() - start.getMonth();
-            let days = end.getDate() - start.getDate();
+            // Cálculo Decomposto (Anos, Meses, Dias)
+            let years = d2.getFullYear() - d1.getFullYear();
+            let months = d2.getMonth() - d1.getMonth();
+            let days = d2.getDate() - d1.getDate();
 
             if (days < 0) {
                 months--;
-                let lastMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+                // Pega o último dia do mês anterior
+                const lastMonth = new Date(d2.getFullYear(), d2.getMonth(), 0);
                 days += lastMonth.getDate();
             }
 
@@ -118,25 +183,20 @@
                 months += 12;
             }
 
-            // Cálculo total de dias
-            const diffTime = Math.abs(end - start);
-            const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            document.getElementById('result').style.display = 'block';
-            document.getElementById('res-years').textContent = years;
-            document.getElementById('res-months').textContent = months;
-            document.getElementById('res-days').textContent = days;
-            document.getElementById('res-total-days').textContent = totalDays.toLocaleString('pt-BR');
+            // Renderização
+            document.getElementById('result-area').style.display = 'block';
+            document.getElementById('res-anos').textContent = years;
+            document.getElementById('res-meses').textContent = months;
+            document.getElementById('res-dias').textContent = days;
+            document.getElementById('res-total').textContent = diffDays.toLocaleString('pt-BR');
         }
 
-        // Sincronização de tema
-        const savedTheme = localStorage.getItem('theme-pref-dataehora') || 'auto';
-        if (savedTheme === 'auto') {
-            const hora = new Date().getHours();
-            document.body.setAttribute('data-theme', (hora >= 6 && hora < 18) ? 'light' : 'dark');
-        } else {
-            document.body.setAttribute('data-theme', savedTheme);
-        }
+        window.onload = () => {
+            const d = new Date();
+            document.getElementById('date-start').value = d.toISOString().split('T')[0];
+            const d2 = new Date(); d2.setFullYear(d.getFullYear() + 1);
+            document.getElementById('date-end').value = d2.toISOString().split('T')[0];
+        };
     </script>
 </body>
 </html>
