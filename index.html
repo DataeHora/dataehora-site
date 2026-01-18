@@ -44,8 +44,8 @@
             --text-muted: #94a3b8;
             --accent: #60a5fa;
             --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-            /* --- AJUSTE: Separador mais claro no modo dark --- */
-            --hr-color: rgba(248, 250, 252, 0.15);
+            /* Separador mais claro no dark mode conforme solicitado */
+            --hr-color: rgba(248, 250, 252, 0.2);
         }
 
         * { box-sizing: border-box; }
@@ -92,12 +92,12 @@
         }
 
         #clock { 
-            font-size: clamp(4.5rem, 18vw, 12rem);
+            font-size: clamp(4rem, 18vw, 12rem);
             font-weight: 800; color: var(--text-main); letter-spacing: -5px; line-height: 0.9;
             font-variant-numeric: tabular-nums;
         }
         #date { 
-            font-size: clamp(1.21rem, 4.4vw, 2.42rem); 
+            font-size: clamp(1.1rem, 4.4vw, 2.2rem); 
             margin-top: 20px; 
             color: var(--text-muted); 
             font-weight: 700; 
@@ -110,23 +110,21 @@
             background: var(--hr-color);
             width: 100%;
             max-width: 600px;
-            margin: 30px 0;
+            margin: 35px 0;
         }
 
         .holiday-section {
             text-align: center;
             padding: 0 20px;
             color: var(--text-main);
-            font-size: clamp(1rem, 3vw, 1.2rem);
-            line-height: 1.5;
-            margin-bottom: 10px;
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            line-height: 1.6;
         }
-        .holiday-section strong { color: var(--accent); }
+        .holiday-section strong { color: var(--accent); font-weight: 700; }
 
         .menu-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px; width: 100%; max-width: 900px;
-            margin-bottom: 10px;
         }
         .menu-item {
             background: var(--bg-card); border: 1px solid rgba(148, 163, 184, 0.1);
@@ -139,7 +137,7 @@
         .menu-item span { font-weight: 700; font-size: 1.1rem; }
         .menu-item small { color: var(--text-muted); font-size: 0.8rem; }
         
-        .footer-section { width: 100%; display: flex; justify-content: center; margin-top: 10px; }
+        .footer-section { width: 100%; display: flex; justify-content: center; padding: 20px 0; }
         .btn-settings {
             padding: 12px 25px; border-radius: 50px;
             color: var(--text-muted); text-decoration: none; border: 1px solid var(--text-muted); 
@@ -164,7 +162,7 @@
     <section class="hero">
         <span class="label-topo">Horário Oficial de Brasília</span>
         <div id="clock">--:--:--</div>
-        <div id="date">Carregando data...</div>
+        <div id="date">Carregando...</div>
     </section>
 
     <hr class="discreet">
@@ -179,7 +177,7 @@
     <span class="label-topo">Ferramentas</span>
     <nav class="menu-grid">
         <a href="/feriados/" class="menu-item"><span>📅 Feriados</span><small>Lista de feriados e feriadões</small></a>
-        <a href="/contagem/" class="menu-item"><span>⏳ Quanto Falta</span><small>Contagem regressiva para feriados e eventos</small></a>
+        <a href="/contagem/" class="menu-item"><span>⏳ Quanto Falta</span><small>Contagem regressiva para feriados</small></a>
         <a href="/calculadora/" class="menu-item"><span>🧮 Calculadoras</span><small>Dias Úteis e Corridos</small></a>
         <a href="/calendarios/" class="menu-item"><span>🗓️ Calendários</span><small>Calendários Anual</small></a>
     </nav>
@@ -193,6 +191,7 @@
     </section>
 
     <script>
+        // Função principal para atualizar o relógio
         function updateClock() {
             const clockEl = document.getElementById('clock');
             const dateEl = document.getElementById('date');
@@ -205,6 +204,7 @@
             clockEl.textContent = agora.toLocaleTimeString('pt-BR', optH);
             dateEl.textContent = agora.toLocaleDateString('pt-BR', optD);
 
+            // Troca de tema automática (se configurada)
             const saved = localStorage.getItem('theme-pref') || 'default';
             if (saved === 'auto' && agora.getSeconds() === 0) {
                 const hora = agora.getHours();
@@ -213,9 +213,12 @@
             }
         }
 
+        // Função para calcular o próximo feriado
         function updateHolidayCountdown() {
-            const hName = document.getElementById('h-name');
-            if(!hName) return;
+            const hNameEl = document.getElementById('h-name');
+            const hDateEl = document.getElementById('h-date');
+            const hCountEl = document.getElementById('h-countdown');
+            if(!hNameEl || !hDateEl || !hCountEl) return;
 
             const agora = new Date();
             const feriados = [
@@ -243,22 +246,31 @@
 
             const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
             
-            hName.textContent = proximo.n;
-            document.getElementById('h-date').textContent = `${proximo.d.getDate()} de ${meses[proximo.d.getMonth()]}`;
-            document.getElementById('h-countdown').textContent = `${dias} dias, ${horas} horas e ${minutos} minutos`;
+            hNameEl.textContent = proximo.n;
+            hDateEl.textContent = `${proximo.d.getDate()} de ${meses[proximo.d.getMonth()]}`;
+            hCountEl.textContent = `${dias} dias, ${horas} horas e ${minutos} minutos`;
         }
 
-        // Inicialização robusta
-        window.addEventListener('DOMContentLoaded', () => {
+        // Inicialização Garantida
+        function init() {
             document.body.classList.add('loaded');
             updateClock();
             updateHolidayCountdown();
             setInterval(updateClock, 1000);
             setInterval(updateHolidayCountdown, 60000);
-        });
+        }
 
+        // Tenta iniciar via DOMContentLoaded, se falhar ou já passou, inicia imediatamente
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        // Listener para mudanças de tema no sistema
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            if (localStorage.getItem('theme-pref') === 'default' || !localStorage.getItem('theme-pref')) {
+            const saved = localStorage.getItem('theme-pref') || 'default';
+            if (saved === 'default') {
                 document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
             }
         });
