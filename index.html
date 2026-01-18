@@ -44,7 +44,8 @@
             --text-muted: #94a3b8;
             --accent: #60a5fa;
             --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-            --hr-color: rgba(148, 163, 184, 0.1);
+            /* --- AJUSTE: Separador mais claro no modo dark --- */
+            --hr-color: rgba(248, 250, 252, 0.15);
         }
 
         * { box-sizing: border-box; }
@@ -84,7 +85,6 @@
 
         .hero { text-align: center; margin-bottom: 20px; width: 100%; }
         
-        /* Estilo compartilhado para os títulos de seção */
         .label-topo { 
             text-transform: uppercase; font-size: 0.85rem;
             letter-spacing: 5px; color: var(--accent); margin-bottom: 20px; font-weight: 700;
@@ -104,7 +104,6 @@
             text-transform: capitalize;
         }
 
-        /* --- SEPARADORES --- */
         hr.discreet {
             border: 0;
             height: 1px;
@@ -114,7 +113,6 @@
             margin: 30px 0;
         }
 
-        /* --- SEÇÃO FERIADO --- */
         .holiday-section {
             text-align: center;
             padding: 0 20px;
@@ -125,7 +123,6 @@
         }
         .holiday-section strong { color: var(--accent); }
 
-        /* --- MENU GRID --- */
         .menu-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px; width: 100%; max-width: 900px;
@@ -142,7 +139,6 @@
         .menu-item span { font-weight: 700; font-size: 1.1rem; }
         .menu-item small { color: var(--text-muted); font-size: 0.8rem; }
         
-        /* --- SEÇÃO CONFIGURAÇÕES --- */
         .footer-section { width: 100%; display: flex; justify-content: center; margin-top: 10px; }
         .btn-settings {
             padding: 12px 25px; border-radius: 50px;
@@ -167,14 +163,14 @@
 
     <section class="hero">
         <span class="label-topo">Horário Oficial de Brasília</span>
-        <div id="clock">00:00:00</div>
-        <div id="date">--:--</div>
+        <div id="clock">--:--:--</div>
+        <div id="date">Carregando data...</div>
     </section>
 
     <hr class="discreet">
 
     <span class="label-topo">Próximo Feriado</span>
-    <section class="holiday-section" id="next-holiday-box">
+    <section class="holiday-section">
         O próximo feriado será <strong id="h-name">...</strong> em <strong id="h-date">...</strong>, em <span id="h-countdown">...</span>.
     </section>
 
@@ -197,21 +193,17 @@
     </section>
 
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            document.body.classList.add('loaded');
-            updateClock();
-            updateHolidayCountdown();
-            setInterval(updateClock, 1000);
-            setInterval(updateHolidayCountdown, 60000);
-        });
-
         function updateClock() {
+            const clockEl = document.getElementById('clock');
+            const dateEl = document.getElementById('date');
+            if(!clockEl || !dateEl) return;
+
             const agora = new Date();
             const optH = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' };
             const optD = { timeZone: 'America/Sao_Paulo', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
             
-            document.getElementById('clock').textContent = agora.toLocaleTimeString('pt-BR', optH);
-            document.getElementById('date').textContent = agora.toLocaleDateString('pt-BR', optD);
+            clockEl.textContent = agora.toLocaleTimeString('pt-BR', optH);
+            dateEl.textContent = agora.toLocaleDateString('pt-BR', optD);
 
             const saved = localStorage.getItem('theme-pref') || 'default';
             if (saved === 'auto' && agora.getSeconds() === 0) {
@@ -222,6 +214,9 @@
         }
 
         function updateHolidayCountdown() {
+            const hName = document.getElementById('h-name');
+            if(!hName) return;
+
             const agora = new Date();
             const feriados = [
                 {n: "Carnaval", d: new Date(2026, 1, 17)},
@@ -248,10 +243,19 @@
 
             const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
             
-            document.getElementById('h-name').textContent = proximo.n;
+            hName.textContent = proximo.n;
             document.getElementById('h-date').textContent = `${proximo.d.getDate()} de ${meses[proximo.d.getMonth()]}`;
             document.getElementById('h-countdown').textContent = `${dias} dias, ${horas} horas e ${minutos} minutos`;
         }
+
+        // Inicialização robusta
+        window.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('loaded');
+            updateClock();
+            updateHolidayCountdown();
+            setInterval(updateClock, 1000);
+            setInterval(updateHolidayCountdown, 60000);
+        });
 
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
             if (localStorage.getItem('theme-pref') === 'default' || !localStorage.getItem('theme-pref')) {
