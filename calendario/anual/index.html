@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário Anual 2026 | dataehora.com.br</title>
+    <style>
+        /* Reutilizando as variáveis de cor do seu site para manter a consistência */
+        :root {
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent: #2563eb;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            --weekend-bg: rgba(37, 99, 235, 0.05);
+            --holiday-color: #ef4444;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #020617;
+            --bg-card: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #60a5fa;
+            --weekend-bg: rgba(96, 165, 250, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .calendar-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .month-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .month-name {
+            text-align: center;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .day-name {
+            font-weight: 700;
+            color: var(--text-muted);
+            padding-bottom: 5px;
+        }
+
+        .day {
+            padding: 8px 0;
+            border-radius: 8px;
+        }
+
+        /* Diferenciação de finais de semana */
+        .weekend { background-color: var(--weekend-bg); color: var(--accent); font-weight: 600; }
+
+        /* Marcação de Feriados */
+        .holiday { color: var(--holiday-color) !important; font-weight: 800; position: relative; }
+        .holiday::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--holiday-color); border-radius: 50%; }
+
+        .month-info {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+            font-size: 0.8rem;
+        }
+
+        .month-holidays { color: var(--holiday-color); font-weight: 600; margin-bottom: 5px; list-style: none; padding: 0; }
+        .work-days { color: var(--text-muted); font-style: italic; }
+
+        .header-nav { width: 100%; max-width: 1200px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 800; color: var(--accent); text-decoration: none; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+
+    <div class="header-nav">
+        <a href="/" class="logo">dataehora.com.br</a>
+        <h1 style="font-size: 1.2rem;">Calendário 2026</h1>
+    </div>
+
+    <div class="calendar-container" id="calendar"></div>
+
+    <script>
+        const feriados2026 = {
+            "0-1": "Ano Novo",
+            "1-17": "Carnaval",
+            "3-3": "Sexta-feira Santa",
+            "3-21": "Tiradentes",
+            "4-1": "Dia do Trabalho",
+            "5-4": "Corpus Christi",
+            "8-7": "Independência",
+            "9-12": "Nsa. Sra. Aparecida",
+            "10-2": "Finados",
+            "10-15": "Proclamação da República",
+            "10-20": "Consciência Negra",
+            "11-25": "Natal"
+        };
+
+        const mesesNomes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+        const diasSemana = ["D", "S", "T", "Q", "Q", "S", "S"];
+
+        function gerarCalendario() {
+            const container = document.getElementById('calendar');
+            const ano = 2026;
+
+            for (let m = 0; m < 12; m++) {
+                let html = `<div class="month-card">
+                    <div class="month-name">${mesesNomes[m]}</div>
+                    <div class="calendar-grid">`;
+                
+                // Cabeçalho dias da semana
+                diasSemana.forEach(d => html += `<div class="day-name">${d}</div>`);
+
+                const primeiroDiaMes = new Date(ano, m, 1).getDay();
+                const diasNoMes = new Date(ano, m + 1, 0).getDate();
+
+                // Espaços vazios antes do dia 1
+                for (let i = 0; i < primeiroDiaMes; i++) html += `<div></div>`;
+
+                let diasUteis = 0;
+                let feriadosDoMes = [];
+
+                for (let d = 1; d <= diasNoMes; d++) {
+                    const dataAtual = new Date(ano, m, d);
+                    const diaSemana = dataAtual.getDay();
+                    const chaveFeriado = `${m}-${d}`;
+                    
+                    let classe = "day";
+                    const isWeekend = (diaSemana === 0 || diaSemana === 6);
+                    const isHoliday = feriados2026[chaveFeriado];
+
+                    if (isWeekend) classe += " weekend";
+                    if (isHoliday) {
+                        classe += " holiday";
+                        feriadosDoMes.push(`${d}: ${isHoliday}`);
+                    }
+
+                    // Cálculo de dias úteis (Seg-Sex e não feriado)
+                    if (!isWeekend && !isHoliday) diasUteis++;
+
+                    html += `<div class="${classe}">${d}</div>`;
+                }
+
+                html += `</div>
+                    <div class="month-info">
+                        <ul class="month-holidays">${feriadosDoMes.map(f => `<li>• ${f}</li>`).join('')}</ul>
+                        <div class="work-days">Total: <strong>${diasUteis} dias úteis</strong></div>
+                    </div>
+                </div>`;
+                
+                container.innerHTML += html;
+            }
+        }
+
+        // Aplicar tema dark se necessário
+        if (localStorage.getItem('theme-pref') === 'dark' || 
+           (localStorage.getItem('theme-pref') === 'default' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+
+        gerarCalendario();
+    </script>
+</body>
+</html>
