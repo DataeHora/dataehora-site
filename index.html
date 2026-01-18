@@ -44,7 +44,6 @@
             --text-muted: #94a3b8;
             --accent: #60a5fa;
             --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-            /* Separador mais claro no dark mode conforme solicitado */
             --hr-color: rgba(248, 250, 252, 0.2);
         }
 
@@ -168,8 +167,8 @@
     <hr class="discreet">
 
     <span class="label-topo">Próximo Feriado</span>
-    <section class="holiday-section">
-        O próximo feriado será <strong id="h-name">...</strong> em <strong id="h-date">...</strong>, em <span id="h-countdown">...</span>.
+    <section class="holiday-section" id="holiday-display">
+        Carregando informações do próximo feriado...
     </section>
 
     <hr class="discreet">
@@ -191,7 +190,6 @@
     </section>
 
     <script>
-        // Função principal para atualizar o relógio
         function updateClock() {
             const clockEl = document.getElementById('clock');
             const dateEl = document.getElementById('date');
@@ -204,7 +202,6 @@
             clockEl.textContent = agora.toLocaleTimeString('pt-BR', optH);
             dateEl.textContent = agora.toLocaleDateString('pt-BR', optD);
 
-            // Troca de tema automática (se configurada)
             const saved = localStorage.getItem('theme-pref') || 'default';
             if (saved === 'auto' && agora.getSeconds() === 0) {
                 const hora = agora.getHours();
@@ -213,15 +210,13 @@
             }
         }
 
-        // Função para calcular o próximo feriado
         function updateHolidayCountdown() {
-            const hNameEl = document.getElementById('h-name');
-            const hDateEl = document.getElementById('h-date');
-            const hCountEl = document.getElementById('h-countdown');
-            if(!hNameEl || !hDateEl || !hCountEl) return;
+            const display = document.getElementById('holiday-display');
+            if(!display) return;
 
             const agora = new Date();
             const feriados = [
+                {n: "Ano Novo", d: new Date(2026, 0, 1)},
                 {n: "Carnaval", d: new Date(2026, 1, 17)},
                 {n: "Sexta-feira Santa", d: new Date(2026, 3, 3)},
                 {n: "Tiradentes", d: new Date(2026, 3, 21)},
@@ -239,19 +234,23 @@
             const proximo = feriados.find(f => f.d > agora);
             if (!proximo) return;
 
+            // Cálculos de tempo
             const diff = proximo.d - agora;
-            const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const horas = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const minutos = Math.floor((diff / (1000 * 60)) % 60);
-
-            const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+            const dias = Math.ceil(diff / (1000 * 60 * 60 * 24));
             
-            hNameEl.textContent = proximo.n;
-            hDateEl.textContent = `${proximo.d.getDate()} de ${meses[proximo.d.getMonth()]}`;
-            hCountEl.textContent = `${dias} dias, ${horas} horas e ${minutos} minutos`;
+            // Dados da data
+            const diaMes = proximo.d.getDate();
+            const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+            const nomeMes = meses[proximo.d.getMonth()];
+            const diasSemana = ["domingo", "segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado"];
+            const nomeDiaSemana = diasSemana[proximo.d.getDay()];
+            
+            // Lógica do artigo (num/numa ou no/na)
+            const artigo = (proximo.d.getDay() === 0 || proximo.d.getDay() === 6) ? "no" : "numa";
+
+            display.innerHTML = `O próximo feriado será ${artigo} <strong>${nomeDiaSemana}</strong> de <strong>${proximo.n}</strong>, dia <strong>${diaMes} de ${nomeMes}</strong>. Faltam <strong>${dias} dias</strong>.`;
         }
 
-        // Inicialização Garantida
         function init() {
             document.body.classList.add('loaded');
             updateClock();
@@ -260,14 +259,12 @@
             setInterval(updateHolidayCountdown, 60000);
         }
 
-        // Tenta iniciar via DOMContentLoaded, se falhar ou já passou, inicia imediatamente
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
         } else {
             init();
         }
 
-        // Listener para mudanças de tema no sistema
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
             const saved = localStorage.getItem('theme-pref') || 'default';
             if (saved === 'default') {
