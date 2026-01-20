@@ -37,9 +37,20 @@
         }
 
         .container { width: 100%; max-width: 900px; }
-        .breadcrumb { width: 100%; margin-bottom: 20px; font-size: 0.85rem; color: var(--text-muted); }
-        .breadcrumb a { color: var(--accent); text-decoration: none; }
-        .breadcrumb span { margin: 0 8px; opacity: 0.5; }
+
+        /* BREADCRUMB PADRONIZADO */
+        .breadcrumb {
+            width: 100%;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 500; }
+        .breadcrumb span { margin: 0 8px; color: #cbd5e1; }
 
         .countdown-card {
             background: var(--bg-card);
@@ -51,6 +62,7 @@
             margin-bottom: 30px;
         }
 
+        .event-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px; font-weight: 700; }
         .event-name { font-size: 2.5rem; font-weight: 800; color: var(--accent); margin-bottom: 5px; }
         .event-date-display { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 30px; }
 
@@ -65,15 +77,21 @@
         .timer-val { font-size: 3rem; font-weight: 800; display: block; }
         .timer-unit { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); }
 
-        .share-actions {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
+        /* COMPARTILHAR */
+        .share-section {
             margin-top: 15px;
             padding-top: 20px;
             border-top: 1px solid var(--hr-color);
         }
-
+        .share-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: block;
+        }
+        .share-actions { display: flex; justify-content: center; gap: 10px; }
         .btn-share {
             text-decoration: none;
             padding: 10px 18px;
@@ -115,7 +133,7 @@
 
 <div class="container">
     <nav class="breadcrumb">
-        <a href="/">Home</a> <span>/</span> Contagem Regressiva
+        <a href="/">Home</a> <span>/</span> <a href="#">Ferramentas</a> <span>/</span> Contagem Regressiva
     </nav>
 
     <div class="countdown-card">
@@ -130,9 +148,12 @@
             <div class="timer-box"><span class="timer-val" id="seconds">00</span><span class="timer-unit">Segundos</span></div>
         </div>
 
-        <div class="share-actions">
-            <a href="#" id="share-wa" class="btn-share btn-wa" target="_blank">WhatsApp</a>
-            <a href="#" id="share-mail" class="btn-share btn-mail">E-mail</a>
+        <div class="share-section">
+            <span class="share-label">Compartilhar</span>
+            <div class="share-actions">
+                <a href="#" id="share-wa" class="btn-share btn-wa" target="_blank">WhatsApp</a>
+                <a href="#" id="share-mail" class="btn-share btn-mail">E-mail</a>
+            </div>
         </div>
     </div>
 
@@ -181,7 +202,6 @@
             data.setDate(pascoa.getDate() + dias);
             return data.toISOString().split('T')[0] + "T00:00:00";
         };
-
         return [
             { d: `${year}-01-01T00:00:00`, n: "Ano Novo" },
             { d: moveis(-47), n: "Carnaval" },
@@ -250,7 +270,7 @@
 
     function updateShareLinks() {
         const selector = document.getElementById('event-selector').value;
-        const baseUrl = window.location.origin + window.location.pathname;
+        const baseUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
         let shareUrl = baseUrl;
 
         if (selector === 'custom') {
@@ -261,9 +281,9 @@
             shareUrl += `?type=event&val=${encodeURIComponent(selector)}`;
         }
 
-        const text = encodeURIComponent(`Veja a contagem regressiva para ${targetName}: `);
+        const text = encodeURIComponent(`Veja a contagem regressiva para ${targetName} no site Data e Hora: `);
         document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${text}${encodeURIComponent(shareUrl)}`;
-        document.getElementById('share-mail').href = `mailto:?subject=${targetName}&body=${text}${encodeURIComponent(shareUrl)}`;
+        document.getElementById('share-mail').href = `mailto:?subject=${encodeURIComponent(targetName)}&body=${text}${encodeURIComponent(shareUrl)}`;
     }
 
     function loadFromUrl() {
@@ -276,7 +296,10 @@
             document.getElementById('custom-name').value = params.get('name');
             document.getElementById('custom-date').value = params.get('date');
         } else if (params.get('type') === 'event') {
-            document.getElementById('event-selector').value = params.get('val');
+            const val = params.get('val');
+            const selector = document.getElementById('event-selector');
+            // Verifica se o valor existe nas opções antes de setar
+            selector.value = val;
         }
     }
 
@@ -286,9 +309,14 @@
             const diff = targetDate.getTime() - new Date().getTime();
             if (diff <= 0) {
                 ["days","hours","minutes","seconds"].forEach(id => document.getElementById(id).innerText = "00");
-                if(isLive) { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); isLive = false; }
+                if(isLive) { 
+                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); 
+                    isLive = false; 
+                }
+                document.getElementById('label-txt').innerText = "Chegou o momento de:";
                 return;
             }
+            document.getElementById('label-txt').innerText = "Contagem Regressiva para";
             document.getElementById('days').innerText = Math.floor(diff / 864e5).toString().padStart(2, '0');
             document.getElementById('hours').innerText = Math.floor((diff % 864e5) / 36e5).toString().padStart(2, '0');
             document.getElementById('minutes').innerText = Math.floor((diff % 36e5) / 6e4).toString().padStart(2, '0');
@@ -300,7 +328,7 @@
 
     window.onload = () => { 
         populateHolidays(); 
-        loadFromUrl(); // Primeiro tenta carregar da URL
+        loadFromUrl(); 
         updateTarget(); 
     };
 </script>
