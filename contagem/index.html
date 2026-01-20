@@ -38,7 +38,6 @@
 
         .container { width: 100%; max-width: 900px; }
 
-        /* BREADCRUMB PADRONIZADO */
         .breadcrumb {
             width: 100%;
             margin-bottom: 25px;
@@ -77,29 +76,33 @@
         .timer-val { font-size: 3rem; font-weight: 800; display: block; }
         .timer-unit { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); }
 
-        /* COMPARTILHAR */
+        /* SEÇÃO COMPARTILHAR */
         .share-section {
-            margin-top: 15px;
+            margin-top: 25px;
             padding-top: 20px;
             border-top: 1px solid var(--hr-color);
+            text-align: center;
         }
         .share-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            font-weight: 800;
-            color: var(--text-muted);
-            margin-bottom: 12px;
             display: block;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
         }
         .share-actions { display: flex; justify-content: center; gap: 10px; }
         .btn-share {
             text-decoration: none;
-            padding: 10px 18px;
+            padding: 12px 20px;
             border-radius: 10px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 700;
             color: white;
             transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
         }
         .btn-wa { background-color: var(--whatsapp); }
         .btn-mail { background-color: var(--text-muted); }
@@ -126,6 +129,7 @@
             .timer-val { font-size: 1.8rem; }
             .timer-grid { gap: 8px; }
             .share-actions { flex-direction: column; }
+            .btn-share { justify-content: center; }
         }
     </style>
 </head>
@@ -133,12 +137,12 @@
 
 <div class="container">
     <nav class="breadcrumb">
-        <a href="/">Home</a> <span>/</span> <a href="#">Ferramentas</a> <span>/</span> Contagem Regressiva
+        <a href="/">Home</a> <span>/</span> Ferramentas <span>/</span> Contagem Regressiva
     </nav>
 
     <div class="countdown-card">
         <div class="event-label" id="label-txt">Contagem Regressiva para</div>
-        <div class="event-name" id="display-name">...</div>
+        <div class="event-name" id="display-name">Carregando...</div>
         <div class="event-date-display" id="display-full-date">...</div>
 
         <div class="timer-grid">
@@ -171,7 +175,7 @@
             <div id="custom-fields" class="hidden" style="display: contents;">
                 <div class="input-group">
                     <label>Título</label>
-                    <input type="text" id="custom-name" placeholder="Ex: Férias" oninput="updateTarget()">
+                    <input type="text" id="custom-name" placeholder="Ex: Meu Aniversário" oninput="updateTarget()">
                 </div>
                 <div class="input-group">
                     <label>Data e Hora</label>
@@ -264,26 +268,36 @@
         document.getElementById('display-full-date').innerText = targetDate.toLocaleString('pt-BR', { dateStyle: 'long', timeStyle: 'short' });
         
         if (targetDate > now) isLive = true;
-        updateShareLinks();
+        updateURLAndLinks(); // Atualiza a URL na barra e os botões
         startTimer();
     }
 
-    function updateShareLinks() {
+    function updateURLAndLinks() {
         const selector = document.getElementById('event-selector').value;
-        const baseUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
-        let shareUrl = baseUrl;
+        const baseUrl = window.location.origin + window.location.pathname;
+        let queryParams = "";
 
         if (selector === 'custom') {
             const cName = document.getElementById('custom-name').value;
             const cDate = document.getElementById('custom-date').value;
-            shareUrl += `?type=custom&name=${encodeURIComponent(cName)}&date=${encodeURIComponent(cDate)}`;
-        } else {
-            shareUrl += `?type=event&val=${encodeURIComponent(selector)}`;
+            if (cName || cDate) {
+                queryParams = `?type=custom&name=${encodeURIComponent(cName)}&date=${encodeURIComponent(cDate)}`;
+            }
+        } else if (selector !== 'next') {
+            queryParams = `?type=event&val=${encodeURIComponent(selector)}`;
         }
 
-        const text = encodeURIComponent(`Veja a contagem regressiva para ${targetName} no site Data e Hora: `);
-        document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${text}${encodeURIComponent(shareUrl)}`;
-        document.getElementById('share-mail').href = `mailto:?subject=${encodeURIComponent(targetName)}&body=${text}${encodeURIComponent(shareUrl)}`;
+        const finalUrl = baseUrl + queryParams;
+
+        // ATUALIZA A BARRA DE ENDEREÇO SEM RECARREGAR (Para Favoritos)
+        if (window.history.replaceState) {
+            window.history.replaceState({path: finalUrl}, '', finalUrl);
+        }
+
+        // ATUALIZA BOTÕES DE COMPARTILHAMENTO
+        const text = encodeURIComponent(`Veja a contagem regressiva para ${targetName}: `);
+        document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${text}${encodeURIComponent(finalUrl)}`;
+        document.getElementById('share-mail').href = `mailto:?subject=${encodeURIComponent(targetName)}&body=${text}${encodeURIComponent(finalUrl)}`;
     }
 
     function loadFromUrl() {
@@ -293,13 +307,11 @@
         if (params.get('type') === 'custom') {
             document.getElementById('event-selector').value = 'custom';
             document.getElementById('custom-fields').classList.remove('hidden');
-            document.getElementById('custom-name').value = params.get('name');
-            document.getElementById('custom-date').value = params.get('date');
+            document.getElementById('custom-name').value = params.get('name') || "";
+            document.getElementById('custom-date').value = params.get('date') || "";
         } else if (params.get('type') === 'event') {
             const val = params.get('val');
-            const selector = document.getElementById('event-selector');
-            // Verifica se o valor existe nas opções antes de setar
-            selector.value = val;
+            document.getElementById('event-selector').value = val;
         }
     }
 
