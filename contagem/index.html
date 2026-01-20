@@ -28,13 +28,13 @@
             --bg-card: #ffffff;
             --text-main: #0f172a;
             --text-muted: #64748b;
-            --accent: #2563eb; /* 4. AZUL PADRÃO */
+            --accent: #2563eb;
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
             --hr-color: rgba(100, 116, 139, 0.15);
             --whatsapp: #25d366;
+            --copy-btn: #6366f1;
         }
 
-        /* 2. LÓGICA DE TEMA (Configurações) */
         .dark-mode {
             --bg-body: #0f172a;
             --bg-card: #1e293b;
@@ -57,7 +57,6 @@
 
         .container { width: 100%; max-width: 900px; }
 
-        /* 4. BREADCRUMB PADRÃO FONTE E COR */
         .breadcrumb {
             width: 100%;
             margin-bottom: 25px;
@@ -98,10 +97,23 @@
 
         .share-section { margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--hr-color); text-align: center; }
         .share-label { display: block; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 15px; }
-        .share-actions { display: flex; justify-content: center; gap: 10px; }
-        .btn-share { text-decoration: none; padding: 12px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 700; color: white; display: inline-flex; align-items: center; }
+        .share-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        
+        .btn-share { 
+            text-decoration: none; 
+            padding: 12px 20px; 
+            border-radius: 10px; 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            color: white; 
+            display: inline-flex; 
+            align-items: center; 
+            cursor: pointer;
+            border: none;
+        }
         .btn-wa { background-color: var(--whatsapp); }
         .btn-mail { background-color: var(--text-muted); }
+        .btn-copy { background-color: var(--copy-btn); }
 
         .selection-panel { background: var(--bg-card); padding: 25px; border-radius: 20px; box-shadow: var(--shadow); }
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end; }
@@ -119,6 +131,7 @@
             .timer-val { font-size: 1.8rem; }
             .timer-grid { gap: 8px; }
             .share-actions { flex-direction: column; }
+            .btn-share { width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -126,7 +139,7 @@
 
 <div class="container">
     <nav class="breadcrumb">
-        <a href="/">Home</a> <span>/</span> <a href="/ferramentas">Ferramentas</a> <span>/</span> Contagem Regressiva
+        <a href="/">Home</a> <span>/</span> Contagem Regressiva
     </nav>
 
     <div class="countdown-card">
@@ -146,6 +159,7 @@
             <div class="share-actions">
                 <a href="#" id="share-wa" class="btn-share btn-wa" target="_blank">WhatsApp</a>
                 <a href="#" id="share-mail" class="btn-share btn-mail">E-mail</a>
+                <button onclick="copyToClipboard()" id="btn-copy" class="btn-share btn-copy">Copiar Link</button>
             </div>
         </div>
     </div>
@@ -175,7 +189,6 @@
 </div>
 
 <script>
-    /* 1. MANUTENÇÃO ZERO */
     function getHolidays(year) {
         const a = year % 19, b = Math.floor(year / 100), c = year % 100;
         const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
@@ -218,7 +231,6 @@
         });
     }
 
-    /* A FUNÇÃO QUE FALTAVA */
     function toggleCustomFields() {
         const val = document.getElementById('event-selector').value;
         document.getElementById('custom-fields').classList.toggle('hidden', val !== 'custom');
@@ -229,10 +241,9 @@
         const selector = document.getElementById('event-selector');
         const now = new Date();
         if (selector.value === 'next' || selector.value.includes('|')) {
-            let list = getHolidays(now.getFullYear());
             let found;
             if (selector.value === 'next') {
-                found = list.find(h => new Date(h.d) > now) || getHolidays(now.getFullYear() + 1)[0];
+                found = getHolidays(now.getFullYear()).find(h => new Date(h.d) > now) || getHolidays(now.getFullYear() + 1)[0];
             } else {
                 const [d, n] = selector.value.split('|');
                 let t = new Date(d);
@@ -274,9 +285,27 @@
             window.history.replaceState(null, '', finalUrl);
         }
 
+        // CORREÇÃO E-MAIL: Reconstrução dinâmica dos atributos href
         const shareText = `Confira a contagem regressiva para ${targetName}: ${finalUrl}`;
         document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
-        document.getElementById('share-mail').href = `mailto:?subject=${encodeURIComponent("Contagem: " + targetName)}&body=${encodeURIComponent(shareText)}`;
+        
+        // Atribuição direta para garantir que o mailto capture os dados atuais
+        const mailBtn = document.getElementById('share-mail');
+        mailBtn.setAttribute('href', `mailto:?subject=${encodeURIComponent('Contagem: ' + targetName)}&body=${encodeURIComponent(shareText)}`);
+    }
+
+    function copyToClipboard() {
+        const url = window.location.href;
+        const btn = document.getElementById('btn-copy');
+        navigator.clipboard.writeText(url).then(() => {
+            const originalText = btn.innerText;
+            btn.innerText = "Link Copiado! ✓";
+            btn.style.backgroundColor = "#22c55e";
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.backgroundColor = "var(--copy-btn)";
+            }, 2000);
+        });
     }
 
     function startTimer() {
