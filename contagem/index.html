@@ -28,7 +28,7 @@
             --bg-card: #ffffff;
             --text-main: #0f172a;
             --text-muted: #64748b;
-            --accent: #2563eb;
+            --accent: #2563eb; /* 4. AZUL PADRÃO */
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
             --hr-color: rgba(100, 116, 139, 0.15);
             --whatsapp: #25d366;
@@ -57,7 +57,7 @@
 
         .container { width: 100%; max-width: 900px; }
 
-        /* 4. BREADCRUMB PADRÃO AZUL */
+        /* 4. BREADCRUMB PADRÃO FONTE E COR */
         .breadcrumb {
             width: 100%;
             margin-bottom: 25px;
@@ -126,7 +126,7 @@
 
 <div class="container">
     <nav class="breadcrumb">
-        <a href="/">Home</a> <span>/</span> Contagem Regressiva
+        <a href="/">Home</a> <span>/</span> <a href="/ferramentas">Ferramentas</a> <span>/</span> Contagem Regressiva
     </nav>
 
     <div class="countdown-card">
@@ -175,7 +175,7 @@
 </div>
 
 <script>
-    /* 1. MANUTENÇÃO ZERO: Algoritmo de Feriados Cíclicos */
+    /* 1. MANUTENÇÃO ZERO */
     function getHolidays(year) {
         const a = year % 19, b = Math.floor(year / 100), c = year % 100;
         const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
@@ -218,13 +218,21 @@
         });
     }
 
+    /* A FUNÇÃO QUE FALTAVA */
+    function toggleCustomFields() {
+        const val = document.getElementById('event-selector').value;
+        document.getElementById('custom-fields').classList.toggle('hidden', val !== 'custom');
+        updateTarget();
+    }
+
     function updateTarget() {
         const selector = document.getElementById('event-selector');
         const now = new Date();
         if (selector.value === 'next' || selector.value.includes('|')) {
+            let list = getHolidays(now.getFullYear());
             let found;
             if (selector.value === 'next') {
-                found = getHolidays(now.getFullYear()).find(h => new Date(h.d) > now) || getHolidays(now.getFullYear() + 1)[0];
+                found = list.find(h => new Date(h.d) > now) || getHolidays(now.getFullYear() + 1)[0];
             } else {
                 const [d, n] = selector.value.split('|');
                 let t = new Date(d);
@@ -240,44 +248,36 @@
         }
         document.getElementById('display-name').innerText = targetName;
         document.getElementById('display-full-date').innerText = targetDate.toLocaleString('pt-BR', { dateStyle: 'long', timeStyle: 'short' });
-        if (targetDate > now) isLive = true;
+        isLive = (targetDate > now);
         syncURL();
         startTimer();
     }
 
-function syncURL() {
-    const selector = document.getElementById('event-selector').value;
-    const baseUrl = window.location.origin + window.location.pathname;
-    let queryParams = "";
+    function syncURL() {
+        const selector = document.getElementById('event-selector').value;
+        const baseUrl = window.location.origin + window.location.pathname;
+        let queryParams = "";
 
-    if (selector === 'custom') {
-        const cName = document.getElementById('custom-name').value;
-        const cDate = document.getElementById('custom-date').value;
-        if (cName || cDate) {
-            queryParams = `?type=custom&name=${encodeURIComponent(cName)}&date=${encodeURIComponent(cDate)}`;
+        if (selector === 'custom') {
+            const cName = document.getElementById('custom-name').value;
+            const cDate = document.getElementById('custom-date').value;
+            if (cName || cDate) {
+                queryParams = `?type=custom&name=${encodeURIComponent(cName)}&date=${encodeURIComponent(cDate)}`;
+            }
+        } else if (selector !== 'next') {
+            queryParams = `?type=event&val=${encodeURIComponent(selector)}`;
         }
-    } else if (selector !== 'next') {
-        queryParams = `?type=event&val=${encodeURIComponent(selector)}`;
+
+        const finalUrl = baseUrl + queryParams;
+
+        if (window.history.replaceState) {
+            window.history.replaceState(null, '', finalUrl);
+        }
+
+        const shareText = `Confira a contagem regressiva para ${targetName}: ${finalUrl}`;
+        document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+        document.getElementById('share-mail').href = `mailto:?subject=${encodeURIComponent("Contagem: " + targetName)}&body=${encodeURIComponent(shareText)}`;
     }
-
-    const finalUrl = baseUrl + queryParams;
-
-    // Atualiza a barra de endereço para Favoritos
-    if (window.history.replaceState) {
-        window.history.replaceState(null, '', finalUrl);
-    }
-
-    // --- CORREÇÃO DO E-MAIL E WHATSAPP ---
-    const shareText = `Confira a contagem regressiva para ${targetName}: ${finalUrl}`;
-    const mailSubject = encodeURIComponent(`Contagem Regressiva: ${targetName}`);
-    const mailBody = encodeURIComponent(shareText);
-
-    // Link WhatsApp
-    document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
-    
-    // Link E-mail (Corrigido)
-    document.getElementById('share-mail').href = `mailto:?subject=${mailSubject}&body=${mailBody}`;
-}
 
     function startTimer() {
         if (timerInterval) clearInterval(timerInterval);
@@ -302,8 +302,8 @@ function syncURL() {
             if (p.get('type') === 'custom') {
                 document.getElementById('event-selector').value = 'custom';
                 document.getElementById('custom-fields').classList.remove('hidden');
-                document.getElementById('custom-name').value = p.get('name');
-                document.getElementById('custom-date').value = p.get('date');
+                document.getElementById('custom-name').value = p.get('name') || "";
+                document.getElementById('custom-date').value = p.get('date') || "";
             } else {
                 document.getElementById('event-selector').value = p.get('val');
             }
