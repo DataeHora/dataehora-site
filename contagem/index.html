@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <script>
-        (function() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            if (savedTheme === 'dark') {
-                document.documentElement.classList.add('dark-mode');
-            }
-        })();
-    </script>
-
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -34,17 +25,7 @@
             --whatsapp: #25d366;
         }
 
-        /* 2. LÓGICA DE TEMA (Configurações) */
-        .dark-mode {
-            --bg-body: #0f172a;
-            --bg-card: #1e293b;
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
-            --accent: #3b82f6;
-            --hr-color: rgba(255, 255, 255, 0.1);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.3s ease; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-body);
@@ -56,20 +37,9 @@
         }
 
         .container { width: 100%; max-width: 900px; }
-
-        /* 4. BREADCRUMB PADRÃO AZUL */
-        .breadcrumb {
-            width: 100%;
-            margin-bottom: 25px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            background: var(--bg-card);
-            padding: 12px 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        }
-        .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
-        .breadcrumb span { margin: 0 8px; color: #cbd5e1; }
+        .breadcrumb { width: 100%; margin-bottom: 20px; font-size: 0.85rem; color: var(--text-muted); }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb span { margin: 0 8px; opacity: 0.5; }
 
         .countdown-card {
             background: var(--bg-card);
@@ -77,11 +47,10 @@
             border-radius: 24px;
             box-shadow: var(--shadow);
             text-align: center;
-            border: 1px solid var(--hr-color);
+            border: 1px solid rgba(255,255,255,0.8);
             margin-bottom: 30px;
         }
 
-        .event-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px; font-weight: 700; }
         .event-name { font-size: 2.5rem; font-weight: 800; color: var(--accent); margin-bottom: 5px; }
         .event-date-display { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 30px; }
 
@@ -96,21 +65,41 @@
         .timer-val { font-size: 3rem; font-weight: 800; display: block; }
         .timer-unit { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); }
 
-        .share-section { margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--hr-color); text-align: center; }
-        .share-label { display: block; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 15px; }
-        .share-actions { display: flex; justify-content: center; gap: 10px; }
-        .btn-share { text-decoration: none; padding: 12px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 700; color: white; display: inline-flex; align-items: center; }
+        .share-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 20px;
+            border-top: 1px solid var(--hr-color);
+        }
+
+        .btn-share {
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+            transition: 0.2s;
+        }
         .btn-wa { background-color: var(--whatsapp); }
         .btn-mail { background-color: var(--text-muted); }
 
-        .selection-panel { background: var(--bg-card); padding: 25px; border-radius: 20px; box-shadow: var(--shadow); }
+        .selection-panel {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end; }
         .input-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 150px; }
         .input-group label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
 
         select, input {
             padding: 12px; border-radius: 10px; border: 1px solid var(--hr-color);
-            background: var(--bg-body); color: var(--text-main); font-size: 0.95rem; font-weight: 600; outline: none;
+            background: #f8fafc; font-size: 0.95rem; font-weight: 600; outline: none;
         }
 
         .hidden { display: none !important; }
@@ -126,12 +115,12 @@
 
 <div class="container">
     <nav class="breadcrumb">
-        <a href="/">Home</a> <span>/</span> <a href="/ferramentas">Ferramentas</a> <span>/</span> Contagem Regressiva
+        <a href="/">Home</a> <span>/</span> Contagem Regressiva
     </nav>
 
     <div class="countdown-card">
         <div class="event-label" id="label-txt">Contagem Regressiva para</div>
-        <div class="event-name" id="display-name">Carregando...</div>
+        <div class="event-name" id="display-name">...</div>
         <div class="event-date-display" id="display-full-date">...</div>
 
         <div class="timer-grid">
@@ -141,12 +130,9 @@
             <div class="timer-box"><span class="timer-val" id="seconds">00</span><span class="timer-unit">Segundos</span></div>
         </div>
 
-        <div class="share-section">
-            <span class="share-label">Compartilhar</span>
-            <div class="share-actions">
-                <a href="#" id="share-wa" class="btn-share btn-wa" target="_blank">WhatsApp</a>
-                <a href="#" id="share-mail" class="btn-share btn-mail">E-mail</a>
-            </div>
+        <div class="share-actions">
+            <a href="#" id="share-wa" class="btn-share btn-wa" target="_blank">WhatsApp</a>
+            <a href="#" id="share-mail" class="btn-share btn-mail">E-mail</a>
         </div>
     </div>
 
@@ -160,10 +146,11 @@
                     <option value="custom">✨ Data Personalizada...</option>
                 </select>
             </div>
+
             <div id="custom-fields" class="hidden" style="display: contents;">
                 <div class="input-group">
                     <label>Título</label>
-                    <input type="text" id="custom-name" placeholder="Ex: Meu Aniversário" oninput="updateTarget()">
+                    <input type="text" id="custom-name" placeholder="Ex: Férias" oninput="updateTarget()">
                 </div>
                 <div class="input-group">
                     <label>Data e Hora</label>
@@ -175,7 +162,11 @@
 </div>
 
 <script>
-    /* 1. MANUTENÇÃO ZERO: Algoritmo de Feriados Cíclicos */
+    let targetDate = null;
+    let targetName = "";
+    let timerInterval = null;
+    let isLive = false; 
+
     function getHolidays(year) {
         const a = year % 19, b = Math.floor(year / 100), c = year % 100;
         const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
@@ -190,6 +181,7 @@
             data.setDate(pascoa.getDate() + dias);
             return data.toISOString().split('T')[0] + "T00:00:00";
         };
+
         return [
             { d: `${year}-01-01T00:00:00`, n: "Ano Novo" },
             { d: moveis(-47), n: "Carnaval" },
@@ -206,11 +198,10 @@
         ];
     }
 
-    let targetDate, targetName, timerInterval, isLive = false;
-
     function populateHolidays() {
         const list = document.getElementById('holiday-list');
-        getHolidays(new Date().getFullYear()).forEach(h => {
+        const now = new Date();
+        getHolidays(now.getFullYear()).forEach(h => {
             const opt = document.createElement('option');
             opt.value = `${h.d}|${h.n}`;
             opt.innerText = h.n;
@@ -218,97 +209,99 @@
         });
     }
 
+    function toggleCustomFields() {
+        const val = document.getElementById('event-selector').value;
+        document.getElementById('custom-fields').classList.toggle('hidden', val !== 'custom');
+        updateTarget();
+    }
+
     function updateTarget() {
         const selector = document.getElementById('event-selector');
+        const val = selector.value;
         const now = new Date();
-        if (selector.value === 'next' || selector.value.includes('|')) {
+        isLive = false;
+
+        if (val === 'next' || val.includes('|')) {
+            let list = getHolidays(now.getFullYear());
             let found;
-            if (selector.value === 'next') {
-                found = getHolidays(now.getFullYear()).find(h => new Date(h.d) > now) || getHolidays(now.getFullYear() + 1)[0];
+            if (val === 'next') {
+                found = list.find(h => new Date(h.d) > now) || getHolidays(now.getFullYear() + 1)[0];
             } else {
-                const [d, n] = selector.value.split('|');
-                let t = new Date(d);
-                if (t < now) t.setFullYear(now.getFullYear() + 1);
-                found = { d: t, n: n };
+                const [dateStr, name] = val.split('|');
+                let target = new Date(dateStr);
+                if (target < now) target = new Date(new Date(dateStr).setFullYear(now.getFullYear() + 1));
+                found = { d: target, n: name };
             }
             targetDate = new Date(found.d);
             targetName = found.n;
         } else {
             targetName = document.getElementById('custom-name').value || "Data Especial";
-            const dv = document.getElementById('custom-date').value;
-            targetDate = dv ? new Date(dv) : now;
+            const dateVal = document.getElementById('custom-date').value;
+            targetDate = dateVal ? new Date(dateVal) : now;
         }
+
         document.getElementById('display-name').innerText = targetName;
         document.getElementById('display-full-date').innerText = targetDate.toLocaleString('pt-BR', { dateStyle: 'long', timeStyle: 'short' });
+        
         if (targetDate > now) isLive = true;
-        syncURL();
+        updateShareLinks();
         startTimer();
     }
 
-function syncURL() {
-    const selector = document.getElementById('event-selector').value;
-    const baseUrl = window.location.origin + window.location.pathname;
-    let queryParams = "";
+    function updateShareLinks() {
+        const selector = document.getElementById('event-selector').value;
+        const baseUrl = window.location.origin + window.location.pathname;
+        let shareUrl = baseUrl;
 
-    if (selector === 'custom') {
-        const cName = document.getElementById('custom-name').value;
-        const cDate = document.getElementById('custom-date').value;
-        if (cName || cDate) {
-            queryParams = `?type=custom&name=${encodeURIComponent(cName)}&date=${encodeURIComponent(cDate)}`;
+        if (selector === 'custom') {
+            const cName = document.getElementById('custom-name').value;
+            const cDate = document.getElementById('custom-date').value;
+            shareUrl += `?type=custom&name=${encodeURIComponent(cName)}&date=${encodeURIComponent(cDate)}`;
+        } else {
+            shareUrl += `?type=event&val=${encodeURIComponent(selector)}`;
         }
-    } else if (selector !== 'next') {
-        queryParams = `?type=event&val=${encodeURIComponent(selector)}`;
+
+        const text = encodeURIComponent(`Veja a contagem regressiva para ${targetName}: `);
+        document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${text}${encodeURIComponent(shareUrl)}`;
+        document.getElementById('share-mail').href = `mailto:?subject=${targetName}&body=${text}${encodeURIComponent(shareUrl)}`;
     }
 
-    const finalUrl = baseUrl + queryParams;
+    function loadFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        if (!params.has('type')) return;
 
-    // Atualiza a barra de endereço para Favoritos
-    if (window.history.replaceState) {
-        window.history.replaceState(null, '', finalUrl);
+        if (params.get('type') === 'custom') {
+            document.getElementById('event-selector').value = 'custom';
+            document.getElementById('custom-fields').classList.remove('hidden');
+            document.getElementById('custom-name').value = params.get('name');
+            document.getElementById('custom-date').value = params.get('date');
+        } else if (params.get('type') === 'event') {
+            document.getElementById('event-selector').value = params.get('val');
+        }
     }
-
-    // --- CORREÇÃO DO E-MAIL E WHATSAPP ---
-    const shareText = `Confira a contagem regressiva para ${targetName}: ${finalUrl}`;
-    const mailSubject = encodeURIComponent(`Contagem Regressiva: ${targetName}`);
-    const mailBody = encodeURIComponent(shareText);
-
-    // Link WhatsApp
-    document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
-    
-    // Link E-mail (Corrigido)
-    document.getElementById('share-mail').href = `mailto:?subject=${mailSubject}&body=${mailBody}`;
-}
 
     function startTimer() {
         if (timerInterval) clearInterval(timerInterval);
-        timerInterval = setInterval(() => {
-            const diff = targetDate - new Date();
+        const update = () => {
+            const diff = targetDate.getTime() - new Date().getTime();
             if (diff <= 0) {
                 ["days","hours","minutes","seconds"].forEach(id => document.getElementById(id).innerText = "00");
-                if(isLive) { confetti(); isLive = false; }
+                if(isLive) { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); isLive = false; }
                 return;
             }
             document.getElementById('days').innerText = Math.floor(diff / 864e5).toString().padStart(2, '0');
             document.getElementById('hours').innerText = Math.floor((diff % 864e5) / 36e5).toString().padStart(2, '0');
             document.getElementById('minutes').innerText = Math.floor((diff % 36e5) / 6e4).toString().padStart(2, '0');
             document.getElementById('seconds').innerText = Math.floor((diff % 6e4) / 1000).toString().padStart(2, '0');
-        }, 1000);
+        };
+        update();
+        timerInterval = setInterval(update, 1000);
     }
 
-    window.onload = () => {
-        populateHolidays();
-        const p = new URLSearchParams(window.location.search);
-        if (p.has('type')) {
-            if (p.get('type') === 'custom') {
-                document.getElementById('event-selector').value = 'custom';
-                document.getElementById('custom-fields').classList.remove('hidden');
-                document.getElementById('custom-name').value = p.get('name');
-                document.getElementById('custom-date').value = p.get('date');
-            } else {
-                document.getElementById('event-selector').value = p.get('val');
-            }
-        }
-        updateTarget();
+    window.onload = () => { 
+        populateHolidays(); 
+        loadFromUrl(); // Primeiro tenta carregar da URL
+        updateTarget(); 
     };
 </script>
 </body>
