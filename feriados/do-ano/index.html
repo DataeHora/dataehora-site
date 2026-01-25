@@ -11,7 +11,7 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendário de Feriados | dataehora.com.br</title>
+    <title>Feriados Nacionais | dataehora.com.br</title>
     
     <script>
         (function() {
@@ -26,82 +26,91 @@
 
     <style>
         :root {
-            --bg-body: #f1f5f9; --bg-card: #ffffff; --text-main: #0f172a;
-            --text-muted: #64748b; --accent: #2563eb; --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-            --border: rgba(148, 163, 184, 0.15); --next-bg: #2563eb; /* Banner Azul Royal */
-            /* Paleta Formal de Anos (Cores Sóbrias) */
-            --y2026: #2563eb; --y2027: #4338ca; --y2028: #0891b2;
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent: #2563eb; 
+            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --border: rgba(148, 163, 184, 0.2);
+            --color-feriados: #2563eb; 
+            --color-feriadoes: #4338ca; 
         }
+
         [data-theme="dark"] {
-            --bg-body: #020617; --bg-card: #0f172a; --text-main: #f8fafc;
-            --text-muted: #94a3b8; --accent: #3b82f6; --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
-            --border: rgba(255, 255, 255, 0.05); --next-bg: #1d4ed8;
-            --y2026: #60a5fa; --y2027: #818cf8; --y2028: #22d3ee;
+            --bg-body: #020617;
+            --bg-card: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #60a5fa; /* Azul Soft para Dark Mode */
+            --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
+            --border: rgba(255, 255, 255, 0.05);
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-body); color: var(--text-main);
-            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Blindagem de Transição */
         }
 
-        .container { width: 100%; max-width: 750px; animation: fadeIn 0.5s ease-out; }
+        .container { width: 100%; max-width: 700px; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
+
         /* BREADCRUMB PADRONIZADO (800 weight) */
         .nav-header { display: flex; gap: 12px; margin: 20px 0 30px 0; align-items: center; }
         .nav-link { text-decoration: none; font-weight: 800; font-size: 0.85rem; color: var(--accent); }
         .nav-sep { color: var(--text-muted); font-weight: 800; font-size: 0.8rem; }
         .nav-current { color: var(--text-muted); font-weight: 800; font-size: 0.85rem; }
 
-        .header { margin-bottom: 40px; }
+        .header { margin-bottom: 50px; text-align: left; }
         h1 { font-size: 2.8rem; margin: 0; letter-spacing: -1.8px; font-weight: 900; line-height: 1.1; }
-        .subtitle { color: var(--text-muted); font-size: 1.1rem; margin-top: 5px; font-weight: 500; }
+        .subtitle { color: var(--text-muted); font-size: 1.2rem; margin-top: 10px; font-weight: 500; max-width: 500px; }
 
-        /* BANNER DE PRÓXIMO FERIADO */
-        .next-banner {
-            background: var(--next-bg); color: #ffffff;
-            padding: 45px 30px; border-radius: 32px; text-align: center;
-            box-shadow: 0 20px 30px -10px rgba(37, 99, 235, 0.3);
-            margin-bottom: 60px;
+        .hub-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+
+        .hub-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 28px;
+            padding: 35px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .next-banner .label { text-transform: uppercase; font-size: 0.8rem; font-weight: 800; opacity: 0.8; letter-spacing: 2px; display: block; margin-bottom: 15px; }
-        .next-banner .date { font-size: 3.2rem; font-weight: 900; margin: 0; display: block; letter-spacing: -2px; line-height: 1; }
-        .next-banner .name { font-size: 1.6rem; font-weight: 700; margin-top: 15px; display: block; }
 
-        /* DIVISORES DE ANO */
-        .year-section { margin-top: 60px; }
-        .year-divider { 
-            font-size: 3.5rem; font-weight: 900; margin-bottom: 30px; 
-            letter-spacing: -3px; display: flex; align-items: center; gap: 20px;
+        .hub-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: var(--shadow); 
+            border-color: var(--card-color); 
         }
-        .year-divider::after { content: ''; flex-grow: 1; height: 4px; border-radius: 4px; opacity: 0.15; }
+        
+        .card-icon { font-size: 2.5rem; margin-bottom: 5px; }
+        .card-title { font-size: 1.8rem; font-weight: 900; color: var(--text-main); letter-spacing: -1px; transition: color 0.3s; }
+        .card-desc { font-size: 1.05rem; color: var(--text-muted); font-weight: 500; line-height: 1.5; }
 
-        .y-2026 .year-divider { color: var(--y2026); } .y-2026 .year-divider::after { background: var(--y2026); }
-        .y-2027 .year-divider { color: var(--y2027); } .y-2027 .year-divider::after { background: var(--y2027); }
-        .y-2028 .year-divider { color: var(--y2028); } .y-2028 .year-divider::after { background: var(--y2028); }
+        .card-feriados { --card-color: var(--color-feriados); }
+        .card-feriadoes { --card-color: var(--color-feriadoes); }
+        
+        .hub-card:hover .card-title { color: var(--card-color); }
 
-        /* LISTA DE FERIADOS */
-        .holiday-row {
-            display: grid; grid-template-columns: 130px 160px 1fr; align-items: center;
-            padding: 20px 15px; border-bottom: 1px solid var(--border);
-            transition: all 0.2s ease;
+        .btn-action {
+            margin-top: 10px; display: inline-flex; align-items: center; gap: 8px;
+            font-weight: 800; color: var(--card-color); text-transform: uppercase;
+            font-size: 0.85rem; letter-spacing: 1px;
         }
-        .holiday-row:hover:not(.past) { background: var(--bg-card); border-radius: 16px; transform: translateX(8px); border-color: transparent; box-shadow: var(--shadow); }
-        .holiday-row.past { opacity: 0.35; filter: grayscale(1); cursor: default; }
 
-        .col-date { font-weight: 900; font-size: 1.25rem; letter-spacing: -0.5px; }
-        .col-weekday { font-size: 0.95rem; font-weight: 600; color: var(--text-muted); text-transform: capitalize; }
-        .col-name { font-weight: 800; text-align: right; font-size: 1.1rem; color: var(--text-main); }
+        footer { text-align: center; padding: 80px 0 40px; color: var(--text-muted); font-size: 0.9rem; font-weight: 700; }
 
-        footer { text-align: center; padding: 100px 0; color: var(--text-muted); font-size: 0.9rem; font-weight: 700; }
-
-        @media (max-width: 650px) {
-            .holiday-row { grid-template-columns: 110px 1fr; }
-            .col-weekday { display: none; }
-            .year-divider { font-size: 2.8rem; }
-            .next-banner .date { font-size: 2.4rem; }
+        @media (max-width: 600px) {
             h1 { font-size: 2.2rem; }
+            .hub-card { padding: 25px; }
+            .card-title { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -111,35 +120,31 @@
         <nav class="nav-header">
             <a href="/" class="nav-link">Início</a>
             <span class="nav-sep">/</span>
-            <a href="/feriados" class="nav-link">Feriados</a>
-            <span class="nav-sep">/</span>
-            <span class="nav-current">Calendário</span>
+            <span class="nav-current">Feriados</span>
         </nav>
 
         <header class="header">
-            <h1>Calendário de Feriados</h1>
-            <p class="subtitle">Datas oficiais e pontos facultativos nacionais no Brasil.</p>
+            <h1>Feriados</h1>
+            <p class="subtitle">Planeje seu ano com a lista completa de feriados e emendas nacionais.</p>
         </header>
 
-        <div id="next-container"></div>
-        <div id="calendar-content"></div>
+        <main class="hub-grid">
+            <a href="/feriados/do-ano" class="hub-card card-feriados">
+                <span class="card-icon">📅</span>
+                <span class="card-title">Calendário Completo</span>
+                <span class="card-desc">Lista detalhada de todos os feriados nacionais de 2026 a 2028, organizada mês a mês.</span>
+                <span class="btn-action">Ver calendário completo →</span>
+            </a>
+
+            <a href="/feriados/feriadoes" class="hub-card card-feriadoes">
+                <span class="card-icon">✈️</span>
+                <span class="card-title">Feriadões & Emendas</span>
+                <span class="card-desc">Planeje sua viagem: veja os feriados que permitem prolongar o descanso durante a semana.</span>
+                <span class="btn-action">Ver emendas e pontes →</span>
+            </a>
+        </main>
 
         <footer>dataehora.com.br</footer>
     </div>
-
-    <script>
-        // MANUTENÇÃO ZERO: Algoritmo de Feriados Móveis e Fixos
-        function getHolidays(year) {
-            const h = [
-                { d: 1, m: 0, n: "Confraternização Universal" },
-                { d: 21, m: 3, n: "Tiradentes" },
-                { d: 1, m: 4, n: "Dia do Trabalhador" },
-                { d: 7, m: 8, n: "Independência do Brasil" },
-                { d: 12, m: 9, n: "Nossa Sra. Aparecida" },
-                { d: 2, m: 10, n: "Finados" },
-                { d: 15, m: 10, n: "Proclamação da República" },
-                { d: 20, m: 10, n: "Consciência Negra" },
-                { d: 25, m: 11, n: "Natal" }
-            ];
-
-            // Algoritmo de Páscoa (Meeus
+</body>
+</html>
