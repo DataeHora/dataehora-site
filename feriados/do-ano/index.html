@@ -1,16 +1,13 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-4Y5H59FEQE');
-</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-4Y5H59FEQE');
+    </script>
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,15 +28,15 @@
         :root {
             --bg-body: #f1f5f9; --bg-card: #ffffff; --text-main: #0f172a;
             --text-muted: #64748b; --accent: #2563eb; --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-            --border: rgba(148, 163, 184, 0.15); --next-bg: #10b981;
-            /* Cores dos Anos */
-            --y2026: #2563eb; --y2027: #7c3aed; --y2028: #0891b2;
+            --border: rgba(148, 163, 184, 0.15); --next-bg: #2563eb; /* Banner Azul Royal */
+            /* Paleta Formal de Anos (Cores Sóbrias) */
+            --y2026: #2563eb; --y2027: #4338ca; --y2028: #0891b2;
         }
         [data-theme="dark"] {
             --bg-body: #020617; --bg-card: #0f172a; --text-main: #f8fafc;
-            --text-muted: #94a3b8; --accent: #60a5fa; --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
-            --border: rgba(255, 255, 255, 0.05); --next-bg: #059669;
-            --y2026: #60a5fa; --y2027: #a78bfa; --y2028: #22d3ee;
+            --text-muted: #94a3b8; --accent: #3b82f6; --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
+            --border: rgba(255, 255, 255, 0.05); --next-bg: #1d4ed8;
+            --y2026: #60a5fa; --y2027: #818cf8; --y2028: #22d3ee;
         }
 
         body {
@@ -51,62 +48,60 @@
         .container { width: 100%; max-width: 750px; animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Breadcrumb Nível 3 */
+        /* BREADCRUMB PADRONIZADO (800 weight) */
         .nav-header { display: flex; gap: 12px; margin: 20px 0 30px 0; align-items: center; }
-        .nav-link { text-decoration: none; font-weight: 700; font-size: 0.85rem; color: var(--accent); }
-        .nav-sep { color: var(--text-muted); font-size: 0.8rem; }
+        .nav-link { text-decoration: none; font-weight: 800; font-size: 0.85rem; color: var(--accent); }
+        .nav-sep { color: var(--text-muted); font-weight: 800; font-size: 0.8rem; }
+        .nav-current { color: var(--text-muted); font-weight: 800; font-size: 0.85rem; }
 
         .header { margin-bottom: 40px; }
-        h1 { font-size: 2.5rem; margin: 0; letter-spacing: -2px; font-weight: 900; }
-        .subtitle { color: var(--text-muted); font-size: 1.1rem; margin-top: 5px; }
+        h1 { font-size: 2.8rem; margin: 0; letter-spacing: -1.8px; font-weight: 900; line-height: 1.1; }
+        .subtitle { color: var(--text-muted); font-size: 1.1rem; margin-top: 5px; font-weight: 500; }
 
-        /* Banner Destaque */
-        #next-container { margin-bottom: 60px; }
+        /* BANNER DE PRÓXIMO FERIADO */
         .next-banner {
             background: var(--next-bg); color: #ffffff;
-            padding: 40px 30px; border-radius: 32px; text-align: center;
-            box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.2);
+            padding: 45px 30px; border-radius: 32px; text-align: center;
+            box-shadow: 0 20px 30px -10px rgba(37, 99, 235, 0.3);
+            margin-bottom: 60px;
         }
-        .next-banner .label { text-transform: uppercase; font-size: 0.8rem; font-weight: 800; opacity: 0.9; letter-spacing: 2px; display: block; margin-bottom: 12px; }
-        .next-banner .date { font-size: 3rem; font-weight: 900; margin: 0; display: block; letter-spacing: -2px; line-height: 1; }
-        .next-banner .name { font-size: 1.6rem; font-weight: 700; margin-top: 10px; display: block; opacity: 0.95; }
+        .next-banner .label { text-transform: uppercase; font-size: 0.8rem; font-weight: 800; opacity: 0.8; letter-spacing: 2px; display: block; margin-bottom: 15px; }
+        .next-banner .date { font-size: 3.2rem; font-weight: 900; margin: 0; display: block; letter-spacing: -2px; line-height: 1; }
+        .next-banner .name { font-size: 1.6rem; font-weight: 700; margin-top: 15px; display: block; }
 
-        /* Divisores de Ano Estilizados */
+        /* DIVISORES DE ANO */
         .year-section { margin-top: 60px; }
         .year-divider { 
-            font-size: 3.5rem; font-weight: 900; margin-bottom: 25px; 
+            font-size: 3.5rem; font-weight: 900; margin-bottom: 30px; 
             letter-spacing: -3px; display: flex; align-items: center; gap: 20px;
         }
-        .year-divider::after { content: ''; flex-grow: 1; height: 5px; border-radius: 3px; opacity: 0.2; }
+        .year-divider::after { content: ''; flex-grow: 1; height: 4px; border-radius: 4px; opacity: 0.15; }
 
-        /* Cores por Ano */
         .y-2026 .year-divider { color: var(--y2026); } .y-2026 .year-divider::after { background: var(--y2026); }
         .y-2027 .year-divider { color: var(--y2027); } .y-2027 .year-divider::after { background: var(--y2027); }
         .y-2028 .year-divider { color: var(--y2028); } .y-2028 .year-divider::after { background: var(--y2028); }
 
-        /* Linhas da Lista */
+        /* LISTA DE FERIADOS */
         .holiday-row {
-            display: grid; grid-template-columns: 120px 160px 1fr; align-items: center;
-            padding: 18px 15px; border-bottom: 1px solid var(--border);
-            transition: 0.2s;
+            display: grid; grid-template-columns: 130px 160px 1fr; align-items: center;
+            padding: 20px 15px; border-bottom: 1px solid var(--border);
+            transition: all 0.2s ease;
         }
-        .holiday-row:hover { background: var(--bg-card); border-radius: 16px; transform: translateX(5px); border-color: transparent; }
-        .holiday-row.past { opacity: 0.35; filter: grayscale(1); }
+        .holiday-row:hover:not(.past) { background: var(--bg-card); border-radius: 16px; transform: translateX(8px); border-color: transparent; box-shadow: var(--shadow); }
+        .holiday-row.past { opacity: 0.35; filter: grayscale(1); cursor: default; }
 
-        .col-date { font-weight: 900; font-size: 1.25rem; }
-        /* A cor da data será injetada via JS conforme o ano */
-        
-        .col-weekday { font-size: 1rem; font-weight: 600; color: var(--text-muted); text-transform: capitalize; }
+        .col-date { font-weight: 900; font-size: 1.25rem; letter-spacing: -0.5px; }
+        .col-weekday { font-size: 0.95rem; font-weight: 600; color: var(--text-muted); text-transform: capitalize; }
         .col-name { font-weight: 800; text-align: right; font-size: 1.1rem; color: var(--text-main); }
 
         footer { text-align: center; padding: 100px 0; color: var(--text-muted); font-size: 0.9rem; font-weight: 700; }
 
         @media (max-width: 650px) {
-            .holiday-row { grid-template-columns: 100px 1fr; }
+            .holiday-row { grid-template-columns: 110px 1fr; }
             .col-weekday { display: none; }
-            .year-divider { font-size: 2.5rem; }
-            .next-banner .date { font-size: 2.2rem; }
-            h1 { font-size: 2rem; }
+            .year-divider { font-size: 2.8rem; }
+            .next-banner .date { font-size: 2.4rem; }
+            h1 { font-size: 2.2rem; }
         }
     </style>
 </head>
@@ -118,12 +113,12 @@
             <span class="nav-sep">/</span>
             <a href="/feriados" class="nav-link">Feriados</a>
             <span class="nav-sep">/</span>
-            <span style="color: var(--text-muted); font-weight: 800; font-size: 0.85rem;">Calendário</span>
+            <span class="nav-current">Calendário</span>
         </nav>
 
         <header class="header">
             <h1>Calendário de Feriados</h1>
-            <p class="subtitle">Lista oficial de feriados nacionais e pontos facultativos.</p>
+            <p class="subtitle">Datas oficiais e pontos facultativos nacionais no Brasil.</p>
         </header>
 
         <div id="next-container"></div>
@@ -133,11 +128,12 @@
     </div>
 
     <script>
+        // MANUTENÇÃO ZERO: Algoritmo de Feriados Móveis e Fixos
         function getHolidays(year) {
             const h = [
-                { d: 1, m: 0, n: "Ano Novo" },
+                { d: 1, m: 0, n: "Confraternização Universal" },
                 { d: 21, m: 3, n: "Tiradentes" },
-                { d: 1, m: 4, n: "Dia do Trabalho" },
+                { d: 1, m: 4, n: "Dia do Trabalhador" },
                 { d: 7, m: 8, n: "Independência do Brasil" },
                 { d: 12, m: 9, n: "Nossa Sra. Aparecida" },
                 { d: 2, m: 10, n: "Finados" },
@@ -146,84 +142,4 @@
                 { d: 25, m: 11, n: "Natal" }
             ];
 
-            const a = year % 19, b = Math.floor(year / 100), c = year % 100,
-                  d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25),
-                  g = Math.floor((b - f + 1) / 3), h_val = (19 * a + b - d - g + 15) % 30,
-                  i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h_val - k) % 7,
-                  m = Math.floor((a + 11 * h_val + 22 * l) / 451);
-            const month = Math.floor((h_val + l - 7 * m + 114) / 31) - 1;
-            const day = ((h_val + l - 7 * m + 114) % 31) + 1;
-            const easter = new Date(year, month, day);
-
-            const addM = (offset, name) => {
-                const date = new Date(easter);
-                date.setDate(easter.getDate() + offset);
-                h.push({ d: date.getDate(), m: date.getMonth(), n: name });
-            };
-
-            addM(-47, "Carnaval");
-            addM(-2, "Sexta-feira Santa");
-            addM(60, "Corpus Christi");
-
-            return h.map(x => {
-                const dt = new Date(year, x.m, x.d);
-                return { ...x, dt, week: dt.toLocaleDateString('pt-BR', { weekday: 'long' }) };
-            }).sort((a, b) => a.dt - b.dt);
-        }
-
-        function render() {
-            const now = new Date();
-            const currentYear = now.getFullYear();
-            const container = document.getElementById('calendar-content');
-            let nextFound = false;
-
-            for (let y = currentYear; y <= currentYear + 2; y++) {
-                const yearSection = document.createElement('div');
-                yearSection.className = `year-section y-${y}`;
-                
-                const yearDiv = document.createElement('div');
-                yearDiv.className = 'year-divider';
-                yearDiv.textContent = y;
-                yearSection.appendChild(yearDiv);
-
-                getHolidays(y).forEach(f => {
-                    const isPast = f.dt < new Date().setHours(0,0,0,0);
-                    
-                    if (!nextFound && !isPast) {
-                        renderNext(f);
-                        nextFound = true;
-                    }
-
-                    const row = document.createElement('div');
-                    row.className = `holiday-row ${isPast ? 'past' : ''}`;
-                    
-                    // Cor dinâmica da data baseada no ano
-                    const dateColor = `var(--y${y})`;
-                    const mesAbrev = f.dt.toLocaleDateString('pt-BR', {month: 'short'}).replace('.','');
-
-                    row.innerHTML = `
-                        <div class="col-date" style="color: ${dateColor}">${f.d} ${mesAbrev}</div>
-                        <div class="col-weekday">${f.week.split('-')[0]}</div>
-                        <div class="col-name">${f.n}</div>
-                    `;
-                    yearSection.appendChild(row);
-                });
-                container.appendChild(yearSection);
-            }
-        }
-
-        function renderNext(f) {
-            const nextCont = document.getElementById('next-container');
-            nextCont.innerHTML = `
-                <div class="next-banner">
-                    <span class="label">Próximo Feriado</span>
-                    <span class="date">${f.d} de ${f.dt.toLocaleDateString('pt-BR', {month: 'long'})}</span>
-                    <span class="name">${f.n}</span>
-                </div>
-            `;
-        }
-
-        render();
-    </script>
-</body>
-</html>
+            // Algoritmo de Páscoa (Meeus

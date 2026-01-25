@@ -1,16 +1,13 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-4Y5H59FEQE');
-</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-4Y5H59FEQE');
+    </script>
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,54 +26,74 @@
 
     <style>
         :root {
-            --bg-body: #f1f5f9; --bg-card: #ffffff; --text-main: #0f172a;
-            --text-muted: #64748b; --accent: #2563eb; --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent: #2563eb; 
+            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
             --border: rgba(148, 163, 184, 0.2);
-            --color-feriados: #2563eb; --color-feriadoes: #7c3aed;
+            --color-feriados: #2563eb; 
+            --color-feriadoes: #4338ca; 
         }
+
         [data-theme="dark"] {
-            --bg-body: #020617; --bg-card: #0f172a; --text-main: #f8fafc;
-            --text-muted: #94a3b8; --accent: #60a5fa; --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
+            --bg-body: #020617;
+            --bg-card: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #60a5fa; /* Azul Soft para Dark Mode */
+            --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
             --border: rgba(255, 255, 255, 0.05);
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-body); color: var(--text-main);
-            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
             min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Blindagem de Transição */
         }
 
         .container { width: 100%; max-width: 700px; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Navegação Nível 2 */
+        /* BREADCRUMB PADRONIZADO (800 weight) */
         .nav-header { display: flex; gap: 12px; margin: 20px 0 30px 0; align-items: center; }
-        .nav-link { text-decoration: none; font-weight: 700; font-size: 0.85rem; color: var(--accent); }
-        .nav-sep { color: var(--text-muted); font-size: 0.8rem; }
+        .nav-link { text-decoration: none; font-weight: 800; font-size: 0.85rem; color: var(--accent); }
+        .nav-sep { color: var(--text-muted); font-weight: 800; font-size: 0.8rem; }
+        .nav-current { color: var(--text-muted); font-weight: 800; font-size: 0.85rem; }
 
         .header { margin-bottom: 50px; text-align: left; }
-        h1 { font-size: 2.8rem; margin: 0; letter-spacing: -2px; font-weight: 900; line-height: 1; }
-        .subtitle { color: var(--text-muted); font-size: 1.2rem; margin-top: 10px; font-weight: 500; }
+        h1 { font-size: 2.8rem; margin: 0; letter-spacing: -1.8px; font-weight: 900; line-height: 1.1; }
+        .subtitle { color: var(--text-muted); font-size: 1.2rem; margin-top: 10px; font-weight: 500; max-width: 500px; }
 
-        /* Grid de Opções */
         .hub-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
 
         .hub-card {
-            background: var(--bg-card); border: 2px solid var(--border);
-            border-radius: 28px; padding: 35px; text-decoration: none;
-            display: flex; flex-direction: column; gap: 15px;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 28px;
+            padding: 35px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative; overflow: hidden;
         }
 
-        .hub-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--card-color); }
+        .hub-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: var(--shadow); 
+            border-color: var(--card-color); 
+        }
         
         .card-icon { font-size: 2.5rem; margin-bottom: 5px; }
-        .card-title { font-size: 1.8rem; font-weight: 900; color: var(--text-main); letter-spacing: -1px; }
+        .card-title { font-size: 1.8rem; font-weight: 900; color: var(--text-main); letter-spacing: -1px; transition: color 0.3s; }
         .card-desc { font-size: 1.05rem; color: var(--text-muted); font-weight: 500; line-height: 1.5; }
 
-        /* Cores Temáticas dos Hubs */
         .card-feriados { --card-color: var(--color-feriados); }
         .card-feriadoes { --card-color: var(--color-feriadoes); }
         
@@ -88,7 +105,7 @@
             font-size: 0.85rem; letter-spacing: 1px;
         }
 
-        footer { text-align: center; padding: 80px 0; color: var(--text-muted); font-size: 0.9rem; font-weight: 700; }
+        footer { text-align: center; padding: 80px 0 40px; color: var(--text-muted); font-size: 0.9rem; font-weight: 700; }
 
         @media (max-width: 600px) {
             h1 { font-size: 2.2rem; }
@@ -103,32 +120,31 @@
         <nav class="nav-header">
             <a href="/" class="nav-link">Início</a>
             <span class="nav-sep">/</span>
-            <span style="color: var(--text-muted); font-weight: 800; font-size: 0.85rem;">Feriados</span>
+            <span class="nav-current">Feriados</span>
         </nav>
 
         <header class="header">
             <h1>Feriados</h1>
-            <p class="subtitle">Planeje seu ano com a lista de todos os feriados e feriadões nacionais</p>
+            <p class="subtitle">Planeje seu ano com a lista completa de feriados e emendas nacionais.</p>
         </header>
 
         <main class="hub-grid">
             <a href="/feriados/do-ano" class="hub-card card-feriados">
                 <span class="card-icon">📅</span>
                 <span class="card-title">Calendário Completo</span>
-                <span class="card-desc">Lista detalhada de todos os feriados nacionais de 2026 a 2028, mês a mês.</span>
-                <span class="btn-action">Ver calendário de feriados completo →</span>
+                <span class="card-desc">Lista detalhada de todos os feriados nacionais de 2026 a 2028, organizada mês a mês.</span>
+                <span class="btn-action">Ver calendário completo →</span>
             </a>
 
             <a href="/feriados/feriadoes" class="hub-card card-feriadoes">
                 <span class="card-icon">✈️</span>
                 <span class="card-title">Feriadões & Emendas</span>
-                <span class="card-desc">Veja apenas os feriados que caem durante a semana e permitem emendar.</span>
-                <span class="btn-action">Ver calendário de feriadões e emendas →</span>
+                <span class="card-desc">Planeje sua viagem: veja os feriados que permitem prolongar o descanso durante a semana.</span>
+                <span class="btn-action">Ver emendas e pontes →</span>
             </a>
         </main>
 
         <footer>dataehora.com.br</footer>
     </div>
-
 </body>
 </html>
