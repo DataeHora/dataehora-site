@@ -146,30 +146,46 @@
         <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
     </footer>
 
-    <script>
-        function updateClock() {
+   <script>
+        // Função para obter a data/hora travada em Brasília, independente do sistema do usuário
+        function getBrasiliaDate() {
             const now = new Date();
-            const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            const dateStr = now.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            // Converte o objeto Date para uma string no fuso de Brasília e cria um novo Date a partir dela
+            return new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+        }
+
+        function updateClock() {
+            const nowBrasilia = getBrasiliaDate();
+            
+            // Formata a hora e a data forçando o fuso horário de Brasília
+            const timeStr = nowBrasilia.toLocaleTimeString('pt-BR', { 
+                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                hour12: false
+            });
+            
+            const dateStr = nowBrasilia.toLocaleDateString('pt-BR', { 
+                weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' 
+            });
             
             document.getElementById('clock').textContent = timeStr;
             document.getElementById('date').textContent = dateStr;
 
             // Auto-tema a cada minuto se estiver em modo auto
-            if (now.getSeconds() === 0) {
+            if (nowBrasilia.getSeconds() === 0) {
                 const saved = localStorage.getItem('theme-pref') || 'default';
                 if (saved === 'auto') {
-                    const isDark = (now.getHours() < 6 || now.getHours() >= 18);
+                    const h = nowBrasilia.getHours();
+                    const isDark = (h < 6 || h >= 18);
                     document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
                 }
             }
         }
 
         function updateHoliday() {
-            const now = new Date();
-            const year = now.getFullYear();
+            const nowBrasilia = getBrasiliaDate();
+            const year = nowBrasilia.getFullYear();
             
-            // Lógica simplificada para a Home (Pode ser expandida com a função de Páscoa se necessário)
+            // Feriados com datas fixas (o JavaScript trata meses de 0 a 11)
             const feriados = [
                 {n: "Ano Novo", d: new Date(year, 0, 1)},
                 {n: "Carnaval", d: new Date(year, 1, 17)},
@@ -186,11 +202,14 @@
                 {n: "Ano Novo", d: new Date(year + 1, 0, 1)}
             ];
 
-            const proximo = feriados.find(f => f.d > now);
-            const diff = Math.ceil((proximo.d - now) / 864e5);
+            // Encontra o próximo feriado comparando com a hora de Brasília
+            const proximo = feriados.find(f => f.d > nowBrasilia);
             
-            const fmtDia = new Intl.DateTimeFormat('pt-BR', { weekday: 'long' }).format(proximo.d);
-            const fmtData = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'long' }).format(proximo.d);
+            // Cálculo de dias restantes baseado em Brasília
+            const diff = Math.ceil((proximo.d - nowBrasilia) / 864e5);
+            
+            const fmtDia = new Intl.DateTimeFormat('pt-BR', { weekday: 'long', timeZone: 'America/Sao_Paulo' }).format(proximo.d);
+            const fmtData = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'long', timeZone: 'America/Sao_Paulo' }).format(proximo.d);
             const prep = (proximo.d.getDay() === 0 || proximo.d.getDay() === 6) ? "no" : "numa";
 
             document.getElementById('holiday-display').innerHTML = 
