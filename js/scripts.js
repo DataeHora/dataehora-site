@@ -32,6 +32,17 @@ const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
     year: 'numeric'
 });
 
+const holidayWeekdayFormatter = new Intl.DateTimeFormat('pt-BR', {
+    weekday: 'long',
+    timeZone: 'America/Sao_Paulo'
+});
+
+const holidayDateFormatter = new Intl.DateTimeFormat('pt-BR', {
+    day: 'numeric',
+    month: 'long',
+    timeZone: 'America/Sao_Paulo'
+});
+
 /**
  * Update clock display with current Brasília time
  * Updates every second and handles auto-theme switching
@@ -97,17 +108,9 @@ function updateHoliday() {
     // Calculate remaining days based on Brasília time
     const diff = Math.ceil((proximo.d - nowBrasilia) / 864e5);
     
-    const fmtDia = new Intl.DateTimeFormat('pt-BR', { 
-        weekday: 'long', 
-        timeZone: 'America/Sao_Paulo' 
-    }).format(proximo.d);
-    
-    const fmtData = new Intl.DateTimeFormat('pt-BR', { 
-        day: 'numeric', 
-        month: 'long', 
-        timeZone: 'America/Sao_Paulo' 
-    }).format(proximo.d);
-    
+    // Use pre-created formatters for better performance
+    const fmtDia = holidayWeekdayFormatter.format(proximo.d);
+    const fmtData = holidayDateFormatter.format(proximo.d);
     const prep = (proximo.d.getDay() === 0 || proximo.d.getDay() === 6) ? "no" : "numa";
 
     document.getElementById('holiday-display').innerHTML = 
