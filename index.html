@@ -7,6 +7,7 @@
     <!-- SEO Meta Tags -->
     <title>Horário de Brasília Oficial | dataehora.com.br</title>
     <meta name="description" content="Hora certa de Brasília atualizada em tempo real. Calendário de feriados 2026, calculadoras de datas, contagem regressiva e muito mais.">
+    <meta name="keywords" content="horário de Brasília, hora certa, feriados, calendário, calculadora de datas, contagem regressiva, hora oficial Brasil">
     <meta name="author" content="dataehora.com.br">
     <meta name="robots" content="index, follow">
     
@@ -16,6 +17,13 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://dataehora.com.br/">
     <meta property="og:site_name" content="Data e Hora">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Horário de Brasília Oficial | dataehora.com.br">
+    <meta name="twitter:description" content="Hora certa de Brasília atualizada em tempo real. Calendário de feriados 2026, calculadoras de datas e contagem regressiva.">
+    <meta name="twitter:site" content="@dataehora">
+    <meta name="twitter:creator" content="@dataehora">
     
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -42,18 +50,8 @@
     <!-- External Stylesheet -->
     <link rel="stylesheet" href="/css/styles.css">
     
-    <!-- Critical Theme Initialization - Must execute before page renders -->
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme-pref') || 'default';
-            let isDark = false;
-            if (saved === 'default') isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            else if (saved === 'auto') { const h = new Date().getHours(); isDark = (h < 6 || h >= 18); }
-            else isDark = (saved === 'dark');
-            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-            document.documentElement.style.backgroundColor = isDark ? '#020617' : '#f1f5f9';
-        })();
-    </script>
+    <!-- Theme Initialization - Must execute before page renders to prevent FOUC -->
+    <script src="/js/theme.js"></script>
 
 </head>
 <body>
