@@ -7,7 +7,6 @@
     <!-- SEO Meta Tags -->
     <title>Horário de Brasília Oficial | dataehora.com.br</title>
     <meta name="description" content="Hora certa de Brasília atualizada em tempo real. Calendário de feriados 2026, calculadoras de datas, contagem regressiva e muito mais.">
-    <meta name="keywords" content="hora brasília, horário brasília, feriados 2026, calendário, calculadora de datas, contagem regressiva">
     <meta name="author" content="dataehora.com.br">
     <meta name="robots" content="index, follow">
     
@@ -42,6 +41,19 @@
     
     <!-- External Stylesheet -->
     <link rel="stylesheet" href="/css/styles.css">
+    
+    <!-- Critical Theme Initialization - Must execute before page renders -->
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme-pref') || 'default';
+            let isDark = false;
+            if (saved === 'default') isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            else if (saved === 'auto') { const h = new Date().getHours(); isDark = (h < 6 || h >= 18); }
+            else isDark = (saved === 'dark');
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            document.documentElement.style.backgroundColor = isDark ? '#020617' : '#f1f5f9';
+        })();
+    </script>
 
 </head>
 <body>
@@ -67,19 +79,19 @@
 
     <span class="label-topo">Ferramentas</span>
     <nav class="menu-grid" aria-label="Menu de Ferramentas">
-        <a href="/feriados/" class="menu-item" aria-label="Feriados Nacionais, Estaduais e Municipais">
+        <a href="/feriados/" class="menu-item">
             <span>📅 Feriados Nacionais, Estaduais e Municipais</span>
             <small>Lista de feriados e feriadões em cada ano</small>
         </a>
-        <a href="/contagem/" class="menu-item" aria-label="Contagem Regressiva">
+        <a href="/contagem/" class="menu-item">
             <span>⏳ Contagem Regressiva</span>
             <small>Quanto tempo falta para seu evento</small>
         </a>
-        <a href="/calculadora/" class="menu-item" aria-label="Calculadoras de Datas">
+        <a href="/calculadora/" class="menu-item">
             <span>🧮 Calculadoras</span>
             <small>Dias úteis, corridos e prazos</small>
         </a>
-        <a href="/calendario/" class="menu-item" aria-label="Calendários">
+        <a href="/calendario/" class="menu-item">
             <span>🗓️ Calendários</span>
             <small>Calendário anual com feriados e fases da lua</small>
         </a>
