@@ -43,10 +43,8 @@
     applyTheme(currentTheme);
     
     // Export functions for use in other scripts
-    if (typeof window !== 'undefined') {
-        window.themeManager = {
-            getTheme: getTheme,
-            applyTheme: applyTheme
-        };
-    }
+    window.themeManager = {
+        getTheme: getTheme,
+        applyTheme: applyTheme
+    };
 })();
