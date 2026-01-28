@@ -167,146 +167,42 @@
 </div>
 
 <script>
-    let targetDate, targetName, timerInterval, isLive = false;
-
-    function getHolidays(year) {
-        const a = year % 19, b = Math.floor(year / 100), c = year % 100;
-        const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
-        const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
-        const i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7;
-        const m = Math.floor((a + 11 * h + 22 * l) / 451);
-        const mes = Math.floor((h + l - 7 * m + 114) / 31);
-        const dia = ((h + l - 7 * m + 114) % 31) + 1;
-        const pascoa = new Date(year, mes - 1, dia);
-
-        const moveis = (dias) => {
-            const dt = new Date(pascoa); dt.setDate(pascoa.getDate() + dias);
-            return dt.toISOString().split('T')[0] + "T00:00:00";
-        };
-
-        return [
-            { d: `${year}-01-01T00:00:00`, n: "Ano Novo" },
-            { d: moveis(-47), n: "Carnaval" },
-            { d: moveis(-2), n: "Sexta-feira Santa" },
-            { d: `${year}-04-21T00:00:00`, n: "Tiradentes" },
-            { d: `${year}-05-01T00:00:00`, n: "Dia do Trabalho" },
-            { d: moveis(60), n: "Corpus Christi" },
-            { d: `${year}-09-07T00:00:00`, n: "Independência" },
-            { d: `${year}-10-12T00:00:00`, n: "Nossa Sra. Aparecida" },
-            { d: `${year}-11-02T00:00:00`, n: "Finados" },
-            { d: `${year}-11-15T00:00:00`, n: "Proclamação da República" },
-            { d: `${year}-11-20T00:00:00`, n: "Consciência Negra" },
-            { d: `${year}-12-25T00:00:00`, n: "Natal" }
-        ];
-    }
-
-    function populateHolidays() {
-        const list = document.getElementById('holiday-list');
-        const year = new Date().getFullYear();
-        getHolidays(year).forEach(h => {
-            const opt = document.createElement('option');
-            opt.value = `${h.d}|${h.n}`;
-            opt.innerText = h.n;
-            list.appendChild(opt);
-        });
-    }
-
-    function toggleCustomFields() {
-        const val = document.getElementById('event-selector').value;
-        document.getElementById('custom-fields').classList.toggle('hidden', val !== 'custom');
-        updateTarget();
-    }
-
-    function updateTarget() {
-        const selector = document.getElementById('event-selector');
+    // Função mestre para garantir que o tempo de referência seja sempre Brasília
+    function getBrasiliaDate() {
         const now = new Date();
+        return new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+    }
+
+    function updateCountdown() {
+        const nowBrasilia = getBrasiliaDate();
         
-        if (selector.value === 'next' || selector.value.includes('|')) {
-            let found;
-            if (selector.value === 'next') {
-                found = getHolidays(now.getFullYear()).find(h => new Date(h.d) > now) || getHolidays(now.getFullYear() + 1)[0];
-            } else {
-                const [d, n] = selector.value.split('|');
-                let t = new Date(d);
-                if (t < now) t.setFullYear(now.getFullYear() + 1);
-                found = { d: t, n: n };
-            }
-            targetDate = new Date(found.d);
-            targetName = found.n;
-        } else {
-            targetName = document.getElementById('custom-name').value || "Data Especial";
-            const dv = document.getElementById('custom-date').value;
-            targetDate = dv ? new Date(dv) : now;
+        // Defina aqui a data alvo (Exemplo: Próximo Ano Novo)
+        // Você pode capturar essa data de um input ou variável global
+        const targetDate = new Date(2027, 0, 1, 0, 0, 0); 
+        
+        const diff = targetDate - nowBrasilia;
+
+        if (diff <= 0) {
+            document.getElementById('countdown-timer').innerHTML = "O evento chegou!";
+            return;
         }
 
-        document.getElementById('display-name').innerText = targetName;
-        document.getElementById('display-full-date').innerText = targetDate.toLocaleString('pt-BR', { dateStyle: 'long', timeStyle: 'short' });
-        isLive = (targetDate > now);
-        syncURL();
-        startTimer();
-    }
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-    function syncURL() {
-        const selector = document.getElementById('event-selector').value;
-        const p = new URLSearchParams();
-        if (selector === 'custom') {
-            p.set('type', 'custom');
-            p.set('name', document.getElementById('custom-name').value);
-            p.set('date', document.getElementById('custom-date').value);
-        } else if (selector !== 'next') {
-            p.set('type', 'event');
-            p.set('val', selector);
-        }
-        
-        const newUrl = window.location.pathname + (p.toString() ? '?' + p.toString() : '');
-        window.history.replaceState(null, '', newUrl);
-
-        const shareLink = window.location.href;
-        document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${encodeURIComponent('Falta quanto tempo para ' + targetName + '? Veja aqui: ' + shareLink)}`;
-    }
-
-    function startTimer() {
-        if (timerInterval) clearInterval(timerInterval);
-        const update = () => {
-            const diff = targetDate - new Date();
-            if (diff <= 0) {
-                ["days","hours","minutes","seconds"].forEach(id => document.getElementById(id).innerText = "00");
-                if(isLive) { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); isLive = false; }
-                return;
-            }
-            document.getElementById('days').innerText = Math.floor(diff / 864e5).toString().padStart(2, '0');
-            document.getElementById('hours').innerText = Math.floor((diff % 864e5) / 36e5).toString().padStart(2, '0');
-            document.getElementById('minutes').innerText = Math.floor((diff % 36e5) / 6e4).toString().padStart(2, '0');
-            document.getElementById('seconds').innerText = Math.floor((diff % 6e4) / 1000).toString().padStart(2, '0');
-        };
-        update();
-        timerInterval = setInterval(update, 1000);
-    }
-
-    function copyToClipboard() {
-        const btn = document.getElementById('btn-copy');
-        navigator.clipboard.writeText(window.location.href).then(() => {
-            const original = btn.innerText;
-            btn.innerText = "Copiado! ✓";
-            btn.style.background = "#22c55e";
-            setTimeout(() => { btn.innerText = original; btn.style.background = "var(--copy-btn)"; }, 2000);
-        });
+        // Atualiza os elementos na tela
+        // Certifique-se de que os IDs existam no seu HTML
+        document.getElementById('days').textContent = String(days).padStart(2, '0');
+        document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        populateHolidays();
-        const p = new URLSearchParams(window.location.search);
-        if (p.has('type')) {
-            if (p.get('type') === 'custom') {
-                document.getElementById('event-selector').value = 'custom';
-                document.getElementById('custom-fields').classList.remove('hidden');
-                document.getElementById('custom-name').value = p.get('name');
-                document.getElementById('custom-date').value = p.get('date');
-            } else {
-                document.getElementById('event-selector').value = p.get('val');
-            }
-        }
-        updateTarget();
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
     });
 </script>
 </body>
