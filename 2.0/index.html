@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horário de Brasília Oficial | dataehora.com.br</title>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Data e Hora Oficial",
+      "url": "https://dataehora.com.br/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "All",
+      "featureList": "Hora certa de Brasília, Calendário de Feriados 2026, Calculadoras de Datas"
+    }
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-4Y5H59FEQE');
+    </script>
+
+    <link rel="stylesheet" href="/style.css">
+    <script src="/scripts.js" defer></script>
+</head>
+<body>
+
+    <header class="top-nav">
+        <a href="/" class="logo-text">dataehora.com.br</a>
+        
+        <div class="ad-container" id="top-ad" style="display:none; width:100%; height:90px;"></div>
+    </header>
+
+    <main class="hero">
+        <span class="label-topo">Horário Oficial de Brasília</span>
+        <div id="clock">--:--:--</div>
+        <div id="date">Carregando...</div>
+
+        <hr class="discreet">
+
+        <span class="label-topo">Próximo Feriado</span>
+        <section class="holiday-section" id="holiday-display">
+            Calculando próximo feriado...
+        </section>
+
+        <hr class="discreet">
+
+        <span class="label-topo">Ferramentas</span>
+        <nav class="menu-grid">
+            <a href="/feriados/" class="menu-item">
+                <span>📅 Feriados</span>
+                <small>Nacionais, Estaduais e Municipais</small>
+            </a>
+            <a href="/contagem/" class="menu-item">
+                <span>⏳ Contagem Regressiva</span>
+            </a>
+            <a href="/calculadora/" class="menu-item">
+                <span>🧮 Calculadoras</span>
+            </a>
+            <a href="/calendario/" class="menu-item">
+                <span>🗓️ Calendários</span>
+            </a>
+        </nav>
+    </main>
+
+    <hr class="discreet">
+
+    <footer>
+        <div class="ad-container" id="footer-ad" style="display:none; width:100%; height:250px;"></div>
+
+        <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
+        
+        <div class="footer-info">
+            <p>Dúvidas? <a href="mailto:contato@dataehora.com.br">contato@dataehora.com.br</a></p>
+            <p>© 2026 dataehora.com.br</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Garante que o script externo carregou antes de chamar a função
+            const checkHoliday = setInterval(() => {
+                if (typeof updateHoliday === 'function') {
+                    updateHoliday();
+                    clearInterval(checkHoliday);
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

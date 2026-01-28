@@ -1,0 +1,31 @@
+/* Ajustes de Estrutura para Rodapé e Anúncios */
+header, main, footer {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+footer {
+    margin-top: 50px;
+    padding-bottom: 60px;
+    gap: 30px;
+}
+
+.footer-info p {
+    margin: 5px 0;
+}
+
+.ad-container {
+    background: var(--hr-color);
+    margin: 20px 0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Garante que o botão de configurações seja visível */
+.btn-settings {
+    display: inline-flex !important;
+    visibility: visible !important;
+}
