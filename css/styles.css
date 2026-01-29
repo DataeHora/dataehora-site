@@ -195,9 +195,9 @@ hr.discreet {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.btn-settings:focus {
+.btn-settings:focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: 3px;
+    outline-offset: 2px;
 }
 
 /* Responsive Design - Mobile */
