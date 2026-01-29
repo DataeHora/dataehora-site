@@ -1,6 +1,47 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Contagem Regressiva para Eventos e Feriados | dataehora.com.br</title>
+    <meta name="description" content="Crie contagens regressivas personalizadas para feriados, eventos e datas importantes. Compartilhe no WhatsApp e acompanhe em tempo real.">
+    <meta name="keywords" content="contagem regressiva, contador de dias, dias para feriado, countdown, timer, eventos">
+    <meta name="author" content="dataehora.com.br">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Contagem Regressiva para Eventos e Feriados | dataehora.com.br">
+    <meta property="og:description" content="Crie contagens regressivas personalizadas para feriados, eventos e datas importantes. Compartilhe no WhatsApp e acompanhe em tempo real.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dataehora.com.br/contagem/">
+    <meta property="og:site_name" content="Data e Hora">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Contagem Regressiva para Eventos e Feriados | dataehora.com.br">
+    <meta name="twitter:description" content="Crie contagens regressivas personalizadas para feriados, eventos e datas importantes. Compartilhe no WhatsApp e acompanhe em tempo real.">
+    <meta name="twitter:site" content="@dataehora">
+    <meta name="twitter:creator" content="@dataehora">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Contagem Regressiva para Eventos e Feriados",
+      "description": "Crie contagens regressivas personalizadas para feriados, eventos e datas importantes. Compartilhe no WhatsApp e acompanhe em tempo real.",
+      "url": "https://dataehora.com.br/contagem/",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Data e Hora",
+        "url": "https://dataehora.com.br/"
+      }
+    }
+    </script>
+
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -9,20 +50,8 @@
       gtag('config', 'G-4Y5H59FEQE');
     </script>
     
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contagem Regressiva | dataehora.com.br</title>
-    
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme-pref') || 'default';
-            let isDark = false;
-            if (saved === 'default') isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            else if (saved === 'auto') { const h = new Date().getHours(); isDark = (h < 6 || h >= 18); }
-            else isDark = (saved === 'dark');
-            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        })();
-    </script>
+    <!-- Theme Initialization - Must execute before page renders to prevent FOUC -->
+    <script src="/js/theme.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
@@ -104,6 +133,47 @@
         select:focus, input:focus { border-color: var(--accent); }
         .hidden { display: none !important; }
 
+        footer {
+            margin-top: 40px;
+            padding: 40px 20px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 700;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-settings {
+            padding: 14px 30px;
+            border-radius: 50px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border: 1.5px solid var(--hr-color);
+            font-size: 0.9rem;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            max-width: fit-content;
+        }
+
+        .btn-settings:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--bg-card);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-settings:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
         @media (max-width: 600px) {
             .timer-grid { gap: 8px; }
             .timer-box { padding: 15px 2px; }
@@ -115,7 +185,7 @@
 <body>
 
 <div class="container">
-    <nav class="nav-header">
+    <nav class="nav-header" aria-label="Navegação estrutural">
         <a href="/" class="nav-link">Início</a>
         <span class="nav-sep">/</span>
         <span style="color: var(--text-muted); font-weight: 800;">Contagem Regressiva</span>
@@ -165,6 +235,10 @@
         </div>
     </div>
 </div>
+
+<footer>
+    <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
+</footer>
 
 <script>
     // Função mestre para garantir que o tempo de referência seja sempre Brasília
