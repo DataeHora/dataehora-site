@@ -55,101 +55,16 @@
 
     <!-- External Stylesheet -->
     <link rel="stylesheet" href="/css/styles.css">
+    
+    <!-- Holiday calculation utilities -->
+    <script src="/js/holidays.js"></script>
 
-    <style>
-        :root {
-            --bg-body: #f1f5f9; --bg-card: #ffffff; --text-main: #0f172a;
-            --text-muted: #64748b; --accent: #2563eb; --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-            --border: rgba(148, 163, 184, 0.15);
-            --color-prolongado: #10b981; --color-emenda: #f59e0b;
-            --y2026: #2563eb; --y2027: #4338ca; --y2028: #0891b2;
-        }
-        [data-theme="dark"] {
-            --bg-body: #020617; --bg-card: #0f172a; --text-main: #f8fafc;
-            --text-muted: #94a3b8; --accent: #60a5fa; --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
-            --border: rgba(255, 255, 255, 0.05);
-            --y2026: #60a5fa; --y2027: #818cf8; --y2028: #22d3ee;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-body); color: var(--text-main);
-            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center;
-        }
-
-        .container { width: 100%; max-width: 750px; animation: fadeIn 0.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .nav-header { display: flex; gap: 12px; margin: 20px 0 30px 0; align-items: center; }
-        .nav-link { text-decoration: none; font-weight: 800; font-size: 0.85rem; color: var(--accent); }
-        .nav-sep { color: var(--text-muted); font-weight: 800; font-size: 0.8rem; }
-        .nav-current { color: var(--text-muted); font-weight: 800; font-size: 0.85rem; }
-
-        .header { margin-bottom: 40px; }
-        h1 { font-size: 2.8rem; margin: 0; letter-spacing: -1.8px; font-weight: 900; line-height: 1.1; }
-        .subtitle { color: var(--text-muted); font-size: 1.1rem; margin-top: 5px; font-weight: 500; }
-
-        .year-group { margin-top: 60px; }
-        .year-title { 
-            font-size: 3.5rem; font-weight: 900; margin-bottom: 30px; 
-            letter-spacing: -3px; display: flex; align-items: center; gap: 20px;
-        }
-        .year-title::after { content: ''; flex-grow: 1; height: 4px; border-radius: 4px; opacity: 0.15; }
-
-        .y-2026 .year-title { color: var(--y2026); } .y-2026 .year-title::after { background: var(--y2026); }
-        .y-2027 .year-title { color: var(--y2027); } .y-2027 .year-title::after { background: var(--y2027); }
-        .y-2028 .year-title { color: var(--y2028); } .y-2028 .year-title::after { background: var(--y2028); }
-
-        .month-group { margin-bottom: 30px; }
-        .month-label { 
-            font-size: 0.85rem; font-weight: 900; text-transform: uppercase; 
-            letter-spacing: 2px; margin-bottom: 15px; color: var(--text-muted);
-        }
-
-        .trip-card {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 24px; padding: 25px 30px; margin-bottom: 15px;
-            display: grid; grid-template-columns: 1fr auto; align-items: center;
-            box-shadow: var(--shadow); transition: 0.2s ease;
-        }
-        .trip-card:hover:not(.past) { transform: translateY(-3px); border-color: var(--accent); }
-        .trip-card.past { opacity: 0.35; filter: grayscale(1); }
-
-        .info-main { 
-            display: flex; flex-wrap: wrap; align-items: center; 
-            gap: 10px; font-size: 1.3rem; font-weight: 900; margin-bottom: 10px;
-        }
-        .info-week { color: var(--text-muted); font-size: 1rem; font-weight: 600; }
-        .badge-area { display: flex; align-items: center; gap: 10px; }
-        .badge { 
-            padding: 5px 12px; border-radius: 8px; font-size: 0.7rem; 
-            font-weight: 900; text-transform: uppercase;
-        }
-        .prolongado { background: #10b98120; color: var(--color-prolongado); }
-        .emenda { background: #f59e0b20; color: var(--color-emenda); }
-        .desc-folga { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); }
-
-        .trip-counter { 
-            text-align: center; padding-left: 25px; border-left: 2px solid var(--border);
-            min-width: 80px;
-        }
-        .days-val { font-size: 2.5rem; font-weight: 900; line-height: 1; display: block; }
-        .days-lbl { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); }
-
-        footer { text-align: center; padding: 100px 0; color: var(--text-muted); font-size: 0.9rem; font-weight: 700; }
-
-        @media (max-width: 600px) {
-            .trip-card { grid-template-columns: 1fr; gap: 20px; }
-            .trip-counter { border-left: none; border-top: 1px solid var(--border); padding: 15px 0 0 0; display: flex; align-items: baseline; justify-content: center; gap: 8px; }
-            h1 { font-size: 2.2rem; }
-        }
-    </style>
 </head>
 <body>
 
     <div class="container">
         <nav class="nav-header" aria-label="Navegação estrutural">
-            <a href="/" class="nav-link">Início</a>
+            <a href="/" class="nav-link">dataehora.com.br</a>
             <span class="nav-sep">/</span>
             <a href="/feriados" class="nav-link">Feriados</a>
             <span class="nav-sep">/</span>
@@ -166,50 +81,42 @@
 
     <footer>
         <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
+        <div style="margin-top: 30px; font-size: 0.85rem; color: var(--text-muted); text-align: center;">
+            <p style="margin-bottom: 10px;">
+                <a href="https://dataehora.com.br" style="color: var(--accent); text-decoration: none; font-weight: 700;">dataehora.com.br</a>
+            </p>
+            <p style="margin-bottom: 10px;">© 2026 Data e Hora. Todos os direitos reservados.</p>
+            <p>
+                Contato: <a href="mailto:contato@dataehora.com.br" style="color: var(--accent); text-decoration: none;">contato@dataehora.com.br</a>
+            </p>
+        </div>
     </footer>
 
     <script>
         const mesesNomes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
         function getFeriadoes(ano) {
-            const h = [
-                { d: 1, m: 0, n: "Confraternização Universal" }, { d: 21, m: 3, n: "Tiradentes" },
-                { d: 1, m: 4, n: "Dia do Trabalhador" }, { d: 7, m: 8, n: "Independência" },
-                { d: 12, m: 9, n: "Nossa Sra. Aparecida" }, { d: 2, m: 10, n: "Finados" },
-                { d: 15, m: 10, n: "Proclamação da República" }, { d: 20, m: 10, n: "Consciência Negra" },
-                { d: 25, m: 11, n: "Natal" }
-            ];
-
-            // Algoritmo de Páscoa v2.0
-            const a = ano % 19, b = Math.floor(ano / 100), c = ano % 100,
-                  d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25),
-                  g = Math.floor((b - f + 1) / 3), h_val = (19 * a + b - d - g + 15) % 30,
-                  i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h_val - k) % 7,
-                  m = Math.floor((a + 11 * h_val + 22 * l) / 451);
-            const month = Math.floor((h_val + l - 7 * m + 114) / 31) - 1;
-            const day = ((h_val + l - 7 * m + 114) % 31) + 1;
-            const pascoa = new Date(ano, month, day);
-
-            const addM = (off, name) => {
-                const dt = new Date(pascoa); dt.setDate(pascoa.getDate() + off);
-                h.push({ d: dt.getDate(), m: dt.getMonth(), n: name });
-            };
-            addM(-47, "Carnaval"); addM(-2, "Sexta-feira Santa"); addM(60, "Corpus Christi");
-
-            return h.map(x => {
-                const dt = new Date(ano, x.m, x.d);
-                dt.setHours(0,0,0,0);
-                const ds = dt.getDay(); 
-                let tipo = "", dias = 0, resumo = "", sem = dt.toLocaleDateString('pt-BR', {weekday: 'long'});
+            // Use the shared getHolidays function
+            const holidays = getHolidays(ano);
+            
+            return holidays.map(f => {
+                const ds = f.dt.getDay();
+                let tipo = "", dias = 0, resumo = "";
                 
-                // Lógica de Folga: 1=Seg, 2=Ter, 4=Qui, 5=Sex
+                // Logic for extended weekends: 1=Mon, 2=Tue, 4=Thu, 5=Fri
                 if (ds === 1) { tipo = "prolongado"; dias = 3; resumo = "Sábado a Segunda"; }
                 else if (ds === 5) { tipo = "prolongado"; dias = 3; resumo = "Sexta a Domingo"; }
                 else if (ds === 2) { tipo = "emenda"; dias = 4; resumo = "Sábado a Terça"; }
                 else if (ds === 4) { tipo = "emenda"; dias = 4; resumo = "Quinta a Domingo"; }
 
-                return { ...x, dt, tipo, dias, resumo, sem: sem.split('-')[0] };
-            }).filter(f => f.dias > 0).sort((a, b) => a.dt - b.dt);
+                return { 
+                    ...f, 
+                    tipo, 
+                    dias, 
+                    resumo, 
+                    sem: f.week.split('-')[0] 
+                };
+            }).filter(f => f.dias > 0);
         }
 
         function render() {

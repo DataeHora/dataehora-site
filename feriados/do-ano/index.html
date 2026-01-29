@@ -55,88 +55,16 @@
 
     <!-- External Stylesheet -->
     <link rel="stylesheet" href="/css/styles.css">
+    
+    <!-- Holiday calculation utilities -->
+    <script src="/js/holidays.js"></script>
 
-    <style>
-        :root {
-            --bg-body: #f1f5f9; --bg-card: #ffffff; --text-main: #0f172a;
-            --text-muted: #64748b; --accent: #2563eb; --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-            --border: rgba(148, 163, 184, 0.15); --next-bg: #2563eb;
-            /* Safra Cromática v2.0 */
-            --y2026: #2563eb; --y2027: #4338ca; --y2028: #0891b2;
-        }
-        [data-theme="dark"] {
-            --bg-body: #020617; --bg-card: #0f172a; --text-main: #f8fafc;
-            --text-muted: #94a3b8; --accent: #60a5fa; --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
-            --border: rgba(255, 255, 255, 0.05); --next-bg: #1d4ed8;
-            --y2026: #60a5fa; --y2027: #818cf8; --y2028: #22d3ee;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-body); color: var(--text-main);
-            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center;
-            transition: background-color 0.3s ease;
-        }
-
-        .container { width: 100%; max-width: 750px; animation: fadeIn 0.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .nav-header { display: flex; gap: 12px; margin: 20px 0 30px 0; align-items: center; }
-        .nav-link { text-decoration: none; font-weight: 800; font-size: 0.85rem; color: var(--accent); }
-        .nav-sep { color: var(--text-muted); font-weight: 800; font-size: 0.8rem; }
-        .nav-current { color: var(--text-muted); font-weight: 800; font-size: 0.85rem; }
-
-        .header { margin-bottom: 40px; }
-        h1 { font-size: 2.8rem; margin: 0; letter-spacing: -1.8px; font-weight: 900; line-height: 1.1; }
-        .subtitle { color: var(--text-muted); font-size: 1.1rem; margin-top: 5px; font-weight: 500; }
-
-        .next-banner {
-            background: var(--next-bg); color: #ffffff;
-            padding: 45px 30px; border-radius: 32px; text-align: center;
-            box-shadow: 0 20px 30px -10px rgba(37, 99, 235, 0.3);
-            margin-bottom: 60px;
-        }
-        .next-banner .label { text-transform: uppercase; font-size: 0.8rem; font-weight: 800; opacity: 0.8; letter-spacing: 2px; display: block; margin-bottom: 15px; }
-        .next-banner .date { font-size: 3.2rem; font-weight: 900; margin: 0; display: block; letter-spacing: -2px; line-height: 1; }
-        .next-banner .name { font-size: 1.6rem; font-weight: 700; margin-top: 15px; display: block; }
-
-        .year-section { margin-top: 60px; }
-        .year-divider { 
-            font-size: 3.5rem; font-weight: 900; margin-bottom: 30px; 
-            letter-spacing: -3px; display: flex; align-items: center; gap: 20px;
-        }
-        .year-divider::after { content: ''; flex-grow: 1; height: 4px; border-radius: 4px; opacity: 0.15; }
-
-        .y-2026 .year-divider { color: var(--y2026); } .y-2026 .year-divider::after { background: var(--y2026); }
-        .y-2027 .year-divider { color: var(--y2027); } .y-2027 .year-divider::after { background: var(--y2027); }
-        .y-2028 .year-divider { color: var(--y2028); } .y-2028 .year-divider::after { background: var(--y2028); }
-
-        .holiday-row {
-            display: grid; grid-template-columns: 130px 160px 1fr; align-items: center;
-            padding: 20px 15px; border-bottom: 1px solid var(--border);
-            transition: all 0.2s ease;
-        }
-        .holiday-row:hover:not(.past) { background: var(--bg-card); border-radius: 16px; transform: translateX(8px); box-shadow: var(--shadow); }
-        .holiday-row.past { opacity: 0.35; filter: grayscale(1); }
-
-        .col-date { font-weight: 900; font-size: 1.25rem; }
-        .col-weekday { font-size: 0.95rem; font-weight: 600; color: var(--text-muted); text-transform: capitalize; }
-        .col-name { font-weight: 800; text-align: right; font-size: 1.1rem; }
-
-        footer { text-align: center; padding: 100px 0; color: var(--text-muted); font-size: 0.9rem; font-weight: 700; }
-
-        @media (max-width: 650px) {
-            .holiday-row { grid-template-columns: 110px 1fr; }
-            .col-weekday { display: none; }
-            h1 { font-size: 2.2rem; }
-        }
-    </style>
 </head>
 <body>
 
     <div class="container">
         <nav class="nav-header" aria-label="Navegação estrutural">
-            <a href="/" class="nav-link">Início</a>
+            <a href="/" class="nav-link">dataehora.com.br</a>
             <span class="nav-sep">/</span>
             <a href="/feriados" class="nav-link">Feriados</a>
             <span class="nav-sep">/</span>
@@ -154,48 +82,18 @@
 
     <footer>
         <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
+        <div style="margin-top: 30px; font-size: 0.85rem; color: var(--text-muted); text-align: center;">
+            <p style="margin-bottom: 10px;">
+                <a href="https://dataehora.com.br" style="color: var(--accent); text-decoration: none; font-weight: 700;">dataehora.com.br</a>
+            </p>
+            <p style="margin-bottom: 10px;">© 2026 Data e Hora. Todos os direitos reservados.</p>
+            <p>
+                Contato: <a href="mailto:contato@dataehora.com.br" style="color: var(--accent); text-decoration: none;">contato@dataehora.com.br</a>
+            </p>
+        </div>
     </footer>
 
     <script>
-        function getHolidays(year) {
-            const h = [
-                { d: 1, m: 0, n: "Confraternização Universal" },
-                { d: 21, m: 3, n: "Tiradentes" },
-                { d: 1, m: 4, n: "Dia do Trabalhador" },
-                { d: 7, m: 8, n: "Independência do Brasil" },
-                { d: 12, m: 9, n: "Nossa Sra. Aparecida" },
-                { d: 2, m: 10, n: "Finados" },
-                { d: 15, m: 10, n: "Proclamação da República" },
-                { d: 20, m: 10, n: "Consciência Negra" },
-                { d: 25, m: 11, n: "Natal" }
-            ];
-
-            const a = year % 19, b = Math.floor(year / 100), c = year % 100,
-                  d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25),
-                  g = Math.floor((b - f + 1) / 3), h_val = (19 * a + b - d - g + 15) % 30,
-                  i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h_val - k) % 7,
-                  m = Math.floor((a + 11 * h_val + 22 * l) / 451);
-            const month = Math.floor((h_val + l - 7 * m + 114) / 31) - 1;
-            const day = ((h_val + l - 7 * m + 114) % 31) + 1;
-            const easter = new Date(year, month, day);
-
-            const addM = (offset, name) => {
-                const date = new Date(easter);
-                date.setDate(easter.getDate() + offset);
-                h.push({ d: date.getDate(), m: date.getMonth(), n: name });
-            };
-
-            addM(-47, "Carnaval");
-            addM(-2, "Sexta-feira Santa");
-            addM(60, "Corpus Christi");
-
-            return h.map(x => {
-                const dt = new Date(year, x.m, x.d);
-                dt.setHours(0,0,0,0);
-                return { ...x, dt, week: dt.toLocaleDateString('pt-BR', { weekday: 'long' }) };
-            }).sort((a, b) => a.dt - b.dt);
-        }
-
         function render() {
             const now = new Date();
             now.setHours(0,0,0,0);

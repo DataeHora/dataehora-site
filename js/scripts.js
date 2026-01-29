@@ -5,13 +5,47 @@
  */
 
 /**
+ * Official time offset from API (in milliseconds)
+ * Updated periodically from WorldTimeAPI
+ */
+let officialTimeOffset = 0;
+let lastSyncTime = 0;
+
+/**
+ * Sync with official time API (WorldTimeAPI for São Paulo)
+ * Updates the offset between local system time and official time
+ */
+async function syncOfficialTime() {
+    try {
+        const response = await fetch('https://worldtimeapi.org/api/timezone/America/Sao_Paulo');
+        const data = await response.json();
+        
+        // Calculate offset between official time and local time
+        const officialTime = new Date(data.datetime);
+        const localTime = new Date();
+        officialTimeOffset = officialTime - localTime;
+        lastSyncTime = Date.now();
+        
+        console.log('Synced with official São Paulo time');
+    } catch (error) {
+        console.warn('Failed to sync with official time API, using browser timezone:', error);
+        // Fallback: continue using browser time with timezone conversion
+        officialTimeOffset = 0;
+    }
+}
+
+/**
  * Get current date/time locked to Brasília timezone
- * Ensures consistency regardless of user's system timezone
+ * Uses official API time when available, falls back to browser timezone
  * @returns {Date} Date object in Brasília timezone
  */
 function getBrasiliaDate() {
-    const now = new Date();
-    // Convert Date to string in Brasília timezone and create new Date from it
+    const now = new Date(Date.now() + officialTimeOffset);
+    // If we have official time offset, use it directly
+    if (officialTimeOffset !== 0) {
+        return now;
+    }
+    // Fallback: Convert Date to string in Brasília timezone and create new Date from it
     return new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
 }
 
@@ -71,34 +105,21 @@ function updateClock() {
 /**
  * Calculate and display the next Brazilian holiday
  * Updates the holiday section with countdown and details
- * Note: Moveable holidays (Carnaval, Sexta-feira Santa, Corpus Christi) are hardcoded for 2026
+ * Uses dynamic calculation for all holidays including moveable ones
  */
 function updateHoliday() {
     const nowBrasilia = getBrasiliaDate();
     const year = nowBrasilia.getFullYear();
     
-    // Brazilian holidays for 2026 (JavaScript months are 0-indexed: 0=Jan, 11=Dec)
-    // Note: Moveable holidays (Carnaval, Sexta-feira Santa, Corpus Christi) need annual updates
-    const feriados = [
-        { n: "Ano Novo", d: new Date(year, 0, 1) },
-        { n: "Carnaval", d: new Date(year, 1, 17) },  // Moveable - 2026 date
-        { n: "Sexta-feira Santa", d: new Date(year, 3, 3) },  // Moveable - 2026 date
-        { n: "Tiradentes", d: new Date(year, 3, 21) },
-        { n: "Dia do Trabalho", d: new Date(year, 4, 1) },
-        { n: "Corpus Christi", d: new Date(year, 5, 4) },  // Moveable - 2026 date
-        { n: "Independência", d: new Date(year, 8, 7) },
-        { n: "Nossa Sra. Aparecida", d: new Date(year, 9, 12) },
-        { n: "Finados", d: new Date(year, 10, 2) },
-        { n: "Proclamação da República", d: new Date(year, 10, 15) },
-        { n: "Consciência Negra", d: new Date(year, 10, 20) },
-        { n: "Natal", d: new Date(year, 11, 25) },
-        { n: "Ano Novo", d: new Date(year + 1, 0, 1) }
-    ];
+    // Get holidays for current and next year
+    const currentYearHolidays = getHolidaysForDisplay(year);
+    const nextYearHolidays = getHolidaysForDisplay(year + 1);
+    const allHolidays = [...currentYearHolidays, ...nextYearHolidays];
 
     // Find next holiday after current Brasília date
-    const proximo = feriados.find(f => f.d > nowBrasilia);
+    const proximo = allHolidays.find(f => f.d > nowBrasilia);
     
-    // Safety check - should always find a holiday due to next year's New Year
+    // Safety check - should always find a holiday due to next year's holidays
     if (!proximo) {
         document.getElementById('holiday-display').innerHTML = 
             'Não foi possível calcular o próximo feriado.';
@@ -121,7 +142,13 @@ function updateHoliday() {
  * Initialize application on DOM ready
  * Sets up clock and holiday updates
  */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Sync with official time API first
+    await syncOfficialTime();
+    
+    // Re-sync every 5 minutes to maintain accuracy
+    setInterval(syncOfficialTime, 5 * 60 * 1000);
+    
     updateClock();
     updateHoliday();
     setInterval(updateClock, 1000);
