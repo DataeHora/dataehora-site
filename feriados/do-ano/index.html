@@ -58,9 +58,6 @@
     
     <!-- Holiday calculation utilities -->
     <script src="/js/holidays.js"></script>
-    
-    <!-- Brazilian States Data -->
-    <script src="/js/estados-brasil.js"></script>
 
 </head>
 <body>
@@ -78,22 +75,6 @@
             <h1>Calendário de Feriados</h1>
             <p class="subtitle">Lista oficial de feriados nacionais e pontos facultativos.</p>
         </header>
-
-        <!-- State and Municipal Holiday Filters -->
-        <div class="filter-section">
-            <div class="filter-group">
-                <label for="state-select" class="filter-label">Estado (Opcional)</label>
-                <select id="state-select" class="filter-select" onchange="onStateChange()">
-                    <option value="">Apenas Nacionais</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label for="city-select" class="filter-label">Município (Opcional)</label>
-                <select id="city-select" class="filter-select" onchange="render()" disabled>
-                    <option value="">Selecione um estado primeiro</option>
-                </select>
-            </div>
-        </div>
 
         <div id="next-container"></div>
         <div id="calendar-content"></div>
@@ -113,56 +94,6 @@
     </footer>
 
     <script>
-        let stateHolidays = [];
-        let cityHolidays = [];
-
-        // Initialize state dropdown
-        function initStateDropdown() {
-            const stateSelect = document.getElementById('state-select');
-            ESTADOS_BRASIL.forEach(estado => {
-                const option = document.createElement('option');
-                option.value = estado.uf;
-                option.textContent = estado.nome;
-                stateSelect.appendChild(option);
-            });
-        }
-
-        // Handle state selection change
-        async function onStateChange() {
-            const stateSelect = document.getElementById('state-select');
-            const citySelect = document.getElementById('city-select');
-            const selectedState = stateSelect.value;
-
-            // Reset city dropdown
-            citySelect.innerHTML = '<option value="">Carregando municípios...</option>';
-            citySelect.disabled = true;
-            cityHolidays = [];
-
-            if (!selectedState) {
-                citySelect.innerHTML = '<option value="">Selecione um estado primeiro</option>';
-                stateHolidays = [];
-                render();
-                return;
-            }
-
-            // Fetch municipalities for selected state
-            const municipios = await getMunicipios(selectedState);
-            citySelect.innerHTML = '<option value="">Apenas Estado</option>';
-            municipios.forEach(mun => {
-                const option = document.createElement('option');
-                option.value = mun.codigo;
-                option.textContent = mun.nome;
-                citySelect.appendChild(option);
-            });
-            citySelect.disabled = false;
-
-            // Note: BrasilAPI doesn't provide state/municipal holidays yet
-            // For now, we'll just show national holidays
-            // In the future, this could be enhanced with a more comprehensive API
-            stateHolidays = [];
-            render();
-        }
-
         function render() {
             const now = new Date();
             now.setHours(0,0,0,0);
@@ -179,10 +110,8 @@
                 section.className = `year-section y-${y}`;
                 section.innerHTML = `<div class="year-divider">${y}</div>`;
 
-                // Combine national holidays with state/city holidays
-                const allHolidays = [...getHolidays(y), ...stateHolidays, ...cityHolidays]
-                    .sort((a, b) => a.dt - b.dt);
-
+                const allHolidays = getHolidays(y);
+                
                 allHolidays.forEach(f => {
                     const isPast = f.dt < now;
                     
@@ -211,12 +140,8 @@
         
         // Initialize on DOM ready
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                initStateDropdown();
-                render();
-            });
+            document.addEventListener('DOMContentLoaded', render);
         } else {
-            initStateDropdown();
             render();
         }
     </script>
