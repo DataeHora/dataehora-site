@@ -140,6 +140,24 @@
         #result-area { margin-top: 40px; display: none; text-align: center; }
         .res-divider { border-top: 1px solid var(--border); margin-bottom: 30px; }
         
+        .narrative-text {
+            margin: 0 0 25px 0;
+            padding: 20px;
+            background: var(--input-bg);
+            border-radius: 16px;
+            border-left: 4px solid var(--accent-blue);
+            text-align: left;
+            line-height: 1.6;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        
+        .narrative-text strong {
+            color: var(--accent-blue);
+            font-weight: 800;
+        }
+        
         /* Grid de Decomposição */
         .res-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
         .grid-item { background: var(--input-bg); padding: 20px 10px; border-radius: 18px; border: 1px solid var(--border); }
@@ -206,6 +224,8 @@
             <div id="result-area">
                 <div class="res-divider"></div>
                 
+                <div id="narrative-explanation" class="narrative-text"></div>
+                
                 <div class="res-grid">
                     <div class="grid-item">
                         <span class="grid-val" id="res-anos">0</span>
@@ -231,6 +251,15 @@
 
     <footer>
         <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
+        <div style="margin-top: 30px; font-size: 0.85rem; color: var(--text-muted); text-align: center;">
+            <p style="margin-bottom: 10px;">
+                <a href="https://dataehora.com.br" style="color: var(--accent-blue); text-decoration: none; font-weight: 700;">dataehora.com.br</a>
+            </p>
+            <p style="margin-bottom: 10px;">© 2026 Data e Hora. Todos os direitos reservados.</p>
+            <p>
+                Contato: <a href="mailto:contato@dataehora.com.br" style="color: var(--accent-blue); text-decoration: none;">contato@dataehora.com.br</a>
+            </p>
+        </div>
     </footer>
 
     <script>
@@ -271,6 +300,32 @@
             document.getElementById('res-meses').textContent = months;
             document.getElementById('res-dias').textContent = days;
             document.getElementById('res-total').textContent = diffDays.toLocaleString('pt-BR');
+            
+            // Add narrative explanation
+            const startFormatted = d1.toLocaleDateString('pt-BR');
+            const endFormatted = d2.toLocaleDateString('pt-BR');
+            
+            let narrative = `Entre <strong>${startFormatted}</strong> e <strong>${endFormatted}</strong>, `;
+            narrative += `há um intervalo de `;
+            
+            const parts = [];
+            if (years > 0) parts.push(`<strong>${years} ano${years > 1 ? 's' : ''}</strong>`);
+            if (months > 0) parts.push(`<strong>${months} ${months > 1 ? 'meses' : 'mês'}</strong>`);
+            if (days > 0) parts.push(`<strong>${days} dia${days > 1 ? 's' : ''}</strong>`);
+            
+            if (parts.length > 0) {
+                if (parts.length === 1) {
+                    narrative += parts[0];
+                } else if (parts.length === 2) {
+                    narrative += parts.join(' e ');
+                } else {
+                    narrative += parts.slice(0, -1).join(', ') + ' e ' + parts[parts.length - 1];
+                }
+            }
+            
+            narrative += `, totalizando <strong>${diffDays.toLocaleString('pt-BR')} dias corridos</strong>.`;
+            
+            document.getElementById('narrative-explanation').innerHTML = narrative;
 
             // Scroll suave para mobile
             if(window.innerWidth < 600) {

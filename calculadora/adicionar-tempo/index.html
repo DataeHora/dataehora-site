@@ -145,6 +145,24 @@
         }
         .res-date { font-size: clamp(2rem, 8vw, 3rem); font-weight: 900; color: var(--accent-formal); line-height: 1; display: block; }
         .res-weekday { font-size: 1.2rem; font-weight: 700; color: var(--text-muted); margin-top: 12px; display: block; text-transform: capitalize; }
+        
+        .narrative-text {
+            margin: 0 0 25px 0;
+            padding: 20px;
+            background: var(--input-bg);
+            border-radius: 16px;
+            border-left: 4px solid var(--accent-formal);
+            text-align: left;
+            line-height: 1.6;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        
+        .narrative-text strong {
+            color: var(--accent-formal);
+            font-weight: 800;
+        }
 
         footer { margin-top: 60px; text-align: center; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; }
         
@@ -208,6 +226,7 @@
 
             <div id="result-area">
                 <div class="res-divider"></div>
+                <div id="narrative-explanation" class="narrative-text"></div>
                 <div class="res-box">
                     <span class="res-date" id="res-date-final">--/--/----</span>
                     <span class="res-weekday" id="res-day-name">---</span>
@@ -218,6 +237,15 @@
 
     <footer>
         <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
+        <div style="margin-top: 30px; font-size: 0.85rem; color: var(--text-muted); text-align: center;">
+            <p style="margin-bottom: 10px;">
+                <a href="https://dataehora.com.br" style="color: var(--accent); text-decoration: none; font-weight: 700;">dataehora.com.br</a>
+            </p>
+            <p style="margin-bottom: 10px;">© 2026 Data e Hora. Todos os direitos reservados.</p>
+            <p>
+                Contato: <a href="mailto:contato@dataehora.com.br" style="color: var(--accent); text-decoration: none;">contato@dataehora.com.br</a>
+            </p>
+        </div>
     </footer>
 
     <script>
@@ -249,6 +277,17 @@
             document.getElementById('result-area').style.display = 'block';
             document.getElementById('res-date-final').textContent = formattedDate;
             document.getElementById('res-day-name').textContent = weekday;
+            
+            // Add narrative explanation
+            const baseDate = new Date(y, m - 1, d);
+            const baseDateFormatted = baseDate.toLocaleDateString('pt-BR');
+            const operation = op === 'add' ? 'Adicionando' : 'Subtraindo';
+            const dayWord = amount === 1 ? 'dia' : 'dias';
+            
+            let narrative = `${operation} <strong>${amount} ${dayWord}</strong> ${op === 'add' ? 'à' : 'da'} data inicial <strong>${baseDateFormatted}</strong>, `;
+            narrative += `chegamos a <strong>${formattedDate}</strong>, que cai em uma <strong>${weekday}</strong>.`;
+            
+            document.getElementById('narrative-explanation').innerHTML = narrative;
             
             // Scroll suave para o resultado em dispositivos móveis
             if(window.innerWidth < 600) {

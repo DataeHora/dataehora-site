@@ -143,6 +143,24 @@
             color: var(--text-muted); background: var(--input-bg); padding: 12px 20px; 
             border-radius: 14px; border: 1px solid var(--border); font-size: 0.9rem; font-weight: 700;
         }
+        
+        .narrative-text {
+            margin: 25px 0;
+            padding: 20px;
+            background: var(--input-bg);
+            border-radius: 16px;
+            border-left: 4px solid var(--accent-formal);
+            text-align: left;
+            line-height: 1.6;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        
+        .narrative-text strong {
+            color: var(--accent-formal);
+            font-weight: 800;
+        }
 
         #holiday-list-container { text-align: left; margin-top: 30px; }
         .holiday-list-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 15px; letter-spacing: 1px; display: block; }
@@ -204,6 +222,9 @@
 
             <div id="result-area">
                 <div class="res-divider"></div>
+                
+                <div id="narrative-explanation" class="narrative-text"></div>
+                
                 <span class="res-value" id="res-uteis">0</span>
                 <span class="res-label">Dias Úteis</span>
                 
@@ -222,6 +243,15 @@
 
     <footer>
         <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
+        <div style="margin-top: 30px; font-size: 0.85rem; color: var(--text-muted); text-align: center;">
+            <p style="margin-bottom: 10px;">
+                <a href="https://dataehora.com.br" style="color: var(--accent); text-decoration: none; font-weight: 700;">dataehora.com.br</a>
+            </p>
+            <p style="margin-bottom: 10px;">© 2026 Data e Hora. Todos os direitos reservados.</p>
+            <p>
+                Contato: <a href="mailto:contato@dataehora.com.br" style="color: var(--accent); text-decoration: none;">contato@dataehora.com.br</a>
+            </p>
+        </div>
     </footer>
 
     <script>
@@ -291,6 +321,26 @@
             document.getElementById('res-uteis').textContent = uteis;
             document.getElementById('res-corridos').textContent = corridos;
             document.getElementById('res-feriados').textContent = holidaysFound.length;
+            
+            // Add narrative explanation
+            const startFormatted = d1.toLocaleDateString('pt-BR');
+            const endFormatted = d2.toLocaleDateString('pt-BR');
+            const weekends = corridos - uteis - holidaysFound.length;
+            
+            let narrative = `Entre <strong>${startFormatted}</strong> e <strong>${endFormatted}</strong>, `;
+            narrative += `há um total de <strong>${corridos} dias corridos</strong>. `;
+            narrative += `Deste período, <strong>${uteis} são dias úteis</strong>`;
+            
+            if (holidaysFound.length > 0 || weekends > 0) {
+                narrative += `, excluindo `;
+                const parts = [];
+                if (weekends > 0) parts.push(`${weekends} dias de fim de semana`);
+                if (holidaysFound.length > 0) parts.push(`${holidaysFound.length} feriado${holidaysFound.length > 1 ? 's' : ''} nacional${holidaysFound.length > 1 ? 'is' : ''}`);
+                narrative += parts.join(' e ');
+            }
+            narrative += `.`;
+            
+            document.getElementById('narrative-explanation').innerHTML = narrative;
 
             const listCont = document.getElementById('holiday-list-container');
             const listDiv = document.getElementById('holiday-list');
