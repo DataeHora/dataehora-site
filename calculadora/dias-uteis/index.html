@@ -1,6 +1,44 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Calculadora de Dias Úteis | dataehora.com.br</title>
+    <meta name="description" content="Calcule dias úteis entre datas considerando feriados nacionais. Ideal para prazos legais e comerciais.">
+    <meta name="keywords" content="dias úteis, calculadora dias úteis, prazos legais, feriados nacionais, dias corridos, prazos comerciais">
+    <meta name="author" content="dataehora.com.br">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Calculadora de Dias Úteis | dataehora.com.br">
+    <meta property="og:description" content="Calcule dias úteis entre datas considerando feriados nacionais. Ideal para prazos legais e comerciais.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dataehora.com.br/calculadora/dias-uteis/">
+    <meta property="og:site_name" content="Data e Hora">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Calculadora de Dias Úteis | dataehora.com.br">
+    <meta name="twitter:description" content="Calcule dias úteis entre datas considerando feriados nacionais. Ideal para prazos legais e comerciais.">
+    <meta name="twitter:site" content="@dataehora">
+    <meta name="twitter:creator" content="@dataehora">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Calculadora de Dias Úteis",
+      "url": "https://dataehora.com.br/calculadora/dias-uteis/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "All",
+      "featureList": "Cálculo de Dias Úteis, Feriados Nacionais, Prazos Legais"
+    }
+    </script>
+
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -9,22 +47,8 @@
       gtag('config', 'G-4Y5H59FEQE');
     </script>
     
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Dias Úteis | dataehora.com.br</title>
-    
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme-pref') || 'default';
-            const html = document.documentElement;
-            let isDark = false;
-            if (saved === 'default') isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            else if (saved === 'auto') { const h = new Date().getHours(); isDark = (h < 6 || h >= 18); }
-            else isDark = (saved === 'dark');
-            html.setAttribute('data-theme', isDark ? 'dark' : 'light');
-            html.style.backgroundColor = isDark ? '#020617' : '#f1f5f9';
-        })();
-    </script>
+    <!-- Theme Initialization - Must execute before page renders to prevent FOUC -->
+    <script src="/js/theme.js"></script>
 
     <style>
         /* 5 e 6. PADRONIZAÇÃO DE CORES (Protocolo v2) */
@@ -130,6 +154,19 @@
         .holiday-tag .h-date { color: var(--accent-formal); font-weight: 800; }
 
         footer { margin-top: 60px; text-align: center; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; }
+        
+        .btn-settings {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            color: var(--text-main);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease;
+        }
+        .btn-settings:hover { transform: translateY(-2px); }
 
         @media (max-width: 500px) {
             .breakdown { flex-direction: column; }
@@ -141,7 +178,7 @@
 <body>
 
     <div class="container">
-        <nav class="top-nav">
+        <nav class="top-nav" aria-label="Navegação estrutural">
             <a href="/">dataehora.com.br</a>
             <span>/</span>
             <a href="/calculadora/">Calculadoras</a>
@@ -181,9 +218,11 @@
                 </div>
             </div>
         </div>
-
-        <footer>dataehora.com.br</footer>
     </div>
+
+    <footer>
+        <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
+    </footer>
 
     <script>
         // 1. MANUTENÇÃO ZERO: Algoritmo de feriados brasileiros (Fixos e Móveis)

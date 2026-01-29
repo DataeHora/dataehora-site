@@ -10,19 +10,6 @@
        - /logo.png (for Schema.org structured data)
     -->
     
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-4Y5H59FEQE');
-    </script>
-    
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
-         crossorigin="anonymous"></script>
-    
     <!-- Essential Meta Tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -79,18 +66,21 @@
     }
     </script>
     
-    <!-- Theme Detection Script -->
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
     <script>
-        (function() {
-            const saved = localStorage.getItem('theme-pref') || 'default';
-            let isDark = false;
-            if (saved === 'default') isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            else if (saved === 'auto') { const h = new Date().getHours(); isDark = (h < 6 || h >= 18); }
-            else isDark = (saved === 'dark');
-            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-            document.documentElement.style.backgroundColor = isDark ? '#020617' : '#f1f5f9';
-        })();
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-4Y5H59FEQE');
     </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+         crossorigin="anonymous"></script>
+    
+    <!-- Theme Initialization - Must execute before page renders to prevent FOUC -->
+    <script src="/js/theme.js"></script>
 
     <style>
         /* CSS Variables for Theme Support */
@@ -399,23 +389,26 @@
             margin-top: 80px;
             padding: 40px 0;
             text-align: center;
-            color: var(--text-muted);
-            border-top: 1px solid var(--hr-color);
         }
 
-        footer p {
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-
-        footer a {
-            color: var(--accent);
+        .btn-settings {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            color: var(--text-main);
+            padding: 12px 24px;
+            border-radius: 12px;
             text-decoration: none;
             font-weight: 700;
+            border: 1px solid var(--hr-color);
+            transition: 0.2s;
+            box-shadow: var(--shadow);
         }
 
-        footer a:hover {
-            text-decoration: underline;
+        .btn-settings:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
         }
 
         /* Responsive Design */
@@ -472,7 +465,7 @@
 <body>
 
     <!-- Navigation Header -->
-    <header class="top-nav">
+    <header class="top-nav" aria-label="Navegação estrutural">
         <a href="/">dataehora.com.br</a>
         <span>/</span>
         <span>Artigos</span>
@@ -637,9 +630,7 @@
 
         <!-- Footer -->
         <footer>
-            <p>© 2026 <a href="/">dataehora.com.br</a> - Todos os direitos reservados</p>
-            <p>Horário oficial de Brasília, ferramentas de tempo e calendários</p>
-            <p><a href="/configuracoes/">Configurações</a> | <a href="/">Página Inicial</a></p>
+            <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
         </footer>
     </div>
 

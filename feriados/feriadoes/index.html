@@ -1,6 +1,47 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light">
+<html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Feriadões e Emendas de Feriados 2026 | dataehora.com.br</title>
+    <meta name="description" content="Planeje suas viagens com feriadões e emendas de feriados 2026. Lista completa de feriados prolongados e pontes para descanso de 3 a 4 dias consecutivos.">
+    <meta name="keywords" content="feriadões 2026, emendas de feriados, pontes de feriados, feriados prolongados, planejamento de viagens, descanso prolongado, calendário de feriadões">
+    <meta name="author" content="dataehora.com.br">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Feriadões e Emendas de Feriados 2026 | dataehora.com.br">
+    <meta property="og:description" content="Planeje suas viagens com feriadões e emendas de feriados 2026. Lista completa de feriados prolongados e pontes para descanso.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dataehora.com.br/feriados/feriadoes/">
+    <meta property="og:site_name" content="Data e Hora">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Feriadões e Emendas de Feriados 2026 | dataehora.com.br">
+    <meta name="twitter:description" content="Planeje suas viagens com feriadões e emendas de feriados 2026. Lista completa de feriados prolongados e pontes.">
+    <meta name="twitter:site" content="@dataehora">
+    <meta name="twitter:creator" content="@dataehora">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Feriadões e Emendas de Feriados",
+      "description": "Planejamento de feriadões e emendas de feriados 2026 com lista de feriados prolongados e pontes",
+      "url": "https://dataehora.com.br/feriados/feriadoes/",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Data e Hora",
+        "url": "https://dataehora.com.br/"
+      }
+    }
+    </script>
+
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -9,20 +50,11 @@
       gtag('config', 'G-4Y5H59FEQE');
     </script>
     
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feriadões e Emendas | dataehora.com.br</title>
-    
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme-pref') || 'default';
-            let isDark = false;
-            if (saved === 'default') isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            else if (saved === 'auto') { const h = new Date().getHours(); isDark = (h < 6 || h >= 18); }
-            else isDark = (saved === 'dark');
-            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        })();
-    </script>
+    <!-- Theme Initialization - Must execute before page renders to prevent FOUC -->
+    <script src="/js/theme.js"></script>
+
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="/css/styles.css">
 
     <style>
         :root {
@@ -116,7 +148,7 @@
 <body>
 
     <div class="container">
-        <nav class="nav-header">
+        <nav class="nav-header" aria-label="Navegação estrutural">
             <a href="/" class="nav-link">Início</a>
             <span class="nav-sep">/</span>
             <a href="/feriados" class="nav-link">Feriados</a>
@@ -130,9 +162,11 @@
         </header>
 
         <div id="planner-list"></div>
-
-        <footer>dataehora.com.br</footer>
     </div>
+
+    <footer>
+        <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
+    </footer>
 
     <script>
         const mesesNomes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];

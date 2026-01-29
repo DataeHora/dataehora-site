@@ -428,3 +428,247 @@ footer p {
     }
 }
 
+/* ===================================
+   Feriados Pages Specific Styles
+   =================================== */
+
+/* Additional CSS Variables for Feriados Pages */
+:root {
+    --color-feriados: #2563eb;
+    --color-feriadoes: #4338ca;
+    --y2026: #2563eb;
+    --y2027: #4338ca;
+    --y2028: #0891b2;
+    --next-bg: #2563eb;
+    --holiday-color: #ef4444;
+}
+
+[data-theme="dark"] {
+    --y2026: #60a5fa;
+    --y2027: #818cf8;
+    --y2028: #22d3ee;
+    --next-bg: #1d4ed8;
+}
+
+/* Feriados Hub Page */
+.hub-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.hub-card {
+    background: var(--bg-card);
+    border: 2px solid var(--hr-color);
+    border-radius: 28px;
+    padding: 35px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hub-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+    border-color: var(--card-color);
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+}
+
+.card-title {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--text-main);
+    letter-spacing: -1px;
+    transition: color 0.3s;
+}
+
+.card-desc {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.card-feriados {
+    --card-color: var(--color-feriados);
+}
+
+.card-feriadoes {
+    --card-color: var(--color-feriadoes);
+}
+
+.hub-card:hover .card-title {
+    color: var(--card-color);
+}
+
+.btn-action {
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    color: var(--card-color);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+/* Breadcrumb Navigation */
+.nav-header {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0 30px 0;
+    align-items: center;
+}
+
+.nav-link {
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: var(--accent);
+}
+
+.nav-sep {
+    color: var(--text-muted);
+    font-weight: 800;
+    font-size: 0.8rem;
+}
+
+.nav-current {
+    color: var(--text-muted);
+    font-weight: 800;
+    font-size: 0.85rem;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 700px;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.header {
+    margin-bottom: 50px;
+    text-align: left;
+}
+
+.header h1 {
+    font-size: 2.8rem;
+    margin: 0;
+    letter-spacing: -1.8px;
+    font-weight: 900;
+    line-height: 1.1;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    margin-top: 10px;
+    font-weight: 500;
+    max-width: 500px;
+}
+
+/* Feriados Calendar Pages */
+.next-banner {
+    background: var(--next-bg);
+    color: #ffffff;
+    padding: 45px 30px;
+    border-radius: 32px;
+    text-align: center;
+    box-shadow: 0 20px 30px -10px rgba(37, 99, 235, 0.3);
+    margin-bottom: 60px;
+}
+
+.next-banner .label {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    font-weight: 800;
+    opacity: 0.8;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.next-banner .date {
+    font-size: 3.2rem;
+    font-weight: 900;
+    margin: 0;
+    display: block;
+    letter-spacing: -2px;
+    line-height: 1;
+}
+
+.next-banner .name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-top: 15px;
+    display: block;
+}
+
+.year-section {
+    margin-top: 60px;
+}
+
+.year-divider {
+    font-size: 3.5rem;
+    font-weight: 900;
+    margin-bottom: 30px;
+    letter-spacing: -3px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.year-divider::after {
+    content: '';
+    flex-grow: 1;
+    height: 4px;
+    border-radius: 4px;
+    opacity: 0.15;
+}
+
+.y-2026 .year-divider {
+    color: var(--y2026);
+}
+
+.y-2026 .year-divider::after {
+    background: var(--y2026);
+}
+
+.y-2027 .year-divider {
+    color: var(--y2027);
+}
+
+.y-2027 .year-divider::after {
+    background: var(--y2027);
+}
+
+.y-2028 .year-divider {
+    color: var(--y2028);
+}
+
+.y-2028 .year-divider::after {
+    background: var(--y2028);
+}
+
+/* Responsive Design - Feriados Pages */
+@media (max-width: 600px) {
+    .header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .hub-card {
+        padding: 25px;
+    }
+    
+    .card-title {
+        font-size: 1.5rem;
+    }
+}
+

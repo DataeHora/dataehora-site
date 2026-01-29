@@ -1,6 +1,47 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light">
+<html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Feriados Nacionais do Brasil 2026 | dataehora.com.br</title>
+    <meta name="description" content="Lista completa de feriados nacionais do Brasil 2026, 2027 e 2028. Consulte o calendário de feriados, emendas e feriadões para planejar seu ano.">
+    <meta name="keywords" content="feriados nacionais, feriados 2026, calendário de feriados, feriadões, emendas de feriados, feriados Brasil, pontes de feriados">
+    <meta name="author" content="dataehora.com.br">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Feriados Nacionais do Brasil 2026 | dataehora.com.br">
+    <meta property="og:description" content="Lista completa de feriados nacionais do Brasil 2026, 2027 e 2028. Calendário de feriados, emendas e feriadões.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dataehora.com.br/feriados/">
+    <meta property="og:site_name" content="Data e Hora">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Feriados Nacionais do Brasil 2026 | dataehora.com.br">
+    <meta name="twitter:description" content="Lista completa de feriados nacionais do Brasil. Calendário de feriados, emendas e feriadões.">
+    <meta name="twitter:site" content="@dataehora">
+    <meta name="twitter:creator" content="@dataehora">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Feriados Nacionais do Brasil",
+      "description": "Lista completa de feriados nacionais do Brasil 2026, 2027 e 2028 com calendário de emendas e feriadões",
+      "url": "https://dataehora.com.br/feriados/",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Data e Hora",
+        "url": "https://dataehora.com.br/"
+      }
+    }
+    </script>
+
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -9,115 +50,17 @@
       gtag('config', 'G-4Y5H59FEQE');
     </script>
     
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feriados Nacionais | dataehora.com.br</title>
-    
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme-pref') || 'default';
-            let isDark = false;
-            if (saved === 'default') isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            else if (saved === 'auto') { const h = new Date().getHours(); isDark = (h < 6 || h >= 18); }
-            else isDark = (saved === 'dark');
-            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        })();
-    </script>
+    <!-- Theme Initialization - Must execute before page renders to prevent FOUC -->
+    <script src="/js/theme.js"></script>
 
-    <style>
-        :root {
-            --bg-body: #f1f5f9;
-            --bg-card: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --accent: #2563eb; 
-            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-            --border: rgba(148, 163, 184, 0.2);
-            --color-feriados: #2563eb; 
-            --color-feriadoes: #4338ca; 
-        }
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="/css/styles.css">
 
-        [data-theme="dark"] {
-            --bg-body: #020617;
-            --bg-card: #0f172a;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #60a5fa; /* Azul Soft para Dark Mode */
-            --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
-            --border: rgba(255, 255, 255, 0.05);
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            margin: 0; padding: 20px;
-            display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease; /* Blindagem de Transição */
-        }
-
-        .container { width: 100%; max-width: 700px; animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* BREADCRUMB PADRONIZADO (800 weight) */
-        .nav-header { display: flex; gap: 12px; margin: 20px 0 30px 0; align-items: center; }
-        .nav-link { text-decoration: none; font-weight: 800; font-size: 0.85rem; color: var(--accent); }
-        .nav-sep { color: var(--text-muted); font-weight: 800; font-size: 0.8rem; }
-        .nav-current { color: var(--text-muted); font-weight: 800; font-size: 0.85rem; }
-
-        .header { margin-bottom: 50px; text-align: left; }
-        h1 { font-size: 2.8rem; margin: 0; letter-spacing: -1.8px; font-weight: 900; line-height: 1.1; }
-        .subtitle { color: var(--text-muted); font-size: 1.2rem; margin-top: 10px; font-weight: 500; max-width: 500px; }
-
-        .hub-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-
-        .hub-card {
-            background: var(--bg-card);
-            border: 2px solid var(--border);
-            border-radius: 28px;
-            padding: 35px;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .hub-card:hover { 
-            transform: translateY(-5px); 
-            box-shadow: var(--shadow); 
-            border-color: var(--card-color); 
-        }
-        
-        .card-icon { font-size: 2.5rem; margin-bottom: 5px; }
-        .card-title { font-size: 1.8rem; font-weight: 900; color: var(--text-main); letter-spacing: -1px; transition: color 0.3s; }
-        .card-desc { font-size: 1.05rem; color: var(--text-muted); font-weight: 500; line-height: 1.5; }
-
-        .card-feriados { --card-color: var(--color-feriados); }
-        .card-feriadoes { --card-color: var(--color-feriadoes); }
-        
-        .hub-card:hover .card-title { color: var(--card-color); }
-
-        .btn-action {
-            margin-top: 10px; display: inline-flex; align-items: center; gap: 8px;
-            font-weight: 800; color: var(--card-color); text-transform: uppercase;
-            font-size: 0.85rem; letter-spacing: 1px;
-        }
-
-        footer { text-align: center; padding: 80px 0 40px; color: var(--text-muted); font-size: 0.9rem; font-weight: 700; }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 2.2rem; }
-            .hub-card { padding: 25px; }
-            .card-title { font-size: 1.5rem; }
-        }
-    </style>
 </head>
 <body>
 
     <div class="container">
-        <nav class="nav-header">
+        <nav class="nav-header" aria-label="Navegação estrutural">
             <a href="/" class="nav-link">Início</a>
             <span class="nav-sep">/</span>
             <span class="nav-current">Feriados</span>
@@ -143,8 +86,11 @@
                 <span class="btn-action">Ver emendas e pontes →</span>
             </a>
         </main>
-
-        <footer>dataehora.com.br</footer>
     </div>
+
+    <footer>
+        <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
+    </footer>
+
 </body>
 </html>

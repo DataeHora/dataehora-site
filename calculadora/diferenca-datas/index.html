@@ -1,6 +1,44 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Calculadora de Diferença entre Datas | dataehora.com.br</title>
+    <meta name="description" content="Calcule a diferença exata entre duas datas em anos, meses, dias, horas e minutos.">
+    <meta name="keywords" content="diferença entre datas, calcular diferença datas, anos meses dias, intervalo de tempo, calculadora de tempo">
+    <meta name="author" content="dataehora.com.br">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Calculadora de Diferença entre Datas | dataehora.com.br">
+    <meta property="og:description" content="Calcule a diferença exata entre duas datas em anos, meses, dias, horas e minutos.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dataehora.com.br/calculadora/diferenca-datas/">
+    <meta property="og:site_name" content="Data e Hora">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Calculadora de Diferença entre Datas | dataehora.com.br">
+    <meta name="twitter:description" content="Calcule a diferença exata entre duas datas em anos, meses, dias, horas e minutos.">
+    <meta name="twitter:site" content="@dataehora">
+    <meta name="twitter:creator" content="@dataehora">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Calculadora de Diferença entre Datas",
+      "url": "https://dataehora.com.br/calculadora/diferenca-datas/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "All",
+      "featureList": "Cálculo de Diferença entre Datas, Anos Meses Dias, Intervalo de Tempo"
+    }
+    </script>
+
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -9,22 +47,8 @@
       gtag('config', 'G-4Y5H59FEQE');
     </script>
     
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diferença entre Datas | dataehora.com.br</title>
-    
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme-pref') || 'default';
-            const html = document.documentElement;
-            let isDark = false;
-            if (saved === 'default') isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            else if (saved === 'auto') { const h = new Date().getHours(); isDark = (h < 6 || h >= 18); }
-            else isDark = (saved === 'dark');
-            html.setAttribute('data-theme', isDark ? 'dark' : 'light');
-            html.style.backgroundColor = isDark ? '#020617' : '#f1f5f9';
-        })();
-    </script>
+    <!-- Theme Initialization - Must execute before page renders to prevent FOUC -->
+    <script src="/js/theme.js"></script>
 
     <style>
         :root {
@@ -131,6 +155,19 @@
         .total-lbl { font-size: 0.9rem; font-weight: 700; opacity: 0.9; margin-top: 5px; display: block; }
 
         footer { text-align: center; padding: 60px 0; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; }
+        
+        .btn-settings {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            color: var(--text-main);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease;
+        }
+        .btn-settings:hover { transform: translateY(-2px); }
 
         @media (max-width: 500px) {
             .res-grid { grid-template-columns: 1fr; }
@@ -142,7 +179,7 @@
 <body>
 
     <div class="container">
-        <nav class="nav-header">
+        <nav class="nav-header" aria-label="Navegação estrutural">
             <a href="/" class="nav-link">dataehora.com.br</a>
             <span class="nav-sep">/</span>
             <a href="/calculadora/" class="nav-link">Calculadoras</a>
@@ -190,9 +227,11 @@
                 </div>
             </div>
         </div>
-
-        <footer>dataehora.com.br</footer>
     </div>
+
+    <footer>
+        <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
+    </footer>
 
     <script>
         function calculate() {

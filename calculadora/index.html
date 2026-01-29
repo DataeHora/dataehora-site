@@ -1,6 +1,44 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Calculadoras de Tempo e Datas | dataehora.com.br</title>
+    <meta name="description" content="Calculadoras práticas: dias úteis, diferença entre datas, adicionar tempo e prazos. Ferramentas profissionais para gestão de tempo.">
+    <meta name="keywords" content="calculadora de datas, dias úteis, diferença entre datas, adicionar tempo, prazos, calculadora de tempo, gestão de tempo">
+    <meta name="author" content="dataehora.com.br">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Calculadoras de Tempo e Datas | dataehora.com.br">
+    <meta property="og:description" content="Calculadoras práticas: dias úteis, diferença entre datas, adicionar tempo e prazos. Ferramentas profissionais para gestão de tempo.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dataehora.com.br/calculadora/">
+    <meta property="og:site_name" content="Data e Hora">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Calculadoras de Tempo e Datas | dataehora.com.br">
+    <meta name="twitter:description" content="Calculadoras práticas: dias úteis, diferença entre datas, adicionar tempo e prazos. Ferramentas profissionais para gestão de tempo.">
+    <meta name="twitter:site" content="@dataehora">
+    <meta name="twitter:creator" content="@dataehora">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Calculadoras de Tempo e Datas",
+      "url": "https://dataehora.com.br/calculadora/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "All",
+      "featureList": "Calculadora de Dias Úteis, Diferença entre Datas, Adicionar Tempo"
+    }
+    </script>
+
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -9,27 +47,8 @@
       gtag('config', 'G-4Y5H59FEQE');
     </script>
     
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadoras de Tempo | dataehora.com.br</title>
-    
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme-pref') || 'default';
-            const html = document.documentElement;
-            let isDark = false;
-            if (saved === 'default') {
-                isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            } else if (saved === 'auto') {
-                const hora = new Date().getHours();
-                isDark = (hora < 6 || hora >= 18);
-            } else {
-                isDark = (saved === 'dark');
-            }
-            html.setAttribute('data-theme', isDark ? 'dark' : 'light');
-            html.style.backgroundColor = isDark ? '#020617' : '#f1f5f9';
-        })();
-    </script>
+    <!-- Theme Initialization - Must execute before page renders to prevent FOUC -->
+    <script src="/js/theme.js"></script>
 
     <style>
         /* 5. PADRONIZAÇÃO DE CORES (Conforme Página Inicial) */
@@ -132,6 +151,19 @@
         }
 
         footer { margin-top: 60px; text-align: center; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; opacity: 0.8; }
+        
+        .btn-settings {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            color: var(--text-main);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            border: 1px solid var(--hr-color);
+            transition: transform 0.2s ease;
+        }
+        .btn-settings:hover { transform: translateY(-2px); }
 
         @media (max-width: 600px) {
             .header { text-align: center; }
@@ -143,7 +175,7 @@
 <body>
 
     <div class="container">
-        <nav class="top-nav">
+        <nav class="top-nav" aria-label="Navegação estrutural">
             <a href="/">dataehora.com.br</a>
             <span>/</span>
             <span>Calculadoras</span>
@@ -176,9 +208,11 @@
                 <span class="btn-action">Somar Tempo →</span>
             </a>
         </main>
-
-        <footer>dataehora.com.br</footer>
     </div>
+
+    <footer>
+        <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
+    </footer>
 
 </body>
 </html>

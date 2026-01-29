@@ -1,6 +1,44 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Calendário Anual Inteligente 2026 | dataehora.com.br</title>
+    <meta name="description" content="Calendário anual completo com feriados nacionais, fases da lua e semanas ISO. Exportação em PDF e visualização personalizada.">
+    <meta name="keywords" content="calendário 2026, fases da lua, semanas ISO, calendário anual, feriados, exportar PDF">
+    <meta name="author" content="dataehora.com.br">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Calendário Anual Inteligente 2026 | dataehora.com.br">
+    <meta property="og:description" content="Calendário anual completo com feriados nacionais, fases da lua e semanas ISO. Exportação em PDF e visualização personalizada.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dataehora.com.br/calendario/">
+    <meta property="og:site_name" content="Data e Hora">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Calendário Anual Inteligente 2026 | dataehora.com.br">
+    <meta name="twitter:description" content="Calendário anual completo com feriados nacionais, fases da lua e semanas ISO. Exportação em PDF e visualização personalizada.">
+    <meta name="twitter:site" content="@dataehora">
+    <meta name="twitter:creator" content="@dataehora">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Calendário Anual Inteligente",
+      "url": "https://dataehora.com.br/calendario/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "All",
+      "featureList": "Calendário Anual com Feriados, Fases da Lua, Semanas ISO, Exportação PDF"
+    }
+    </script>
+
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -9,24 +47,12 @@
       gtag('config', 'G-4Y5H59FEQE');
     </script>
     
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendário Anual Inteligente | dataehora.com.br</title>
+    <!-- External Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme-pref') || 'default';
-            const html = document.documentElement;
-            let isDark = false;
-            if (saved === 'default') isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            else if (saved === 'auto') { const h = new Date().getHours(); isDark = (h < 6 || h >= 18); }
-            else isDark = (saved === 'dark');
-            html.setAttribute('data-theme', isDark ? 'dark' : 'light');
-            html.style.backgroundColor = isDark ? '#020617' : '#f1f5f9';
-        })();
-    </script>
+    <!-- Theme Initialization - Must execute before page renders to prevent FOUC -->
+    <script src="/js/theme.js"></script>
     
     <style>
         :root {
@@ -143,6 +169,32 @@
         .moon-item { color: #1e293b; font-weight: 600; display: block; }
         .holiday-item { color: #ef4444; display: block; font-weight: 700; }
 
+        footer {
+            margin-top: 40px;
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .btn-settings {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            color: var(--text-main);
+            padding: 12px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            border: 1px solid var(--hr-color);
+            transition: 0.2s;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-settings:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+        }
+
         @media print {
             .controls-panel, .nav-header { display: none !important; }
             body { background: white; padding: 0; }
@@ -153,7 +205,7 @@
 <body>
 
 <div class="container-central">
-    <nav class="nav-header">
+    <nav class="nav-header" aria-label="Navegação estrutural">
         <a href="/" class="nav-link">Início</a>
         <span class="nav-sep">/</span>
         <span style="color: var(--text-muted); font-weight: 800;">Calendário Anual</span>
@@ -211,6 +263,10 @@
         <div class="calendar-container" id="calendar-wrapper"></div>
     </div>
 </div>
+
+<footer>
+    <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
+</footer>
 
 <script>
     const feriadosFixos = { "0-1":"Ano Novo","3-21":"Tiradentes","4-1":"Trabalho","8-7":"Independência","9-12":"Nossa Sra. Aparecida","10-2":"Finados","10-15":"Proclamação República","10-20":"Consciência Negra","11-25":"Natal" };
