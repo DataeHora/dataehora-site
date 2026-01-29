@@ -135,7 +135,7 @@ function updateHoliday() {
     const prep = (proximo.d.getDay() === 0 || proximo.d.getDay() === 6) ? "no" : "numa";
 
     document.getElementById('holiday-display').innerHTML = 
-        `O próximo feriado é <strong>${proximo.n}</strong>, que cai ${prep} <strong>${fmtDia}</strong>, dia <strong>${fmtData}</strong>. Faltam <strong>${diff} dias</strong>.`;
+        `O próximo feriado é <strong>${proximo.n}</strong> no dia <strong>${fmtData}</strong>, que é em <strong>${diff} dias</strong>.`;
 }
 
 /**
