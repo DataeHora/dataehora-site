@@ -54,9 +54,6 @@
     <!-- Theme Initialization - Must execute before page renders to prevent FOUC -->
     <script src="/js/theme.js"></script>
     
-    <!-- Brazilian States Data -->
-    <script src="/js/estados-brasil.js"></script>
-    
     <style>
         :root {
             --bg-body: #f1f5f9;
@@ -221,18 +218,6 @@
                 </select>
         </div>
         <div class="control-group">
-            <label for="state-select">Estado</label>
-            <select id="state-select" onchange="onStateChangeCalendar()">
-                <option value="">Apenas Nacional</option>
-            </select>
-        </div>
-        <div class="control-group">
-            <label for="city-select">Município</label>
-            <select id="city-select" onchange="renderCalendar()" disabled>
-                <option value="">Selecione estado</option>
-            </select>
-        </div>
-        <div class="control-group">
             <label for="grid-select">Visualização</label>
             <select id="grid-select" onchange="renderCalendar()">
                 <option value="3x4">3 colunas x 4 linhas</option>
@@ -295,53 +280,7 @@
 <script>
     const feriadosFixos = { "0-1":"Ano Novo","3-21":"Tiradentes","4-1":"Trabalho","8-7":"Independência","9-12":"Nossa Sra. Aparecida","10-2":"Finados","10-15":"Proclamação República","10-20":"Consciência Negra","11-25":"Natal" };
     
-    let stateHolidaysCalendar = {};
-    let cityHolidaysCalendar = {};
-
-    // Initialize state dropdown for calendar
-    function initStateDropdownCalendar() {
-        const stateSelect = document.getElementById('state-select');
-        ESTADOS_BRASIL.forEach(estado => {
-            const option = document.createElement('option');
-            option.value = estado.uf;
-            option.textContent = estado.nome;
-            stateSelect.appendChild(option);
-        });
-    }
-
-    // Handle state selection change on calendar
-    async function onStateChangeCalendar() {
-        const stateSelect = document.getElementById('state-select');
-        const citySelect = document.getElementById('city-select');
-        const selectedState = stateSelect.value;
-
-        // Reset city dropdown
-        citySelect.innerHTML = '<option value="">Carregando...</option>';
-        citySelect.disabled = true;
-        cityHolidaysCalendar = {};
-
-        if (!selectedState) {
-            citySelect.innerHTML = '<option value="">Selecione estado</option>';
-            stateHolidaysCalendar = {};
-            renderCalendar();
-            return;
-        }
-
-        // Fetch municipalities for selected state
-        const municipios = await getMunicipios(selectedState);
-        citySelect.innerHTML = '<option value="">Apenas Estado</option>';
-        municipios.forEach(mun => {
-            const option = document.createElement('option');
-            option.value = mun.codigo;
-            option.textContent = mun.nome;
-            citySelect.appendChild(option);
-        });
-        citySelect.disabled = false;
-
-        // Note: State holidays would be fetched from API if available
-        stateHolidaysCalendar = {};
-        renderCalendar();
-    }
+    // Removed state and city holiday support - only national holidays are available
 
     function getFeriadosMoveis(ano) {
         if(ano === 2025) return {"2-4":"Carnaval","3-18":"Sexta Santa","5-19":"Corpus Christi"};
@@ -422,7 +361,7 @@
             for (let d = 1; d <= ult; d++) {
                 const data = new Date(ano, m, d);
                 const ds = data.getDay();
-                const f = feriadosFixos[`${m}-${d}`] || fMoveis[`${m}-${d}`] || stateHolidaysCalendar[`${m}-${d}`] || cityHolidaysCalendar[`${m}-${d}`];
+                const f = feriadosFixos[`${m}-${d}`] || fMoveis[`${m}-${d}`];
                 const moon = getMoonData(ano, m, d);
 
                 let cl = "day";
@@ -486,7 +425,6 @@
     }
 
     window.onload = () => {
-        initStateDropdownCalendar();
         setupYearSelect();
         renderCalendar();
         updateFontSize();

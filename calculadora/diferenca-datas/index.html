@@ -49,6 +49,9 @@
     
     <!-- Theme Initialization - Must execute before page renders to prevent FOUC -->
     <script src="/js/theme.js"></script>
+    
+    <!-- Holiday utilities for calculating Brazilian holidays -->
+    <script src="/js/holidays.js"></script>
 
     <style>
         :root {
@@ -277,6 +280,36 @@
             const diffTime = Math.abs(d2 - d1);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+            // Calculate weekends and business days
+            let weekendDays = 0;
+            let businessDays = 0;
+            
+            // Get all holidays in the range
+            const startYear = d1.getFullYear();
+            const endYear = d2.getFullYear();
+            const allHolidays = [];
+            
+            for (let year = startYear; year <= endYear; year++) {
+                const yearHolidays = getHolidays(year);
+                allHolidays.push(...yearHolidays.map(h => h.dt.getTime()));
+            }
+            
+            // Count weekends and business days
+            const current = new Date(d1);
+            while (current <= d2) {
+                const dayOfWeek = current.getDay();
+                const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+                const isHoliday = allHolidays.includes(current.getTime());
+                
+                if (isWeekend) {
+                    weekendDays++;
+                } else if (!isHoliday) {
+                    businessDays++;
+                }
+                
+                current.setDate(current.getDate() + 1);
+            }
+
             // 2. Decomposição (Anos, Meses, Dias)
             let years = d2.getFullYear() - d1.getFullYear();
             let months = d2.getMonth() - d1.getMonth();
@@ -304,6 +337,7 @@
             // Add narrative explanation
             const startFormatted = d1.toLocaleDateString('pt-BR');
             const endFormatted = d2.toLocaleDateString('pt-BR');
+            const endWeekday = d2.toLocaleDateString('pt-BR', { weekday: 'long' });
             
             let narrative = `Entre <strong>${startFormatted}</strong> e <strong>${endFormatted}</strong>, `;
             narrative += `há um intervalo de `;
@@ -323,7 +357,10 @@
                 }
             }
             
-            narrative += `, totalizando <strong>${diffDays.toLocaleString('pt-BR')} dias corridos</strong>.`;
+            narrative += `, totalizando <strong>${diffDays.toLocaleString('pt-BR')} dias corridos</strong>. `;
+            narrative += `Deste período, <strong>${businessDays.toLocaleString('pt-BR')} são dias úteis</strong> `;
+            narrative += `e <strong>${weekendDays.toLocaleString('pt-BR')} são dias de fim de semana</strong>. `;
+            narrative += `O período termina em uma <strong>${endWeekday}</strong>.`;
             
             document.getElementById('narrative-explanation').innerHTML = narrative;
 
