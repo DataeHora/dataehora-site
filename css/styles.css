@@ -467,45 +467,48 @@ footer a:hover {
 .hub-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 24px;
 }
 
 .hub-card {
     background: var(--bg-card);
     border: 2px solid var(--hr-color);
-    border-radius: 28px;
-    padding: 35px;
+    border-radius: 32px;
+    padding: 40px;
     text-decoration: none;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow);
 }
 
 .hub-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12);
     border-color: var(--card-color);
 }
 
 .card-icon {
-    font-size: 2.5rem;
-    margin-bottom: 5px;
+    font-size: 3rem;
+    margin-bottom: 8px;
+    line-height: 1;
 }
 
 .card-title {
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 900;
     color: var(--text-main);
-    letter-spacing: -1px;
+    letter-spacing: -1.2px;
     transition: color 0.3s;
+    line-height: 1.1;
 }
 
 .card-desc {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     color: var(--text-muted);
     font-weight: 500;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
 .card-feriados {
@@ -562,88 +565,91 @@ footer a:hover {
 /* Container */
 .container {
     width: 100%;
-    max-width: 700px;
+    max-width: 750px;
     animation: fadeIn 0.4s ease-out;
+    margin: 0 auto;
 }
 
 .header {
-    margin-bottom: 50px;
+    margin-bottom: 55px;
     text-align: left;
 }
 
 .header h1 {
-    font-size: 2.8rem;
+    font-size: 3rem;
     margin: 0;
-    letter-spacing: -1.8px;
+    letter-spacing: -2px;
     font-weight: 900;
     line-height: 1.1;
 }
 
 .subtitle {
     color: var(--text-muted);
-    font-size: 1.2rem;
-    margin-top: 10px;
+    font-size: 1.25rem;
+    margin-top: 12px;
     font-weight: 500;
-    max-width: 500px;
+    max-width: 550px;
+    line-height: 1.5;
 }
 
 /* Feriados Calendar Pages */
 .next-banner {
-    background: var(--next-bg);
+    background: linear-gradient(135deg, var(--next-bg) 0%, #1d4ed8 100%);
     color: #ffffff;
-    padding: 45px 30px;
+    padding: 50px 35px;
     border-radius: 32px;
     text-align: center;
-    box-shadow: 0 20px 30px -10px rgba(37, 99, 235, 0.3);
-    margin-bottom: 60px;
+    box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.35);
+    margin-bottom: 65px;
 }
 
 .next-banner .label {
     text-transform: uppercase;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 800;
-    opacity: 0.8;
-    letter-spacing: 2px;
+    opacity: 0.85;
+    letter-spacing: 2.5px;
     display: block;
-    margin-bottom: 15px;
+    margin-bottom: 18px;
 }
 
 .next-banner .date {
-    font-size: 3.2rem;
+    font-size: 3.5rem;
     font-weight: 900;
     margin: 0;
     display: block;
-    letter-spacing: -2px;
+    letter-spacing: -2.5px;
     line-height: 1;
 }
 
 .next-banner .name {
-    font-size: 1.6rem;
+    font-size: 1.7rem;
     font-weight: 700;
-    margin-top: 15px;
+    margin-top: 18px;
     display: block;
+    opacity: 0.95;
 }
 
 .year-section {
-    margin-top: 60px;
+    margin-top: 65px;
 }
 
 .year-divider {
-    font-size: 3.5rem;
+    font-size: 3.8rem;
     font-weight: 900;
-    margin-bottom: 30px;
-    letter-spacing: -3px;
+    margin-bottom: 35px;
+    letter-spacing: -3.5px;
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 25px;
 }
 
 .year-divider::after {
     content: '';
     flex-grow: 1;
-    height: 4px;
-    border-radius: 4px;
-    opacity: 0.15;
+    height: 5px;
+    border-radius: 5px;
+    opacity: 0.18;
 }
 
 .y-2026 .year-divider {
@@ -677,34 +683,82 @@ footer a:hover {
     }
     
     .hub-card {
-        padding: 25px;
+        padding: 30px;
+    }
+    
+    .card-icon {
+        font-size: 2.5rem;
     }
     
     .card-title {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
+    }
+    
+    .next-banner {
+        padding: 35px 25px;
+    }
+    
+    .next-banner .date {
+        font-size: 2.5rem;
+    }
+    
+    .next-banner .name {
+        font-size: 1.3rem;
+    }
+    
+    .year-divider {
+        font-size: 2.8rem;
     }
     
     .holiday-row {
-        grid-template-columns: 110px 1fr;
+        grid-template-columns: 100px 1fr;
+        padding: 18px 15px;
+        margin: 0;
+    }
+    
+    .holiday-row:hover:not(.past) {
+        transform: translateX(5px);
+    }
+    
+    .col-date {
+        font-size: 1.2rem;
     }
     
     .col-weekday {
         display: none;
     }
     
+    .col-name {
+        font-size: 1.05rem;
+        text-align: left;
+    }
+    
     .trip-card {
         grid-template-columns: 1fr;
         gap: 20px;
+        padding: 24px;
+    }
+    
+    .info-main {
+        font-size: 1.2rem;
     }
     
     .trip-counter {
         border-left: none;
-        border-top: 1px solid var(--hr-color);
-        padding: 15px 0 0 0;
+        border-top: 2px solid var(--hr-color);
+        padding: 18px 0 0 0;
         display: flex;
         align-items: baseline;
         justify-content: center;
-        gap: 8px;
+        gap: 10px;
+    }
+    
+    .days-val {
+        font-size: 2.2rem;
+    }
+    
+    .year-title {
+        font-size: 2.8rem;
     }
 }
 
@@ -713,31 +767,34 @@ footer a:hover {
     display: grid;
     grid-template-columns: 130px 160px 1fr;
     align-items: center;
-    padding: 20px 15px;
+    padding: 22px 20px;
     border-bottom: 1px solid var(--hr-color);
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 0 -10px;
 }
 
 .holiday-row:hover:not(.past) {
     background: var(--bg-card);
-    border-radius: 16px;
-    transform: translateX(8px);
+    border-radius: 18px;
+    transform: translateX(10px);
     box-shadow: var(--shadow);
+    border-color: transparent;
 }
 
 .holiday-row.past {
-    opacity: 0.35;
-    filter: grayscale(1);
+    opacity: 0.4;
+    filter: grayscale(0.8);
 }
 
 .col-date {
     font-weight: 900;
-    font-size: 1.25rem;
+    font-size: 1.35rem;
+    letter-spacing: -0.5px;
 }
 
 .col-weekday {
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 700;
     color: var(--text-muted);
     text-transform: capitalize;
 }
@@ -745,30 +802,31 @@ footer a:hover {
 .col-name {
     font-weight: 800;
     text-align: right;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
+    color: var(--text-main);
 }
 
 /* Feriadoes page styles */
 .year-group {
-    margin-top: 60px;
+    margin-top: 65px;
 }
 
 .year-title {
-    font-size: 3.5rem;
+    font-size: 3.8rem;
     font-weight: 900;
-    margin-bottom: 30px;
-    letter-spacing: -3px;
+    margin-bottom: 35px;
+    letter-spacing: -3.5px;
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 25px;
 }
 
 .year-title::after {
     content: '';
     flex-grow: 1;
-    height: 4px;
-    border-radius: 4px;
-    opacity: 0.15;
+    height: 5px;
+    border-radius: 5px;
+    opacity: 0.18;
 }
 
 /* Filter Section for State/Municipal Holidays */
@@ -848,105 +906,125 @@ footer a:hover {
 }
 
 .month-group {
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 }
 
 .month-label {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 15px;
+    letter-spacing: 2.5px;
+    margin-bottom: 18px;
     color: var(--text-muted);
+    opacity: 0.9;
 }
 
 .trip-card {
     background: var(--bg-card);
     border: 1px solid var(--hr-color);
-    border-radius: 24px;
-    padding: 25px 30px;
-    margin-bottom: 15px;
+    border-radius: 26px;
+    padding: 28px 32px;
+    margin-bottom: 18px;
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
+    gap: 24px;
     box-shadow: var(--shadow);
-    transition: 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .trip-card:hover:not(.past) {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.12);
     border-color: var(--accent);
 }
 
 .trip-card.past {
-    opacity: 0.35;
-    filter: grayscale(1);
+    opacity: 0.4;
+    filter: grayscale(0.8);
+}
+
+.trip-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .info-main {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.3rem;
+    align-items: baseline;
+    gap: 12px;
+    font-size: 1.4rem;
     font-weight: 900;
-    margin-bottom: 10px;
+    letter-spacing: -0.5px;
 }
 
 .info-week {
     color: var(--text-muted);
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.info-name {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text-main);
 }
 
 .badge-area {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .badge {
-    padding: 5px 12px;
-    border-radius: 8px;
-    font-size: 0.7rem;
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-size: 0.75rem;
     font-weight: 900;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .prolongado {
-    background: #10b98120;
+    background: #10b98125;
     color: var(--color-prolongado);
 }
 
 .emenda {
-    background: #f59e0b20;
+    background: #f59e0b25;
     color: var(--color-emenda);
 }
 
 .desc-folga {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 700;
     color: var(--text-muted);
 }
 
 .trip-counter {
     text-align: center;
-    padding-left: 25px;
+    padding-left: 28px;
     border-left: 2px solid var(--hr-color);
-    min-width: 80px;
+    min-width: 90px;
 }
 
 .days-val {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     font-weight: 900;
     line-height: 1;
     display: block;
+    letter-spacing: -1px;
 }
 
 .days-lbl {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 800;
     text-transform: uppercase;
     color: var(--text-muted);
+    display: block;
+    margin-top: 4px;
 }
 
