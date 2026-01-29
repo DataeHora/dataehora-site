@@ -207,3 +207,212 @@ hr.discreet {
         justify-content: center;
     }
 }
+
+/* ===================================
+   Settings Page Specific Styles
+   =================================== */
+
+/* Additional CSS Variables for Settings Page */
+:root {
+    --switch-bg: #e2e8f0;
+    --slider: #ffffff;
+    --border: rgba(148, 163, 184, 0.2);
+}
+
+[data-theme="dark"] {
+    --switch-bg: #1e293b;
+    --slider: #334155;
+    --border: rgba(255, 255, 255, 0.05);
+}
+
+/* Settings Container */
+.settings-container {
+    width: 100%;
+    max-width: 600px;
+    animation: fadeIn 0.4s ease-out;
+    margin-bottom: 40px;
+}
+
+/* Settings Header */
+.settings-header {
+    margin-bottom: 40px;
+}
+
+.settings-header h1 {
+    font-size: 2.4rem;
+    margin: 0;
+    letter-spacing: -1.8px;
+    font-weight: 900;
+}
+
+.settings-subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+/* Settings Section Cards */
+.settings-section {
+    background: var(--bg-card);
+    padding: clamp(25px, 5vw, 40px);
+    border-radius: 28px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    margin-bottom: 30px;
+}
+
+.settings-section h2 {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Setting Item */
+.setting-item {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.setting-label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Quad Switch Component */
+.quad-switch {
+    position: relative;
+    display: flex;
+    background: var(--switch-bg);
+    border-radius: 16px;
+    padding: 5px;
+    height: 52px;
+    user-select: none;
+    border: 1px solid var(--border);
+}
+
+.quad-switch input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.quad-switch label {
+    flex: 1;
+    z-index: 2;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    transition: color 0.3s;
+    text-transform: uppercase;
+}
+
+.quad-switch input:checked + label {
+    color: var(--text-main);
+}
+
+.quad-switch input:focus-visible + label {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 12px;
+}
+
+.slider {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: calc(25% - 7.5px);
+    height: calc(100% - 10px);
+    background: var(--slider);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    z-index: 1;
+}
+
+#default:checked ~ .slider {
+    transform: translateX(0);
+}
+
+#auto:checked ~ .slider {
+    transform: translateX(100%);
+}
+
+#light:checked ~ .slider {
+    transform: translateX(200%);
+}
+
+#dark:checked ~ .slider {
+    transform: translateX(300%);
+}
+
+/* Contact Section */
+.contact-text {
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+.email-link {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 20px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 1.1rem;
+    padding: 16px 32px;
+    background: var(--accent);
+    border-radius: 18px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.email-link:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+    padding: 40px 20px 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 700;
+    width: 100%;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Responsive Design - Settings Page */
+@media (max-width: 600px) {
+    .quad-switch label span {
+        display: none;
+    }
+    
+    .quad-switch label::after {
+        content: attr(data-icon);
+        font-size: 1.3rem;
+    }
+    
+    .settings-header h1 {
+        font-size: 2rem;
+    }
+}
+
