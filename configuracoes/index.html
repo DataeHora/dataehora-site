@@ -65,15 +65,15 @@
     </header>
 
     <main class="settings-container">
-        <header class="settings-header">
+        <div class="settings-header">
             <h1>Configurações</h1>
             <p class="settings-subtitle">Ajuste a interface para sua melhor leitura.</p>
-        </header>
+        </div>
 
         <section class="settings-section" aria-labelledby="visual-heading">
             <h2 id="visual-heading">🎨 Visual</h2>
             <div class="setting-item">
-                <label class="setting-label" for="theme-selector">Tema da Interface</label>
+                <div class="setting-label">Tema da Interface</div>
                 <div class="quad-switch" role="radiogroup" aria-label="Seletor de tema da interface" id="theme-selector">
                     <input type="radio" name="theme" id="default" value="default" aria-label="Tema do sistema operacional">
                     <label for="default" data-icon="💻"><span>Sistema</span></label>
@@ -111,27 +111,33 @@
         // Theme management using centralized logic
         const inputs = document.querySelectorAll('input[name="theme"]');
 
+        /**
+         * Convert theme preference to actual theme value
+         * @param {string} theme - Theme preference (default, auto, light, dark)
+         * @returns {string} Actual theme to apply (light or dark)
+         */
+        function resolveTheme(theme) {
+            if (theme === 'light' || theme === 'dark') {
+                return theme;
+            }
+            if (theme === 'default') {
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            if (theme === 'auto') {
+                const h = new Date().getHours();
+                // 6am-6pm = light, otherwise dark
+                return (h < 6 || h >= 18) ? 'dark' : 'light';
+            }
+            return 'light';
+        }
+
         function updateDOMTheme(theme) {
+            const targetTheme = resolveTheme(theme);
             if (window.themeManager && typeof window.themeManager.applyTheme === 'function') {
-                // Use centralized theme manager
-                let targetTheme = theme;
-                if (theme === 'default') {
-                    targetTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                } else if (theme === 'auto') {
-                    const h = new Date().getHours();
-                    targetTheme = (h < 6 || h >= 18) ? 'dark' : 'light';
-                }
                 window.themeManager.applyTheme(targetTheme);
             } else {
                 // Fallback if theme.js not loaded
                 console.warn('Theme manager not available');
-                let targetTheme = theme;
-                if (theme === 'default') {
-                    targetTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                } else if (theme === 'auto') {
-                    const h = new Date().getHours();
-                    targetTheme = (h < 6 || h >= 18) ? 'dark' : 'light';
-                }
                 document.documentElement.setAttribute('data-theme', targetTheme);
             }
         }
@@ -145,12 +151,12 @@
         });
 
         // Initialize theme selector with current preference
+        // Note: Theme is already applied by theme.js, we just need to update the UI
         const currentPref = localStorage.getItem('theme-pref') || 'default';
         const currentInput = document.getElementById(currentPref);
         if (currentInput) {
             currentInput.checked = true;
         }
-        updateDOMTheme(currentPref);
     </script>
 </body>
 </html>
