@@ -244,8 +244,7 @@
     <a href="/configuracoes/" class="btn-settings">⚙️ Configurações & Temas</a>
     <div style="margin-top: 30px; font-size: 0.85rem; color: var(--text-muted); text-align: center; line-height: 1.8;">
         dataehora.com.br<br>
-        Todos os direitos reservados.<br>
-        Contato: contato@dataehora.com.br
+        contato@dataehora.com.br
     </div>
 </footer>
 
@@ -395,18 +394,39 @@
         const diff = targetEvent.date - nowBrasilia;
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         
+        // Get the day of week
+        const dayOfWeek = targetEvent.date.toLocaleDateString('pt-BR', {
+            weekday: 'long',
+            timeZone: 'America/Sao_Paulo'
+        });
+        
+        // Get short date format dd/mm/yy
+        const shortDate = targetEvent.date.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit',
+            timeZone: 'America/Sao_Paulo'
+        });
+        
+        // Determine num/numa based on gender of day of week
+        // Days with "feira" (segunda, terça, quarta, quinta, sexta) are feminine and use "numa"
+        // Days without "feira" (sábado, domingo) are masculine and use "num"
+        const preposition = dayOfWeek.includes('feira') ? 'numa' : 'num';
+        
+        // Natural narrative for the countdown
+        const label = days > 0 
+            ? `O evento selecionado é dia ${shortDate}, ${preposition} ${dayOfWeek}. Faltam exatamente ${days} ${days === 1 ? 'dia' : 'dias'}.`
+            : '🎉 Evento chegou!';
+        document.getElementById('label-txt').textContent = label;
+        
+        document.getElementById('display-name').textContent = targetEvent.name;
+        
         const dateFormatted = targetEvent.date.toLocaleDateString('pt-BR', {
             day: 'numeric',
             month: 'long',
             year: 'numeric',
             timeZone: 'America/Sao_Paulo'
         });
-        
-        // Natural narrative for the countdown
-        const label = days > 0 ? `O próximo evento é ${targetEvent.name} no dia ${dateFormatted}, que é em ${days} dias` : '🎉 Evento chegou!';
-        document.getElementById('label-txt').textContent = label;
-        
-        document.getElementById('display-name').textContent = targetEvent.name;
         document.getElementById('display-full-date').textContent = dateFormatted;
     }
 
@@ -414,13 +434,24 @@
     function updateShareLinks() {
         if (!targetEvent) return;
         
+        const nowBrasilia = getBrasiliaDate();
+        const diff = targetEvent.date - nowBrasilia;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        
         // Create URL with event parameters
         const params = new URLSearchParams();
         params.set('event', targetEvent.name);
         params.set('date', targetEvent.date.toISOString());
         
         const shareUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
-        const shareText = `Faltam exatamente ${daysRemaining} dias para ${targetEvent.name}! Veja a contagem regressiva: ${shareUrl}`;
+        
+        // Create appropriate share text based on whether event has arrived
+        let shareText;
+        if (days > 0) {
+            shareText = `Faltam exatamente ${days} ${days === 1 ? 'dia' : 'dias'} para ${targetEvent.name}! Veja a contagem regressiva: ${shareUrl}`;
+        } else {
+            shareText = `O evento ${targetEvent.name} já chegou! Veja: ${shareUrl}`;
+        }
         
         const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
         document.getElementById('share-wa').href = waUrl;
