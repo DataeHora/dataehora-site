@@ -409,9 +409,9 @@
         });
         
         // Determine num/numa based on gender of day of week
-        // Days ending in 'a' (segunda, terça, quarta, quinta, sexta) use "numa"
-        // Days ending in 'o' (sábado, domingo) use "num"
-        const preposition = dayOfWeek.endsWith('a') ? 'numa' : 'num';
+        // Days with "feira" (segunda, terça, quarta, quinta, sexta) are feminine and use "numa"
+        // Days without "feira" (sábado, domingo) are masculine and use "num"
+        const preposition = dayOfWeek.includes('feira') ? 'numa' : 'num';
         
         // Natural narrative for the countdown
         const label = days > 0 
@@ -444,7 +444,14 @@
         params.set('date', targetEvent.date.toISOString());
         
         const shareUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
-        const shareText = `Faltam exatamente ${days} ${days === 1 ? 'dia' : 'dias'} para ${targetEvent.name}! Veja a contagem regressiva: ${shareUrl}`;
+        
+        // Create appropriate share text based on whether event has arrived
+        let shareText;
+        if (days > 0) {
+            shareText = `Faltam exatamente ${days} ${days === 1 ? 'dia' : 'dias'} para ${targetEvent.name}! Veja a contagem regressiva: ${shareUrl}`;
+        } else {
+            shareText = `O evento ${targetEvent.name} já chegou! Veja: ${shareUrl}`;
+        }
         
         const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
         document.getElementById('share-wa').href = waUrl;
