@@ -52,21 +52,24 @@
     
     <!-- Theme Initialization - Must execute before page renders to prevent FOUC -->
     <script src="/js/theme.js"></script>
+    
+    <!-- Holiday utilities for calculating Brazilian holidays -->
+    <script src="/js/holidays.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
         :root {
             --bg-body: #f1f5f9; --bg-card: #ffffff; --bg-timer: #f8fafc;
-            --text-main: #0f172a; --text-muted: #64748b; --accent: #4f46e5;
+            --text-main: #0f172a; --text-muted: #64748b; --accent: #2563eb;
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
             --hr-color: rgba(148, 163, 184, 0.15); --whatsapp: #22c55e;
-            --copy-btn: #6366f1;
+            --copy-btn: #2563eb;
         }
 
         [data-theme="dark"] {
             --bg-body: #020617; --bg-card: #0f172a; --bg-timer: #1e293b;
-            --text-main: #f8fafc; --text-muted: #94a3b8; --accent: #818cf8;
+            --text-main: #f8fafc; --text-muted: #94a3b8; --accent: #60a5fa;
             --hr-color: rgba(255, 255, 255, 0.08);
         }
 
@@ -250,23 +253,129 @@
 </footer>
 
 <script>
-    // Função mestre para garantir que o tempo de referência seja sempre Brasília
+    // Global state
+    let targetEvent = null;
+    let countdownInterval = null;
+
+    // Get current date/time in Brasília timezone
     function getBrasiliaDate() {
         const now = new Date();
         return new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
     }
 
-    function updateCountdown() {
+    // Populate holiday dropdown with national holidays
+    function populateHolidayDropdown() {
+        const nowBrasilia = getBrasiliaDate();
+        const year = nowBrasilia.getFullYear();
+        
+        // Get holidays for current and next year
+        const currentYearHolidays = getHolidaysForDisplay(year);
+        const nextYearHolidays = getHolidaysForDisplay(year + 1);
+        const allHolidays = [...currentYearHolidays, ...nextYearHolidays];
+        
+        // Filter future holidays only
+        const futureHolidays = allHolidays.filter(h => h.d > nowBrasilia);
+        
+        const holidayList = document.getElementById('holiday-list');
+        holidayList.innerHTML = '';
+        
+        futureHolidays.forEach(holiday => {
+            const option = document.createElement('option');
+            const dateStr = holiday.d.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+            option.value = JSON.stringify({ name: holiday.n, date: holiday.d.toISOString() });
+            option.textContent = `${holiday.n} - ${dateStr}`;
+            holidayList.appendChild(option);
+        });
+        
+        return futureHolidays;
+    }
+
+    // Toggle custom date fields visibility
+    function toggleCustomFields() {
+        const selector = document.getElementById('event-selector');
+        const customFields = document.getElementById('custom-fields');
+        
+        if (selector.value === 'custom') {
+            customFields.classList.remove('hidden');
+        } else {
+            customFields.classList.add('hidden');
+        }
+        
+        updateTarget();
+    }
+
+    // Update target event based on selection
+    function updateTarget() {
+        const selector = document.getElementById('event-selector');
         const nowBrasilia = getBrasiliaDate();
         
-        // Defina aqui a data alvo (Exemplo: Próximo Ano Novo)
-        // Você pode capturar essa data de um input ou variável global
-        const targetDate = new Date(2027, 0, 1, 0, 0, 0); 
+        if (selector.value === 'next') {
+            // Get next national holiday
+            const year = nowBrasilia.getFullYear();
+            const currentYearHolidays = getHolidaysForDisplay(year);
+            const nextYearHolidays = getHolidaysForDisplay(year + 1);
+            const allHolidays = [...currentYearHolidays, ...nextYearHolidays];
+            const nextHoliday = allHolidays.find(h => h.d > nowBrasilia);
+            
+            if (nextHoliday) {
+                targetEvent = {
+                    name: nextHoliday.n,
+                    date: nextHoliday.d
+                };
+            }
+        } else if (selector.value === 'custom') {
+            // Custom event
+            const customName = document.getElementById('custom-name').value;
+            const customDate = document.getElementById('custom-date').value;
+            
+            if (customName && customDate) {
+                targetEvent = {
+                    name: customName,
+                    date: new Date(customDate)
+                };
+            } else {
+                return; // Don't update if incomplete
+            }
+        } else {
+            // Specific holiday selected
+            try {
+                const eventData = JSON.parse(selector.value);
+                targetEvent = {
+                    name: eventData.name,
+                    date: new Date(eventData.date)
+                };
+            } catch (e) {
+                console.error('Error parsing event data:', e);
+                return;
+            }
+        }
         
-        const diff = targetDate - nowBrasilia;
+        updateDisplay();
+        updateShareLinks();
+    }
+
+    // Update countdown display
+    function updateCountdown() {
+        if (!targetEvent) return;
+        
+        const nowBrasilia = getBrasiliaDate();
+        const diff = targetEvent.date - nowBrasilia;
 
         if (diff <= 0) {
-            document.getElementById('countdown-timer').innerHTML = "O evento chegou!";
+            document.getElementById('label-txt').textContent = "🎉 Evento chegou!";
+            document.getElementById('days').textContent = '00';
+            document.getElementById('hours').textContent = '00';
+            document.getElementById('minutes').textContent = '00';
+            document.getElementById('seconds').textContent = '00';
+            
+            // Fire confetti
+            if (window.confetti) {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
             return;
         }
 
@@ -275,17 +384,92 @@
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-        // Atualiza os elementos na tela
-        // Certifique-se de que os IDs existam no seu HTML
         document.getElementById('days').textContent = String(days).padStart(2, '0');
         document.getElementById('hours').textContent = String(hours).padStart(2, '0');
         document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
         document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
     }
 
+    // Update event name and date display
+    function updateDisplay() {
+        if (!targetEvent) return;
+        
+        document.getElementById('display-name').textContent = targetEvent.name;
+        
+        const dateFormatted = targetEvent.date.toLocaleDateString('pt-BR', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            timeZone: 'America/Sao_Paulo'
+        });
+        
+        document.getElementById('display-full-date').textContent = dateFormatted;
+    }
+
+    // Update share links
+    function updateShareLinks() {
+        if (!targetEvent) return;
+        
+        const currentUrl = window.location.origin + window.location.pathname;
+        const shareText = `Faltam exatamente para ${targetEvent.name}! Veja a contagem regressiva: ${currentUrl}`;
+        
+        const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+        document.getElementById('share-wa').href = waUrl;
+    }
+
+    // Copy link to clipboard
+    function copyToClipboard() {
+        const url = window.location.href;
+        
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(() => {
+                const btn = document.getElementById('btn-copy');
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copiado!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('URL: ' + url);
+            });
+        } else {
+            // Fallback for older browsers
+            const textarea = document.createElement('textarea');
+            textarea.value = url;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                const btn = document.getElementById('btn-copy');
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copiado!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                alert('URL: ' + url);
+            }
+            document.body.removeChild(textarea);
+        }
+    }
+
+    // Initialize on page load
     document.addEventListener('DOMContentLoaded', () => {
+        // Populate holiday dropdown
+        populateHolidayDropdown();
+        
+        // Set initial target to next holiday
+        updateTarget();
+        
+        // Start countdown
+        if (countdownInterval) clearInterval(countdownInterval);
+        countdownInterval = setInterval(updateCountdown, 1000);
         updateCountdown();
-        setInterval(updateCountdown, 1000);
     });
 </script>
 </body>
