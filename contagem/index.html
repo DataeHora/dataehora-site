@@ -233,7 +233,7 @@
                 </div>
                 <div class="input-group">
                     <label>Data/Hora</label>
-                    <input type="datetime-local" id="custom-date" onchange="updateTarget()">
+                    <input type="datetime-local" id="custom-date" onchange="validateCustomDate(); updateTarget();" oninput="validateCustomDate();" min="1000-01-01T00:00" max="9999-12-31T23:59">
                 </div>
             </div>
         </div>
@@ -286,6 +286,23 @@
         return futureHolidays;
     }
 
+    // Validate year in custom date input
+    function validateCustomDate() {
+        const customDateInput = document.getElementById('custom-date');
+        const customDate = customDateInput.value;
+        
+        if (customDate) {
+            const date = new Date(customDate);
+            const year = date.getFullYear();
+            
+            // Check if year is outside valid range (1000-9999)
+            if (year < 1000 || year > 9999) {
+                customDateInput.value = '';
+                // The validation message will be shown by updateTarget when user tries to proceed
+            }
+        }
+    }
+
     // Toggle custom date fields visibility
     function toggleCustomFields() {
         const selector = document.getElementById('event-selector');
@@ -325,9 +342,19 @@
             const customDate = document.getElementById('custom-date').value;
             
             if (customName && customDate) {
+                const date = new Date(customDate);
+                const year = date.getFullYear();
+                
+                // Validate year is 4 digits (1000-9999)
+                if (year < 1000 || year > 9999) {
+                    alert('Por favor, insira um ano válido entre 1000 e 9999.');
+                    document.getElementById('custom-date').value = '';
+                    return;
+                }
+                
                 targetEvent = {
                     name: customName,
-                    date: new Date(customDate)
+                    date: date
                 };
             } else {
                 return; // Don't update if incomplete
@@ -515,10 +542,10 @@
             const sanitizedName = eventName.substring(0, 100); // Limit length
             const parsedDate = new Date(eventDate);
             
-            // Validate date is valid and not in distant past/future
+            // Validate date is valid and year is 4 digits (1000-9999)
             if (!isNaN(parsedDate.getTime()) && 
-                parsedDate.getFullYear() >= 2020 && 
-                parsedDate.getFullYear() <= 2100) {
+                parsedDate.getFullYear() >= 1000 && 
+                parsedDate.getFullYear() <= 9999) {
                 
                 // Load event from URL parameters
                 targetEvent = {
