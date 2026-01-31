@@ -233,7 +233,7 @@
                 </div>
                 <div class="input-group">
                     <label>Data/Hora</label>
-                    <input type="datetime-local" id="custom-date" onchange="validateCustomDate(); updateTarget();" oninput="validateCustomDate();" min="1000-01-01T00:00" max="9999-12-31T23:59">
+                    <input type="datetime-local" id="custom-date" oninput="validateCustomDate();" onchange="updateTarget();" min="1000-01-01T00:00" max="9999-12-31T23:59">
                 </div>
             </div>
         </div>
@@ -252,6 +252,15 @@
     // Global state
     let targetEvent = null;
     let countdownInterval = null;
+
+    // Year validation constants
+    const MIN_VALID_YEAR = 1000;
+    const MAX_VALID_YEAR = 9999;
+
+    // Helper function to check if year is valid (4 digits)
+    function isValidYear(year) {
+        return year >= MIN_VALID_YEAR && year <= MAX_VALID_YEAR;
+    }
 
     // Get current date/time in Brasília timezone
     function getBrasiliaDate() {
@@ -295,10 +304,10 @@
             const date = new Date(customDate);
             const year = date.getFullYear();
             
-            // Check if year is outside valid range (1000-9999)
-            if (year < 1000 || year > 9999) {
+            // Check if year is outside valid range
+            if (!isValidYear(year)) {
                 customDateInput.value = '';
-                // The validation message will be shown by updateTarget when user tries to proceed
+                alert(`Por favor, insira um ano válido entre ${MIN_VALID_YEAR} e ${MAX_VALID_YEAR}.`);
             }
         }
     }
@@ -345,9 +354,9 @@
                 const date = new Date(customDate);
                 const year = date.getFullYear();
                 
-                // Validate year is 4 digits (1000-9999)
-                if (year < 1000 || year > 9999) {
-                    alert('Por favor, insira um ano válido entre 1000 e 9999.');
+                // Validate year is 4 digits
+                if (!isValidYear(year)) {
+                    alert(`Por favor, insira um ano válido entre ${MIN_VALID_YEAR} e ${MAX_VALID_YEAR}.`);
                     document.getElementById('custom-date').value = '';
                     return;
                 }
@@ -542,10 +551,8 @@
             const sanitizedName = eventName.substring(0, 100); // Limit length
             const parsedDate = new Date(eventDate);
             
-            // Validate date is valid and year is 4 digits (1000-9999)
-            if (!isNaN(parsedDate.getTime()) && 
-                parsedDate.getFullYear() >= 1000 && 
-                parsedDate.getFullYear() <= 9999) {
+            // Validate date is valid and year is 4 digits
+            if (!isNaN(parsedDate.getTime()) && isValidYear(parsedDate.getFullYear())) {
                 
                 // Load event from URL parameters
                 targetEvent = {
