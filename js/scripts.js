@@ -56,14 +56,16 @@ const timeFormatter = new Intl.DateTimeFormat('pt-BR', {
     hour: '2-digit',
     minute: '2-digit', 
     second: '2-digit',
-    hour12: false
+    hour12: false,
+    timeZone: 'America/Sao_Paulo'
 });
 
 const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
-    year: 'numeric'
+    year: 'numeric',
+    timeZone: 'America/Sao_Paulo'
 });
 
 const holidayWeekdayFormatter = new Intl.DateTimeFormat('pt-BR', {
