@@ -2,20 +2,24 @@
 
 // 1. Garantia do Horário Oficial de Brasília
 function getBrasiliaDate() {
-    const now = new Date();
-    return new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+    return new Date();
 }
 
 // 2. Sistema de Temas (Dark/Light/Auto)
 function applyTheme() {
     const saved = localStorage.getItem('theme-pref') || 'default';
-    const nowBrasilia = getBrasiliaDate();
     let isDark = false;
 
     if (saved === 'default') {
         isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     } else if (saved === 'auto') {
-        const h = nowBrasilia.getHours();
+        const now = getBrasiliaDate();
+        // Get hour in São Paulo timezone
+        const h = parseInt(now.toLocaleTimeString('pt-BR', { 
+            hour: 'numeric', 
+            hour12: false,
+            timeZone: 'America/Sao_Paulo' 
+        }), 10);
         isDark = (h < 6 || h >= 18);
     } else {
         isDark = (saved === 'dark');
@@ -32,18 +36,24 @@ function updateInterface() {
 
     if (clockEl) {
         clockEl.textContent = now.toLocaleTimeString('pt-BR', { 
-            hour: '2-digit', minute: '2-digit', second: '2-digit' 
+            hour: '2-digit', minute: '2-digit', second: '2-digit',
+            timeZone: 'America/Sao_Paulo'
         });
     }
 
     if (dateEl) {
         dateEl.textContent = now.toLocaleDateString('pt-BR', { 
-            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' 
+            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+            timeZone: 'America/Sao_Paulo'
         });
     }
 
     // Auto-tema a cada minuto
-    if (now.getSeconds() === 0) applyTheme();
+    const seconds = parseInt(now.toLocaleTimeString('pt-BR', { 
+        second: 'numeric',
+        timeZone: 'America/Sao_Paulo'
+    }), 10);
+    if (seconds === 0) applyTheme();
 }
 
 // 4. Inicialização de todas as páginas do Sitemap
