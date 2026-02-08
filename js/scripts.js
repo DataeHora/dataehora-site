@@ -35,18 +35,12 @@ async function syncOfficialTime() {
 }
 
 /**
- * Get current date/time locked to Brasília timezone
- * Uses official API time when available, falls back to browser timezone
- * @returns {Date} Date object in Brasília timezone
+ * Get current date/time adjusted with official time offset
+ * Uses official API time when available, falls back to system time
+ * @returns {Date} Date object adjusted with official time offset
  */
 function getBrasiliaDate() {
-    const now = new Date(Date.now() + officialTimeOffset);
-    // If we have official time offset, use it directly
-    if (officialTimeOffset !== 0) {
-        return now;
-    }
-    // Fallback: Convert Date to string in Brasília timezone and create new Date from it
-    return new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+    return new Date(Date.now() + officialTimeOffset);
 }
 
 /**
@@ -79,6 +73,33 @@ const holidayDateFormatter = new Intl.DateTimeFormat('pt-BR', {
     timeZone: 'America/Sao_Paulo'
 });
 
+// Additional formatters for timezone-aware component extraction
+const hourFormatter = new Intl.DateTimeFormat('pt-BR', {
+    hour: 'numeric',
+    hour12: false,
+    timeZone: 'America/Sao_Paulo'
+});
+
+const secondFormatter = new Intl.DateTimeFormat('pt-BR', {
+    second: 'numeric',
+    timeZone: 'America/Sao_Paulo'
+});
+
+const yearFormatter = new Intl.DateTimeFormat('pt-BR', {
+    year: 'numeric',
+    timeZone: 'America/Sao_Paulo'
+});
+
+const dayFormatter = new Intl.DateTimeFormat('pt-BR', {
+    day: 'numeric',
+    timeZone: 'America/Sao_Paulo'
+});
+
+const monthFormatter = new Intl.DateTimeFormat('pt-BR', {
+    month: 'numeric',
+    timeZone: 'America/Sao_Paulo'
+});
+
 /**
  * Update clock display with current Brasília time
  * Updates every second and handles auto-theme switching
@@ -86,7 +107,7 @@ const holidayDateFormatter = new Intl.DateTimeFormat('pt-BR', {
 function updateClock() {
     const nowBrasilia = getBrasiliaDate();
     
-    // Format time and date using pre-created formatters
+    // Format time and date using pre-created formatters (with timeZone set)
     const timeStr = timeFormatter.format(nowBrasilia);
     const dateStr = dateFormatter.format(nowBrasilia);
     
@@ -94,10 +115,12 @@ function updateClock() {
     document.getElementById('date').textContent = dateStr;
 
     // Auto-theme switching every minute if in auto mode
-    if (nowBrasilia.getSeconds() === 0) {
+    // Use pre-created formatters for timezone-aware component extraction
+    const seconds = parseInt(secondFormatter.format(nowBrasilia), 10);
+    if (seconds === 0) {
         const saved = localStorage.getItem('theme-pref') || 'default';
         if (saved === 'auto') {
-            const h = nowBrasilia.getHours();
+            const h = parseInt(hourFormatter.format(nowBrasilia), 10);
             const isDark = (h < 6 || h >= 18);
             document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
         }
@@ -111,15 +134,23 @@ function updateClock() {
  */
 function updateHoliday() {
     const nowBrasilia = getBrasiliaDate();
-    const year = nowBrasilia.getFullYear();
+    
+    // Get current date components in São Paulo timezone using pre-created formatters
+    const year = parseInt(yearFormatter.format(nowBrasilia), 10);
     
     // Get holidays for current and next year
     const currentYearHolidays = getHolidaysForDisplay(year);
     const nextYearHolidays = getHolidaysForDisplay(year + 1);
     const allHolidays = [...currentYearHolidays, ...nextYearHolidays];
 
-    // Find next holiday after current Brasília date
-    const proximo = allHolidays.find(f => f.d > nowBrasilia);
+    // Get today's date at midnight in São Paulo timezone for comparison
+    // Extract date components using pre-created formatters
+    const currentDay = parseInt(dayFormatter.format(nowBrasilia), 10);
+    const currentMonth = parseInt(monthFormatter.format(nowBrasilia), 10) - 1; // 0-indexed
+    const todayInSaoPaulo = new Date(year, currentMonth, currentDay);
+    
+    // Find next holiday after current São Paulo date
+    const proximo = allHolidays.find(f => f.d > todayInSaoPaulo);
     
     // Safety check - should always find a holiday due to next year's holidays
     if (!proximo) {
@@ -128,8 +159,8 @@ function updateHoliday() {
         return;
     }
     
-    // Calculate remaining days based on Brasília time
-    const diff = Math.ceil((proximo.d - nowBrasilia) / 864e5);
+    // Calculate remaining days based on São Paulo dates
+    const diff = Math.ceil((proximo.d - todayInSaoPaulo) / 864e5);
     
     // Use pre-created formatters for better performance
     const fmtDia = holidayWeekdayFormatter.format(proximo.d);
