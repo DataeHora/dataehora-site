@@ -36,8 +36,9 @@ async function syncOfficialTime() {
 
 /**
  * Get current date/time for use with timezone-aware formatters
- * The formatters already have timeZone: 'America/Sao_Paulo', so we just need current time
- * @returns {Date} Current Date object
+ * The officialTimeOffset corrects for system clock drift (from WorldTimeAPI sync)
+ * The formatters handle timezone display (timeZone: 'America/Sao_Paulo')
+ * @returns {Date} Current Date object with drift correction
  */
 function getBrasiliaDate() {
     return new Date(Date.now() + officialTimeOffset);

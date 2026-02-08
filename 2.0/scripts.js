@@ -13,9 +13,9 @@ function applyTheme() {
     if (saved === 'default') {
         isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     } else if (saved === 'auto') {
-        const nowBrasilia = getBrasiliaDate();
+        const now = getBrasiliaDate();
         // Get hour in São Paulo timezone
-        const h = parseInt(nowBrasilia.toLocaleTimeString('pt-BR', { 
+        const h = parseInt(now.toLocaleTimeString('pt-BR', { 
             hour: 'numeric', 
             hour12: false,
             timeZone: 'America/Sao_Paulo' 
