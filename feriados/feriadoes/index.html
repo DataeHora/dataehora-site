@@ -105,6 +105,18 @@
     <script>
         const mesesNomes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
+        /**
+         * Get current date in São Paulo timezone for comparison
+         * Returns a Date object set to midnight in São Paulo time
+         */
+        function getTodayInSaoPaulo() {
+            // Get current time in São Paulo timezone
+            const nowSP = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+            // Set to midnight for date comparison
+            nowSP.setHours(0, 0, 0, 0);
+            return nowSP;
+        }
+
         function getFeriadoes(ano) {
             // Use the shared getHolidays function
             const holidays = getHolidays(ano);
@@ -130,8 +142,7 @@
         }
 
         function render() {
-            const now = new Date();
-            now.setHours(0,0,0,0);
+            const now = getTodayInSaoPaulo();
             const list = document.getElementById('planner-list');
             if(!list) return;
 

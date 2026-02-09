@@ -104,9 +104,20 @@
     </footer>
 
     <script>
+        /**
+         * Get current date in São Paulo timezone for comparison
+         * Returns a Date object set to midnight in São Paulo time
+         */
+        function getTodayInSaoPaulo() {
+            // Get current time in São Paulo timezone
+            const nowSP = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+            // Set to midnight for date comparison
+            nowSP.setHours(0, 0, 0, 0);
+            return nowSP;
+        }
+
         function render() {
-            const now = new Date();
-            now.setHours(0,0,0,0);
+            const now = getTodayInSaoPaulo();
             const currentYear = now.getFullYear();
             const container = document.getElementById('calendar-content');
             const nextCont = document.getElementById('next-container');
@@ -130,14 +141,14 @@
                         nextCont.innerHTML = `
                             <div class="next-banner">
                                 <span class="label">Próximo Feriado</span>
-                                <span class="date">${f.d} de ${f.dt.toLocaleDateString('pt-BR', {month: 'long'})}</span>
+                                <span class="date">${f.d} de ${f.dt.toLocaleDateString('pt-BR', {month: 'long', timeZone: 'America/Sao_Paulo'})}</span>
                                 <span class="name">${f.n}</span>
                             </div>`;
                     }
 
                     const row = document.createElement('div');
                     row.className = `holiday-row ${isPast ? 'past' : ''}`;
-                    const mes = f.dt.toLocaleDateString('pt-BR', {month: 'short'}).replace('.','');
+                    const mes = f.dt.toLocaleDateString('pt-BR', {month: 'short', timeZone: 'America/Sao_Paulo'}).replace('.','');
                     row.innerHTML = `
                         <div class="col-date" style="color: var(--y${y})">${f.d} ${mes}</div>
                         <div class="col-weekday">${f.week.split('-')[0]}</div>
