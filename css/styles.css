@@ -1028,3 +1028,80 @@ footer a:hover {
     margin-top: 4px;
 }
 
+/* ========================================
+   ADSENSE INTEGRATION - HEADER BANNER
+   ======================================== */
+
+/* Wrapper com fundo suave para o header */
+.top-nav-wrapper {
+    width: 100%;
+    background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-body) 100%);
+    border-bottom: 1px solid var(--hr-color);
+    padding: 15px 20px;
+}
+
+/* Container flexbox para alinhar logo + anúncio */
+.top-nav-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Logo (mantém estilo atual) */
+.logo-text {
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    font-size: 1.4rem;
+    color: var(--accent);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
+}
+
+.logo-text:hover {
+    opacity: 0.8;
+}
+
+/* Container do anúncio no header */
+.header-ad {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    min-height: 90px;
+}
+
+/* Responsivo Mobile */
+@media (max-width: 768px) {
+    .top-nav-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .header-ad {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Mobile: usar anúncio responsivo menor */
+    .header-ad .adsbygoogle {
+        width: 320px !important;
+        height: 100px !important;
+    }
+}
+
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .header-ad .adsbygoogle {
+        width: 468px !important;
+        height: 60px !important;
+    }
+}
+
+

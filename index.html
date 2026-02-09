@@ -87,8 +87,22 @@
 </head>
 <body>
 
-    <header class="top-nav">
-        <a href="/" class="logo-text">dataehora.com.br</a>
+    <header class="top-nav-wrapper">
+        <div class="top-nav-container">
+            <!-- Logo (mantém exatamente como está) -->
+            <a href="/" class="logo-text">dataehora.com.br</a>
+            
+            <!-- AdSense Banner (novo) -->
+            <div class="header-ad">
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:728px;height:90px"
+                     data-ad-client="ca-pub-XXXXXXXXXX"
+                     data-ad-slot="YYYYYYYYYY"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
     </header>
 
     <main class="hero">
@@ -130,9 +144,13 @@
 
     <footer>
         <a href="/configuracoes/" class="btn-settings">⚙️ Configurações</a>
+        
         <div style="margin-top: 30px; font-size: 0.85rem; color: var(--text-muted); text-align: center; line-height: 1.8;">
-            dataehora.com.br<br>
-            contato@dataehora.com.br
+            © 2026 dataehora.com.br<br>
+            <a href="mailto:contato@dataehora.com.br" style="color: var(--text-muted); text-decoration: underline;">contato@dataehora.com.br</a><br>
+            <br>
+            <a href="/privacidade/" style="color: var(--text-muted); text-decoration: underline;">Política de Privacidade</a> | 
+            <a href="/termos/" style="color: var(--text-muted); text-decoration: underline;">Termos de Uso</a>
         </div>
     </footer>
 
