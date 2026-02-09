@@ -4,9 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <!-- Canonical URL (prevents duplicate content penalties) -->
+    <link rel="canonical" href="https://dataehora.com.br/">
+    
+    <!-- Preconnect to external domains for faster loading -->
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://worldtimeapi.org">
+    <link rel="dns-prefetch" href="https://worldtimeapi.org">
+    
+    <!-- Preload critical CSS -->
+    <link rel="preload" href="/css/styles.css" as="style">
+    <link rel="stylesheet" href="/css/styles.css">
+    
+    <!-- Favicon and App Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    
+    <!-- Theme color for mobile browsers -->
+    <meta name="theme-color" content="#2563eb">
+    
     <!-- SEO Meta Tags -->
     <title>Horário de Brasília Oficial | dataehora.com.br</title>
-    <meta name="description" content="Hora certa de Brasília atualizada em tempo real. Calendário de feriados 2026, calculadoras de datas, contagem regressiva e muito mais.">
+    <meta name="description" content="✓ Horário oficial de Brasília em tempo real ✓ Feriados 2026 ✓ Calculadoras de datas e prazos ✓ Contagem regressiva. Acesse grátis!">
     <meta name="keywords" content="horário de Brasília, hora certa, feriados, calendário, calculadora de datas, contagem regressiva, hora oficial Brasil">
     <meta name="author" content="dataehora.com.br">
     <meta name="robots" content="index, follow">
@@ -17,6 +40,9 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://dataehora.com.br/">
     <meta property="og:site_name" content="Data e Hora">
+    <meta property="og:image" content="https://dataehora.com.br/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
@@ -24,6 +50,7 @@
     <meta name="twitter:description" content="Hora certa de Brasília atualizada em tempo real. Calendário de feriados 2026, calculadoras de datas e contagem regressiva.">
     <meta name="twitter:site" content="@dataehora">
     <meta name="twitter:creator" content="@dataehora">
+    <meta name="twitter:image" content="https://dataehora.com.br/og-image.jpg">
     
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -47,14 +74,10 @@
       gtag('config', 'G-4Y5H59FEQE');
     </script>
     
-    <!-- External Stylesheet -->
-    <link rel="stylesheet" href="/css/styles.css">
-    
-    <!-- Theme Initialization - Must execute before page renders to prevent FOUC -->
-    <script src="/js/theme.js"></script>
-    
-    <!-- Holiday calculation utilities -->
-    <script src="/js/holidays.js"></script>
+    <!-- CRITICAL: Inline theme script to prevent FOUC (replaces external theme.js) -->
+    <script>
+    (function(){const saved=localStorage.getItem('theme-pref')||'default';let theme='light';if(saved==='light'||saved==='dark'){theme=saved}else if(saved==='auto'){const h=new Date().getHours();theme=(h<6||h>=18)?'dark':'light'}else{theme=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',theme);document.documentElement.style.backgroundColor=theme==='dark'?'#020617':'#f1f5f9';window.themeManager={getTheme:()=>theme,applyTheme:(t)=>{document.documentElement.setAttribute('data-theme',t);document.documentElement.style.backgroundColor=t==='dark'?'#020617':'#f1f5f9'}}})();
+    </script>
 
 </head>
 <body>
@@ -108,7 +131,8 @@
         </div>
     </footer>
 
-    <!-- External JavaScript -->
-    <script src="/js/scripts.js"></script>
+    <!-- OPTIMIZED: Scripts with defer load asynchronously without blocking -->
+    <script defer src="/js/holidays.js"></script>
+    <script defer src="/js/scripts.js"></script>
 </body>
 </html>

@@ -1,33 +1,4 @@
-# Robots.txt otimizado para dataehora.com.br
-# Protocolo v2.0 - Janeiro 2026
-
 User-agent: *
 Allow: /
-Allow: /index.html
-Allow: /feriados/
-Allow: /contagem/
-Allow: /calculadora/
-Allow: /calendario/
 
-# Bloquear pastas de sistema ou arquivos de configuração se existirem
-Disallow: /src/
-Disallow: /private/
-Disallow: /tmp/
-Disallow: /api/
-Disallow: /cdn-cgi/
-
-# Impedir indexação de parâmetros de pesquisa internos ou variações irrelevantes
-# Isso evita conteúdo duplicado (ex: filtros de busca)
-Disallow: /*?s=
-Disallow: /*?search=
-Disallow: /*?ref=
-
-# Caminho absoluto para o Sitemap (Crucial para SEO)
 Sitemap: https://dataehora.com.br/sitemap.xml
-
-# Regras específicas para robôs agressivos que consomem muita banda
-User-agent: Mediapartners-Google
-Allow: /
-
-User-agent: AdsBot-Google
-Allow: /
