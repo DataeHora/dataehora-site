@@ -35,15 +35,9 @@
   </script>
 
   <style>
-    .weather-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
     .weather-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 16px;
       margin-top: 30px;
     }
@@ -177,37 +171,47 @@
         grid-column: 1;
       }
     }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .weather-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+    }
   </style>
 </head>
 <body>
-  <header class="top-nav">
-    <a href="/" class="logo-text">dataehora.com.br</a>
-  </header>
+  <div class="container">
+    <nav class="nav-header" aria-label="Navegação estrutural">
+      <a href="/" class="nav-link">dataehora.com.br</a>
+      <span class="nav-sep">/</span>
+      <span class="nav-current">Previsão do Tempo</span>
+    </nav>
 
-  <div class="header-ad-container">
-    <ins class="adsbygoogle"
-         style="display:inline-block;width:728px;height:90px"
-         data-ad-client="ca-pub-7808195997729404"
-         data-ad-slot="1234567890"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-  </div>
+    <div class="header-ad-container">
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:728px;height:90px"
+           data-ad-client="ca-pub-7808195997729404"
+           data-ad-slot="1234567890"></ins>
+      <script>
+           (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
 
-  <main class="weather-container">
-    <h1 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 10px; color: var(--text-main);">Previsão do Tempo</h1>
-    <p style="color: var(--text-muted); margin-bottom: 20px;">Confira a previsão do tempo atualizada para todas as capitais brasileiras</p>
+    <header class="header">
+      <h1>Previsão do Tempo</h1>
+      <p class="subtitle">Confira a previsão do tempo atualizada para todas as capitais brasileiras</p>
+    </header>
 
-    <div id="weatherContent" class="loading">
+    <main id="weatherContent" class="loading">
       <div class="spinner"></div>
       <p>Carregando previsão do tempo...</p>
-    </div>
-  </main>
+    </main>
+  </div>
 
-  <footer style="text-align: center; padding: 40px 20px; margin-top: 60px;">
-    <a href="/" style="display: inline-block; padding: 12px 24px; background: var(--bg-card); color: var(--text-main); border-radius: 12px; text-decoration: none; font-weight: 700; border: 1px solid var(--hr-color); transition: 0.2s;">← Voltar para Home</a>
+  <footer>
+    <a href="/configuracoes/" class="btn-settings">⚙️ Configurações</a>
     
-    <div style="margin-top: 30px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.8;">
+    <div style="margin-top: 30px; font-size: 0.85rem; color: var(--text-muted); text-align: center; line-height: 1.8;">
       © 2026 dataehora.com.br<br>
       <a href="mailto:contato@dataehora.com.br" style="color: var(--text-muted); text-decoration: underline;">contato@dataehora.com.br</a><br>
       <br>
