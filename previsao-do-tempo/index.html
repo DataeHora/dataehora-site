@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7808195997729404"
+   crossorigin="anonymous"></script>
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   
@@ -39,16 +43,16 @@
 
     .weather-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
       margin-top: 30px;
     }
 
     .weather-card {
       background: var(--bg-card);
-      border-radius: 20px;
-      padding: 24px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       transition: transform 0.2s, box-shadow 0.2s;
       border: 1px solid var(--hr-color);
       position: relative;
@@ -86,43 +90,43 @@
     }
 
     .city-name {
-      font-size: 1.5rem;
-      font-weight: 800;
+      font-size: 1.1rem;
+      font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .weather-info {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin: 16px 0;
+      margin: 10px 0;
     }
 
     .temperature {
-      font-size: 3rem;
-      font-weight: 900;
+      font-size: 2rem;
+      font-weight: 800;
       color: var(--text-main);
       line-height: 1;
     }
 
     .weather-icon {
-      font-size: 4rem;
+      font-size: 2.5rem;
       line-height: 1;
     }
 
     .description {
-      font-size: 1.1rem;
+      font-size: 0.9rem;
       color: var(--text-muted);
-      font-weight: 600;
+      font-weight: 500;
       text-transform: capitalize;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
 
     .details {
       display: flex;
-      gap: 16px;
-      font-size: 0.9rem;
+      gap: 12px;
+      font-size: 0.75rem;
       color: var(--text-muted);
       flex-wrap: wrap;
     }
@@ -130,7 +134,7 @@
     .detail-item {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
     }
 
     .loading {
@@ -179,6 +183,16 @@
   <header class="top-nav">
     <a href="/" class="logo-text">dataehora.com.br</a>
   </header>
+
+  <div class="header-ad-container">
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:728px;height:90px"
+         data-ad-client="ca-pub-7808195997729404"
+         data-ad-slot="1234567890"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
 
   <main class="weather-container">
     <h1 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 10px; color: var(--text-main);">Previsão do Tempo</h1>

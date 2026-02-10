@@ -1039,6 +1039,16 @@ footer a:hover {
     min-height: 90px;
 }
 
+.header-ad-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 10px;
+}
+
 /* ===================================
    RESPONSIVE DESIGN
    =================================== */
@@ -1175,6 +1185,11 @@ footer a:hover {
         width: 320px !important;
         height: 100px !important;
     }
+    
+    .header-ad-container .adsbygoogle {
+        width: 320px !important;
+        height: 100px !important;
+    }
 }
 
 /* Tablet (641px - 1024px) */
@@ -1184,6 +1199,11 @@ footer a:hover {
     }
     
     .header-ad .adsbygoogle {
+        width: 468px !important;
+        height: 60px !important;
+    }
+    
+    .header-ad-container .adsbygoogle {
         width: 468px !important;
         height: 60px !important;
     }
