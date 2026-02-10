@@ -41,6 +41,20 @@
     }
     </script>
 
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://dataehora.com.br/feriados/feriadoes/">
+    
+    <!-- Preconnect to external domains for faster loading -->
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    
+    <!-- Preload critical CSS -->
+    <link rel="preload" href="/css/styles.css" as="style">
+    <link rel="stylesheet" href="/css/styles.css">
+    
+    <!-- Holiday calculation utilities -->
+    <script src="/js/holidays.js"></script>
+
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
     <script>
@@ -50,14 +64,11 @@
       gtag('config', 'G-4Y5H59FEQE');
     </script>
     
-    <!-- Theme Initialization - Must execute before page renders to prevent FOUC -->
-    <script src="/js/theme.js"></script>
-
-    <!-- External Stylesheet -->
-    <link rel="stylesheet" href="/css/styles.css">
-    
-    <!-- Holiday calculation utilities -->
-    <script src="/js/holidays.js"></script>
+    <!-- CRITICAL: Inline theme script to prevent FOUC (replaces external theme.js) -->
+    <!-- Original source: /js/theme.js - minified inline for performance -->
+    <script>
+    (function(){const saved=localStorage.getItem('theme-pref')||'default';let theme='light';if(saved==='light'||saved==='dark'){theme=saved}else if(saved==='auto'){const h=new Date().getHours();theme=(h<6||h>=18)?'dark':'light'}else{theme=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',theme);document.documentElement.style.backgroundColor=theme==='dark'?'#020617':'#f1f5f9';window.themeManager={getTheme:()=>theme,applyTheme:(t)=>{document.documentElement.setAttribute('data-theme',t);document.documentElement.style.backgroundColor=t==='dark'?'#020617':'#f1f5f9'}}})();
+    </script>
 
 </head>
 <body>
@@ -81,14 +92,30 @@
 
     <footer>
         <a href="/configuracoes/" class="btn-settings">⚙️ Configurações</a>
+        
         <div style="margin-top: 30px; font-size: 0.85rem; color: var(--text-muted); text-align: center; line-height: 1.8;">
-            dataehora.com.br<br>
-            contato@dataehora.com.br
+            © 2026 dataehora.com.br<br>
+            <a href="mailto:contato@dataehora.com.br" style="color: var(--text-muted); text-decoration: underline;">contato@dataehora.com.br</a><br>
+            <br>
+            <a href="/privacidade/" style="color: var(--text-muted); text-decoration: underline;">Política de Privacidade</a> | 
+            <a href="/termos/" style="color: var(--text-muted); text-decoration: underline;">Termos de Uso</a>
         </div>
     </footer>
 
     <script>
         const mesesNomes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+        /**
+         * Get current date in São Paulo timezone for comparison
+         * Returns a Date object set to midnight in São Paulo time
+         */
+        function getTodayInSaoPaulo() {
+            // Get current time in São Paulo timezone
+            const nowSP = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+            // Set to midnight for date comparison
+            nowSP.setHours(0, 0, 0, 0);
+            return nowSP;
+        }
 
         function getFeriadoes(ano) {
             // Use the shared getHolidays function
@@ -115,8 +142,7 @@
         }
 
         function render() {
-            const now = new Date();
-            now.setHours(0,0,0,0);
+            const now = getTodayInSaoPaulo();
             const list = document.getElementById('planner-list');
             if(!list) return;
 

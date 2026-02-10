@@ -3,30 +3,56 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calendário — dataehora.com.br</title>
-  <meta name="description" content="Calendários do Brasil: anos, meses, semanas ISO e feriados." />
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://dataehora.com.br/previsao-do-tempo/">
+  
+  <title>Previsão do Tempo — dataehora.com.br</title>
+  <meta name="description" content="Previsão do tempo para o Brasil com informações atualizadas." />
+  <meta name="robots" content="index, follow">
+  
+  <!-- Preload critical CSS -->
+  <link rel="preload" href="/css/styles.css" as="style">
+  <link rel="stylesheet" href="/css/styles.css">
+  
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Y5H59FEQE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4Y5H59FEQE');
+  </script>
+  
+  <!-- CRITICAL: Inline theme script to prevent FOUC -->
+  <script>
+  (function(){const saved=localStorage.getItem('theme-pref')||'default';let theme='light';if(saved==='light'||saved==='dark'){theme=saved}else if(saved==='auto'){const h=new Date().getHours();theme=(h<6||h>=18)?'dark':'light'}else{theme=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',theme);document.documentElement.style.backgroundColor=theme==='dark'?'#020617':'#f1f5f9';window.themeManager={getTheme:()=>theme,applyTheme:(t)=>{document.documentElement.setAttribute('data-theme',t);document.documentElement.style.backgroundColor=t==='dark'?'#020617':'#f1f5f9'}}})();
+  </script>
 </head>
 <body>
-  <header>
-    <h1>Calendário</h1>
-    <nav>
-      <a href="/">Home</a> |
-      <a href="/calendario/">Calendário</a> |
-      <a href="/relogio-mundial/">Relógio Mundial</a> |
-      <a href="/fusos/">Fusos</a> |
-      <a href="/previsao-do-tempo/">Previsão do Tempo</a> |
-      <a href="/cronometro/">Cronômetro</a> |
-      <a href="/calculadora/">Calculadora</a>
-    </nav>
-    <hr />
+  <header class="top-nav">
+    <a href="/" class="logo-text">dataehora.com.br</a>
   </header>
 
-  <main>
-    <p>Aqui você vai encontrar calendários por ano e por mês, com semanas ISO e feriados do Brasil.</p>
-    <ul>
-      <li><a href="/calendario/2026/">Calendário 2026</a> (vamos criar em seguida)</li>
-    </ul>
+  <main style="max-width: 800px; margin: 0 auto; padding: 60px 20px;">
+    <h1 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 10px; color: var(--text-main);">Previsão do Tempo</h1>
+    <p style="color: var(--text-muted); margin-bottom: 40px;">Em desenvolvimento</p>
+    
+    <p style="line-height: 1.8; color: var(--text-main);">
+      Esta página está em desenvolvimento. Em breve você terá acesso à previsão do tempo completa para todo o Brasil.
+    </p>
   </main>
+
+  <footer style="text-align: center; padding: 40px 20px;">
+    <a href="/" style="display: inline-block; padding: 12px 24px; background: var(--bg-card); color: var(--text-main); border-radius: 12px; text-decoration: none; font-weight: 700; border: 1px solid var(--hr-color); transition: 0.2s;">← Voltar para Home</a>
+    
+    <div style="margin-top: 30px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.8;">
+      © 2026 dataehora.com.br<br>
+      <a href="mailto:contato@dataehora.com.br" style="color: var(--text-muted); text-decoration: underline;">contato@dataehora.com.br</a><br>
+      <br>
+      <a href="/privacidade/" style="color: var(--text-muted); text-decoration: underline;">Política de Privacidade</a> | 
+      <a href="/termos/" style="color: var(--text-muted); text-decoration: underline;">Termos de Uso</a>
+    </div>
+  </footer>
 </body>
 </html>
-
