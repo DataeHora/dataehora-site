@@ -359,23 +359,31 @@
           async (position) => {
             const { latitude, longitude } = position.coords;
             
-            // Find closest capital
-            let closest = capitals[0];
-            let minDistance = Infinity;
-            
-            capitals.forEach(city => {
-              const distance = Math.sqrt(
-                Math.pow(city.lat - latitude, 2) + 
-                Math.pow(city.lon - longitude, 2)
+            try {
+              // Fetch weather for user's actual location
+              const response = await fetch(
+                `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&lang=pt_br&appid=83c2a7cc0e5d3a1c8c7cc89cb399b5a7`
               );
-              if (distance < minDistance) {
-                minDistance = distance;
-                closest = city;
+              
+              if (!response.ok) {
+                resolve(null);
+                return;
               }
-            });
-            
-            const weather = await fetchWeather(closest);
-            resolve(weather);
+
+              const data = await response.json();
+              const weather = {
+                name: data.name,
+                state: data.sys.country,
+                temp: Math.round(data.main.temp),
+                description: data.weather[0].description,
+                humidity: data.main.humidity,
+                windSpeed: data.wind.speed.toFixed(1),
+                feelsLike: Math.round(data.main.feels_like)
+              };
+              resolve(weather);
+            } catch (error) {
+              resolve(null);
+            }
           },
           () => resolve(null)
         );
